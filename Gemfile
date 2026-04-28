@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "kiba-extend", github: "lyrasis/kiba-extend", branch: "main"
+gem "pg"
 
 group :development do
   gem "almost_standard", github: "kspurgin/almost_standard", branch: "main"
