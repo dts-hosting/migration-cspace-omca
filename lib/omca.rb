@@ -54,6 +54,16 @@ module Omca
   # ### Re-namespacing Kiba:Extend settings
   setting :registry, default: Kiba::Extend.registry, reader: true
   setting :delim, default: Kiba::Extend.delim, reader: true
+
+  def connection = @connection
+
+  # @param connection_obj [PG::Connection]
+  def set_connection(connection_obj)
+    return connection if connection&.open?
+
+    puts "New DB connection created for #{connection_obj.db}"
+    @connection = connection_obj
+  end
 end
 
 Omca.loader
