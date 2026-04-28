@@ -3,7 +3,7 @@
 require "kiba/extend"
 
 # Namespace for the overall project
-module KeProject
+module Omca
   module_function
 
   # @return Zeitwerk::Loader
@@ -73,7 +73,7 @@ module KeProject
     constructor: proc { |value| File.join(datadir, value) }
   # You can create configs that can be hooked into to control other behavior in
   #   your project. This one is used by the
-  #   `KeProject::RegistryData.register_type_prep_jobs` method.
+  #   `Omca::RegistryData.register_type_prep_jobs` method.
   setting :type_tables,
     default: {
       object_statuses: :status,
@@ -84,7 +84,7 @@ module KeProject
   # For instance, if locations have already been cleaned up, you can use the
   #   cleaned file as a source for a job, but if clean up has not been done,
   #   use the supplied legacy location file. See
-  #   `/lib/ke_project/everything_exploded.rb` for an example using this config
+  #   `/lib/omca/everything_exploded.rb` for an example using this config
   #   setting.
   setting :locations_cleaned, default: true, reader: true
 
@@ -95,7 +95,7 @@ module KeProject
   # - Because of how I want to specify my project :derived_dirs, I need to
   #   configure it first before using it as the :pre_job_task_directories
   #   setting value
-  # - `derived_dirs` is now a class method of the `KeProject` module
+  # - `derived_dirs` is now a class method of the `Omca` module
   # - I don't have to override all Kiba::Extend settings before setting
   #   project-specific configs
   Kiba::Extend.config.pre_job_task_run = true
@@ -111,23 +111,23 @@ module KeProject
   #   Thor task running will break.
   setting :registry, default: Kiba::Extend.registry, reader: true
   #
-  # Doing the following just lets us write `KeProject.delim` in our project
+  # Doing the following just lets us write `Omca.delim` in our project
   #   specific code, instead of `Kiba::Extend.delim`, while ensuring a
   #   consistent default :delim is used across the board.
   setting :delim, default: Kiba::Extend.delim, reader: true
 end
 
-KeProject.loader
+Omca.loader
 
 # The following line is necessary if you wish to use
 # `Kiba::Extend::Mixins::IterativeCleanup` in your project.
-Kiba::Extend.config.config_namespaces = [KeProject]
+Kiba::Extend.config.config_namespaces = [Omca]
 
 # This sets up your file registry. Dig into
-#   `lib/ke_project/registry_data.rb` for more details on this.
+#   `lib/omca/registry_data.rb` for more details on this.
 #
 # If you are not using IterativeCleanup in your project, this can go
-#   at the end of the main KeProject (or equivalent) module definition
+#   at the end of the main Omca (or equivalent) module definition
 #   (or it can stay here). However, if you are using IterativeCleanup,
 #   the following things need to happen in order: (1) Your client
 #   project gets loaded, which loads kiba-extend (and kiba-tms or any
@@ -137,15 +137,15 @@ Kiba::Extend.config.config_namespaces = [KeProject]
 #   entries are registered---those manually and programmatically
 #   defined in `RegistryData`, and those defined by IterativeCleanup
 #   mixin.
-KeProject::RegistryData.register
+Omca::RegistryData.register
 
 # # The following settings are actually set in
-# #   `lib/ke_project/places_cleanup.rb`,
+# #   `lib/omca/places_cleanup.rb`,
 # #   but are commented here to show an alternate place where you could set
 # #   them.
-# KeProject::PlacesCleanup.config.provided_worksheets = [
+# Omca::PlacesCleanup.config.provided_worksheets = [
 #   "places_cleanup_worksheet_1.csv"
 # ]
-# KeProject::PlacesCleanup.config.returned_files = [
+# Omca::PlacesCleanup.config.returned_files = [
 #   "places_cleanup_worksheet_done_1.csv"
 # ]

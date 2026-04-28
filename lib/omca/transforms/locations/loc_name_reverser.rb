@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject
+module Omca
   module Transforms
     module Locations
       # In real life, a transformation to reverse the contents of a field
@@ -27,7 +27,7 @@ module KeProject
       #   of examples.
       #
       # TEST YOUR TRANSFORMS!!
-      # See /spec/ke_project/transforms/locations/loc_name_reverser_spec.rb
+      # See /spec/omca/transforms/locations/loc_name_reverser_spec.rb
       class LocNameReverser
         def initialize(replace: true)
           @loc_name_field = :loc_name

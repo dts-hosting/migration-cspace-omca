@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject
+module Omca
   module Jobs
     module Locations
       module CleanRev
@@ -20,7 +20,7 @@ module KeProject
           Kiba.job_segment do
             transform Rename::Field, from: :loc_id, to: :location_id
             transform Delete::Fields, fields: %i[updated_date]
-            transform KeProject::Transforms::Locations::LocNameReverser,
+            transform Omca::Transforms::Locations::LocNameReverser,
               replace: false
           end
         end

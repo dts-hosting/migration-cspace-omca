@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject::Jobs::Places::PrepForCleanup
+module Omca::Jobs::Places::PrepForCleanup
   module_function
 
   def job
@@ -26,7 +26,7 @@ module KeProject::Jobs::Places::PrepForCleanup
       transform Clean::EnsureConsistentFields
       transform Fingerprint::Add,
         target: :fingerprint,
-        fields: KeProject::Places.fingerprint_fields
+        fields: Omca::Places.fingerprint_fields
       transform Delete::Fields,
         fields: :place
     end

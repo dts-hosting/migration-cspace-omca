@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject
+module Omca
   module Jobs
     module TypePrep
       module_function

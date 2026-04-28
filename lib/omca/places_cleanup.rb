@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject::PlacesCleanup
+module Omca::PlacesCleanup
   module_function
 
   extend Dry::Configurable
@@ -8,7 +8,7 @@ module KeProject::PlacesCleanup
   setting :base_job, default: :places__prep_for_cleanup, reader: true
 
   def fingerprint_fields
-    KeProject::Places.fingerprint_fields -
+    Omca::Places.fingerprint_fields -
       [:place] +
       worksheet_add_fields
   end
@@ -41,11 +41,11 @@ end
 #   outside* the body of the module definition.
 #
 # If I want to see all my project config in one place, I can set these from the
-#   end of `lib/ke_project.rb`. If it makes more sense to me to handle all the
+#   end of `lib/omca.rb`. If it makes more sense to me to handle all the
 #   config/settings for place cleanup in this file, I can set them here.
-KeProject::PlacesCleanup.config.provided_worksheets = [
+Omca::PlacesCleanup.config.provided_worksheets = [
   "places_cleanup_worksheet_1.csv"
 ]
-KeProject::PlacesCleanup.config.returned_files = [
+Omca::PlacesCleanup.config.returned_files = [
   "places_cleanup_worksheet_done_1.csv"
 ]

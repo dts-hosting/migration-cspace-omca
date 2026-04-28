@@ -2,7 +2,7 @@
 
 require "date"
 
-module KeProject
+module Omca
   module EverythingExploded
     module_function
 
@@ -62,7 +62,7 @@ module KeProject
 
     # Illustrates conditionally setting source
     def source
-      if KeProject.registry.key?(:pre_prepped_objects)
+      if Omca.registry.key?(:pre_prepped_objects)
         :pre_prepped_objects
       else
         :orig__objects
@@ -71,10 +71,10 @@ module KeProject
 
     def lookups
       base = []
-      base << KeProject.type_tables
+      base << Omca.type_tables
         .keys
         .map { |tt| :"type__#{tt}" }
-        .select { |key| KeProject.registry.key?(key) }
+        .select { |key| Omca.registry.key?(key) }
       base.flatten
     end
 
@@ -118,13 +118,13 @@ module KeProject
       bind = binding
 
       Kiba.job_segment do
-        job_def = bind.receiver # returns KeProject::EverythingExploded module
+        job_def = bind.receiver # returns Omca::EverythingExploded module
 
         get_today = -> { Date.today.to_s }
 
         transform Merge::ConstantValues, constantmap: {
           update_date: get_today.call,
-          last_week: KeProject::EverythingExploded.get_last_week,
+          last_week: Omca::EverythingExploded.get_last_week,
           prev_date: job_def.send(:get_yesterday)
         }
 
@@ -139,7 +139,7 @@ module KeProject
           table = lkup.to_s
             .delete_prefix("type__")
             .to_sym
-          valfield = KeProject.type_tables[table]
+          valfield = Omca.type_tables[table]
           idfield = :"#{valfield}id"
           transform Merge::MultiRowLookup,
             lookup: send(lkup),

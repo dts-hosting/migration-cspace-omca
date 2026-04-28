@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject
+module Omca
   # Central place to register the expected jobs/files used and produced by your
   #   project
   #
@@ -8,7 +8,7 @@ module KeProject
   module RegistryData
     module_function
 
-    # This is what is called from your `lib/ke_project.rb` file
+    # This is what is called from your `lib/omca.rb` file
     def register
       # This demonstrates one relatively simple way to automatically create
       #   registry entries for all .csv files in a given directory
@@ -18,7 +18,7 @@ module KeProject
       #
       # If you are NOT doing anything fancy, you can take this line out.
       register_dir_files(
-        dir: File.join(KeProject.datadir, "source_system_data"), ns: "orig"
+        dir: File.join(Omca.datadir, "source_system_data"), ns: "orig"
       )
 
       # If the files, jobs, and transformations all follow a pattern, you can do
@@ -50,19 +50,19 @@ module KeProject
       #
       # If you needed to tweak the Kiba::Extend::Registry::FileRegistryEntry
       #   objects after transforming your registry hashes, before the Registry
-      #   is made immutable, you can skip calling `KeProject.registry.finalize`
+      #   is made immutable, you can skip calling `Omca.registry.finalize`
       #   and instead do:
       #
       # ```
-      # KeProject.registry.transform
+      # Omca.registry.transform
       # *your custom code here*
-      # KeProject.registry.freeze
+      # Omca.registry.freeze
       # ```
       #
       # It is probably less trouble, however, to tweak the file registry entry
       #   hashes before they are converted into
       #   Kiba::Extend::Registry::FileRegistryEntry objects. You would do that
-      #   by interacting with KeProject.registry before calling `:finalize` or
+      #   by interacting with Omca.registry before calling `:finalize` or
       #   `:transform` on it.
       #
       # If you need to redefine aspects of
@@ -70,13 +70,13 @@ module KeProject
       #   jobs/dependencies, theoretically you can do that if you do not freeze
       #   the registry. I have not ever needed to do this, so I don't have
       #   patterns for it or know what the fuller implications might be.
-      KeProject.registry.finalize
+      Omca.registry.finalize
     end
 
     # Because these are supplied, not derived by the project, they do not need
     #   `creator` attributes defined.
     def register_dir_files(dir:, ns:)
-      KeProject.registry.namespace(ns) do
+      Omca.registry.namespace(ns) do
         Dir.children(dir).select do |file|
           File.extname(file) == ".csv"
         end.each do |csvfile|
@@ -95,9 +95,9 @@ module KeProject
     def typetable_reg_entry_hash(typetable, field)
       source_key = :"orig__#{typetable}"
       {
-        creator: {callee: KeProject::Jobs::TypePrep,
+        creator: {callee: Omca::Jobs::TypePrep,
                   args: {source: source_key, valfield: field}},
-        path: File.join(KeProject.datadir, "working", "#{typetable}.csv"),
+        path: File.join(Omca.datadir, "working", "#{typetable}.csv"),
         tags: [:typetables, typetable],
         lookup_on: :"#{field}id"
       }
@@ -106,8 +106,8 @@ module KeProject
 
     def register_type_prep_jobs
       bind = binding
-      KeProject.registry.namespace("type") do
-        KeProject.type_tables.each do |typetable, field|
+      Omca.registry.namespace("type") do
+        Omca.type_tables.each do |typetable, field|
           # Even though :typetable_reg_entry_hash is defined immediately above,
           #   the fact is is called here nested within two `do` blocks means it
           #   is called from an unexpected scope and would fail with a method
@@ -120,12 +120,12 @@ module KeProject
           # Because `:typetable_reg_entry_hash` is set as a private method, it
           #   will also fail with a private method called error if we do the
           #   following, since the scope it is being called from is outside
-          #   the `KeProject::RegistryData` module (a module sort of equals a
+          #   the `Omca::RegistryData` module (a module sort of equals a
           #   class in some ways in Ruby, but explaining that further is really
           #   going in the weeds):
           #
           # ```
-          # KeProject::RegistryData.typetable_reg_entry_hash(typetable, field)
+          # Omca::RegistryData.typetable_reg_entry_hash(typetable, field)
           # ```
           #
           # Instead we set/pass in a Binding object in the
@@ -170,10 +170,10 @@ module KeProject
       #
       # I would NOT advise using this as a pattern for setting your own jobs up,
       #   but hopefully it clarifies what the pieces are and how they relate.
-      KeProject.registry.register :prep_objects, {
-        path: File.join(KeProject.datadir, "working",
+      Omca.registry.register :prep_objects, {
+        path: File.join(Omca.datadir, "working",
           "initially_processed_objects.csv"),
-        creator: KeProject::EverythingExploded.method(:i_am_the_creator_method),
+        creator: Omca::EverythingExploded.method(:i_am_the_creator_method),
         desc: "Final location authority records for import into target system",
         tags: %i[importable authority location]
       }
@@ -190,18 +190,18 @@ module KeProject
       #
       # These jobs do exactly what the jobs in the previous namespace do. They
       #   just demonstrate another way to structure your code.
-      KeProject.registry.namespace("locations") do
+      Omca.registry.namespace("locations") do
         register :clean, {
-          path: File.join(KeProject.datadir, "working", "loc_clean.csv"),
-          creator: KeProject::Jobs::Locations::Clean,
+          path: File.join(Omca.datadir, "working", "loc_clean.csv"),
+          creator: Omca::Jobs::Locations::Clean,
           desc: "Location values from source system, cleaned up for further "\
             "mapping",
           tags: %i[authority location]
         }
         register :clean_rev, {
-          path: File.join(KeProject.datadir, "working",
+          path: File.join(Omca.datadir, "working",
             "loc_clean_and_reversed.csv"),
-          creator: KeProject::Jobs::Locations::CleanRev,
+          creator: Omca::Jobs::Locations::CleanRev,
           lookup_on: :location_id,
           desc: "Location values from source system, cleaned up for further "\
             "mapping",
@@ -214,9 +214,9 @@ module KeProject
         # This job outputs to a different destination type, so we need to tell
         #   it what destination class to use
         register :to_json, {
-          path: File.join(KeProject.datadir, "endpoint", "locations.json"),
+          path: File.join(Omca.datadir, "endpoint", "locations.json"),
           dest_class: Kiba::Extend::Destinations::JsonArray,
-          creator: KeProject::Jobs::Locations::ToJson,
+          creator: Omca::Jobs::Locations::ToJson,
           desc: "Version of final locations in JSON",
           tags: %i[json authority location]
         }
@@ -224,12 +224,12 @@ module KeProject
 
       # This namespace registers a job which is used as
       #   the base job for an iterative cleanup process defined in
-      #   `lib/ke_project/places_cleanup.rb`
-      KeProject.registry.namespace("places") do
+      #   `lib/omca/places_cleanup.rb`
+      Omca.registry.namespace("places") do
         register :prep_for_cleanup, {
-          path: File.join(KeProject.datadir, "working",
+          path: File.join(Omca.datadir, "working",
             "places_prep_for_cleanup.csv"),
-          creator: KeProject::Jobs::Places::PrepForCleanup,
+          creator: Omca::Jobs::Places::PrepForCleanup,
           tags: %i[authority place]
         }
       end

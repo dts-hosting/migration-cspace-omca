@@ -12,7 +12,7 @@ end.each do |rbfile|
   require rbfile
 end
 
-require_relative "../lib/ke_project"
+require_relative "../lib/omca"
 
 # A custom rspec matcher to compare expected and given CSVs and provide a usable
 #   diff. Use this if you are testing the output of a job. See example of use in
@@ -20,7 +20,7 @@ require_relative "../lib/ke_project"
 require "rspec/custom/matchers/match_csv"
 
 RSpec.configure do |config|
-  config.extend KeProject
+  config.extend Omca
   config.include Helpers
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

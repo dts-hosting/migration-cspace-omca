@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module KeProject::Places
+module Omca::Places
   module_function
 
   extend Dry::Configurable
