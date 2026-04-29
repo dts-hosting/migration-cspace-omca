@@ -12,7 +12,7 @@ module Omca
           tbl.*
           from #{table_name} tbl
           inner join misc on tbl.id = misc.id and
-            misc.lifecyclestate != 'deleted',
+            misc.lifecyclestate != 'deleted'
           inner join hierarchy hier on tbl.id = hier.id
         SQL
       end
