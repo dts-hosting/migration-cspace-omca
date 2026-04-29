@@ -58,6 +58,14 @@ class Db < Thor
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
 
+  desc "blobs", "Write main blobs table to `main_rectype` dir "\
+    "as CSV"
+  def blobs
+    path = File.join(Omca.datadir, "main_rectype", "blobs_common.csv")
+    query = Omca::Db::Queries.blobs
+    Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
   no_commands do
     def caller(tables:, table_type:, query_meth:)
       results = {}

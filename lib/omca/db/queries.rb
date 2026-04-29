@@ -86,6 +86,38 @@ module Omca
           inner join collectionspace_core cc on cc.id = ahier.id
         SQL
       end
+
+      def blobs
+        <<~SQL
+          with media as (
+          select
+          'media' as mediatype,
+          mch.name as mediacsid,
+          mc.blobcsid
+          from media_common mc
+          inner join misc on mc.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          inner join hierarchy mch on mch.id = mc.id
+
+          union
+
+          select
+          'restrictedmedia' as mediatype,
+          rmch.name as mediacsid,
+          rmc.blobcsid
+          from restrictedmedia_common rmc
+          inner join misc on rmc.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          inner join hierarchy rmch on rmch.id = rmc.id
+          )
+
+          select media.*, bc.*
+          from media
+          inner join hierarchy hier on media.blobcsid = hier.name
+          inner join blobs_common bc on hier.id = bc.id
+          order by mediacsid
+        SQL
+      end
     end
   end
 end
