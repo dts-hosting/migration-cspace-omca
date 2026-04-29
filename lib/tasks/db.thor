@@ -40,6 +40,16 @@ class Db < Thor
     )
   end
 
+  desc "subgroup_tables", "Write repeatable field subgroup tables "\
+    "to `field_subgroups` dir as CSV"
+  def subgroup_tables
+    caller(
+      tables: Omca::Mappings.subgroup_tables,
+      table_type: "field_subgroups",
+      query_meth: :subgroup_table
+    )
+  end
+
   no_commands do
     def caller(tables:, table_type:, query_meth:)
       results = {}
