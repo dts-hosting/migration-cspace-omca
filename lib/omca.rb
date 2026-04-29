@@ -55,6 +55,10 @@ module Omca
   setting :registry, default: Kiba::Extend.registry, reader: true
   setting :delim, default: Kiba::Extend.delim, reader: true
 
+  setting :mappings_path,
+    reader: true,
+    default: File.join(datadir, "OMCA_mappings.xlsx")
+
   def connection = @connection
 
   # @param connection_obj [PG::Connection]
