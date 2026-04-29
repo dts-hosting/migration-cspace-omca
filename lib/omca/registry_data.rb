@@ -7,7 +7,7 @@ module Omca
 
     def register
       register_dir_files(
-        dir: File.join(Omca.datadir, "orig"), ns: "orig"
+        dir: File.join(Omca.datadir, "main_rectype"), ns: "main_rectype"
       )
 
       register_files
