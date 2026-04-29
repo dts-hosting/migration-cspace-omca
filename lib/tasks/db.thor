@@ -50,6 +50,14 @@ class Db < Thor
     )
   end
 
+  desc "contacts", "Write main contacts table to `main_rectype` dir "\
+    "as CSV"
+  def contacts
+    path = File.join(Omca.datadir, "main_rectype", "contacts_common.csv")
+    query = Omca::Db::Queries.contacts
+    Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
   no_commands do
     def caller(tables:, table_type:, query_meth:)
       results = {}

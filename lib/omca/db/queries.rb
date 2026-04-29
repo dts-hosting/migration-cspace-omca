@@ -69,6 +69,23 @@ module Omca
           order by phier.name, sghier.pos
         SQL
       end
+
+      def contacts
+        <<~SQL
+          select
+          chier.name AS contactcsid,
+          ahier.name AS termcsid,
+          cc.uri AS termuri,
+          ahier.id AS term_db_id,
+          tbl.*
+          from contacts_common tbl
+          inner join misc on tbl.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          inner join hierarchy chier on tbl.id = chier.id
+          inner join hierarchy ahier on tbl.initem = ahier.name
+          inner join collectionspace_core cc on cc.id = ahier.id
+        SQL
+      end
     end
   end
 end
