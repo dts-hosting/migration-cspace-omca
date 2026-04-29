@@ -59,6 +59,18 @@ module Omca
     reader: true,
     default: File.join(datadir, "OMCA_mappings.xlsx")
 
+  setting :mappers_dir,
+    reader: true,
+    default: File.expand_path(
+      File.join("~", "code", "cs", "untangler", "data", "mappers",
+        "community_profiles", "release_8_3", "anthro")
+    )
+
+  # @return [Symbol] field containing migrating human-readable record ids
+  setting :ingestid_field,
+    reader: true,
+    default: :ingestid
+
   def connection = @connection
 
   # @param connection_obj [PG::Connection]

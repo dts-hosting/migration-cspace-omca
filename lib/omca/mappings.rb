@@ -27,6 +27,15 @@ module Omca
                                    end
                                      .to_h
 
+    def rectypes = @rectypes ||= main_tables_by_rectype.keys
+
+    # @return [Hash] keys are main table names; values are rectypes
+    def rectypes_by_main_table = @rectypes_by_main_table ||=
+                                   main_table_rows.map do |row|
+                                     [row["table_name"], row["rectype"]]
+                                   end
+                                     .to_h
+
     def repeating_field_tables = @repeating_field_tables ||=
                                    db_tables_sheet.select do |row|
                                      row["table_type"] == "repeatable field"

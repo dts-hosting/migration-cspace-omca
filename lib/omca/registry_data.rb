@@ -13,6 +13,8 @@ module Omca
         )
       end
 
+      register_obj_and_procedure_preprocess_jobs
+
       register_files
 
       # This needs to be added if you are using the IterativeCleanup mixin
@@ -23,8 +25,6 @@ module Omca
       Omca.registry.finalize
     end
 
-    # Because these are supplied, not derived by the project, they do not need
-    #   `creator` attributes defined.
     def register_dir_files(dir:, ns:)
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
 
@@ -37,7 +37,7 @@ module Omca
           register key, {
             path: File.join(dir, csvfile),
             supplied: true,
-            tags: [key, ns.to_sym]
+            tags: [key, ns.to_sym, :orig]
           }
         end
       end
@@ -48,5 +48,39 @@ module Omca
       # placeholder
     end
     private_class_method :register_files
+
+    def register_obj_and_procedure_preprocess_jobs
+      ns = "preprocess_obj_proc"
+
+      entries = Omca::Mappers.obj_and_procedures.keys
+        .map do |rectype|
+          table = Omca::Mappings.main_tables_by_rectype[rectype]
+
+          args = {
+            source: :"main_rectype__#{table}",
+            dest: :"#{ns}__#{rectype}",
+            rectype: rectype
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "preprocess", "#{rectype}.csv"),
+            creator: {
+              callee: Omca::Jobs::PreprocessObjProc,
+              args: args
+            },
+            tags: [:preprocess, table.to_sym, rectype.to_sym],
+            dest_special_opts: {
+              initial_headers: [Omca.ingestid_field]
+            }
+          }
+
+          [rectype.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_obj_and_procedure_preprocess_jobs
   end
 end
