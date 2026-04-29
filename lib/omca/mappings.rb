@@ -35,6 +35,20 @@ module Omca
                                        [r["table_name"],
                                          main_tables_by_rectype[r["rectype"]]]
                                    end
-                                     .to_h
+
+    def addtl_fields_tables = @addtl_fields_tables ||=
+                                db_tables_sheet.select do |row|
+                                  row["table_type"] == "additional fields"
+                                end
+                                  .map do |r|
+                                    [r["table_name"],
+                                      main_tables_by_rectype[r["rectype"]]]
+                                  end
+
+    def group_tables = @group_tables ||=
+                         db_tables_sheet.select do |row|
+                           row["table_type"] == "group"
+                         end
+                           .map { |r| r["table_name"] }
   end
 end

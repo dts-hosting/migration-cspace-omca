@@ -6,9 +6,11 @@ module Omca
     module_function
 
     def register
-      register_dir_files(
-        dir: File.join(Omca.datadir, "main_rectype"), ns: "main_rectype"
-      )
+      %w[main_rectype repeating addtl_fields field_groups].each do |val|
+        register_dir_files(
+          dir: File.join(Omca.datadir, val), ns: val
+        )
+      end
 
       register_files
 

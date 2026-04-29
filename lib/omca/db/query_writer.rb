@@ -14,14 +14,20 @@ module Omca
       end
 
       def call
+        ct = results.num_tuples
+        return ct if ct == 0
+
         CSV.open(
           path,
           "w",
           headers: headers,
           write_headers: true
         ) do |csv|
+          puts "  Writing #{ct} rows"
           results.each { |row| csv << row.values_at(*headers) }
         end
+
+        ct
       end
 
       private
