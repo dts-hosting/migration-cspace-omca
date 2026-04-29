@@ -23,6 +23,8 @@ module Omca
     # Because these are supplied, not derived by the project, they do not need
     #   `creator` attributes defined.
     def register_dir_files(dir:, ns:)
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+
       Omca.registry.namespace(ns) do
         Dir.children(dir).select do |file|
           File.extname(file) == ".csv"
