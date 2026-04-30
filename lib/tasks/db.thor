@@ -40,6 +40,16 @@ class Db < Thor
     )
   end
 
+  desc "repeatable_in_group_tables", "Write repeatable field group tables "\
+    "to `field_groups` dir as CSV"
+  def repeatable_in_group_tables
+    caller(
+      tables: Omca::Mappings.repeatable_in_group_tables,
+      table_type: "repeatable_in_group",
+      query_meth: :repeatable_in_group_table
+    )
+  end
+
   desc "subgroup_tables", "Write repeatable field subgroup tables "\
     "to `field_subgroups` dir as CSV"
   def subgroup_tables
@@ -53,7 +63,7 @@ class Db < Thor
   desc "contacts", "Write main contacts table to `main_rectype` dir "\
     "as CSV"
   def contacts
-    path = File.join(Omca.datadir, "main_rectype", "contacts_common.csv")
+    path = File.join(Omca.datadir, "subrecord", "contacts_common.csv")
     query = Omca::Db::Queries.contacts
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
@@ -61,7 +71,7 @@ class Db < Thor
   desc "blobs", "Write main blobs table to `main_rectype` dir "\
     "as CSV"
   def blobs
-    path = File.join(Omca.datadir, "main_rectype", "blobs_common.csv")
+    path = File.join(Omca.datadir, "subrecord", "blobs_common.csv")
     query = Omca::Db::Queries.blobs
     Omca::Db::QueryWriter.call(query: query, path: path)
   end

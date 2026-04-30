@@ -54,6 +54,23 @@ module Omca
         SQL
       end
 
+      def repeatable_in_group_table(table)
+        <<~SQL
+          select
+          rechier.name as recordcsid,
+          rechier.id as recordid,
+          ghier.id as groupid,
+          tbl.*
+          from #{table} tbl
+          inner join hierarchy ghier on tbl.id = ghier.id
+          inner join hierarchy rechier on ghier.parentid = rechier.id
+          inner join misc on rechier.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          where tbl.item is not null
+          order by tbl.id, tbl.pos
+        SQL
+      end
+
       def subgroup_table(table)
         <<~SQL
           SELECT phier.name as recordcsid,

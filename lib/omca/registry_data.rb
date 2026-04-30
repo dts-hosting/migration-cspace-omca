@@ -7,7 +7,7 @@ module Omca
 
     def register
       %w[main_rectype repeating addtl_fields field_groups
-        field_subgroups].each do |val|
+        field_subgroups subrecord repeatable_in_group].each do |val|
         register_dir_files(
           dir: File.join(Omca.datadir, val), ns: val
         )
@@ -68,7 +68,7 @@ module Omca
               callee: Omca::Jobs::PreprocessObjProc,
               args: args
             },
-            tags: [:preprocess, table.to_sym, rectype.to_sym],
+            tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym],
             dest_special_opts: {
               initial_headers: [Omca.ingestid_field]
             }

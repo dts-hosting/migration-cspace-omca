@@ -61,6 +61,13 @@ module Omca
                          end
                            .map { |r| r["table_name"] }
 
+    def repeatable_in_group_tables = @repeatable_in_group_tables ||=
+                                       db_tables_sheet.select do |row|
+                                         row["table_type"] ==
+                                           "repeatable in group"
+                                       end
+                                         .map { |r| r["table_name"] }
+
     def subgroup_tables = @subgroup_tables ||=
                             db_tables_sheet.select do |row|
                               row["table_type"].start_with?("subgroup")
