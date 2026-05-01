@@ -76,6 +76,18 @@ class Db < Thor
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
 
+  desc "structured_dates", "Writes structured date data to "\
+    "`structured_dates` dir as CSV"
+  def structured_dates
+    path = File.join(Omca.datadir, "structured_dates", "nested.csv")
+    query = Omca::Db::Queries.nested_structured_dates
+    Omca::Db::QueryWriter.call(query: query, path: path)
+
+    path = File.join(Omca.datadir, "structured_dates", "top.csv")
+    query = Omca::Db::Queries.top_level_structured_dates
+    Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
   no_commands do
     def caller(tables:, table_type:, query_meth:)
       results = {}

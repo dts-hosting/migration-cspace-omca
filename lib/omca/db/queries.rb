@@ -87,6 +87,88 @@ module Omca
         SQL
       end
 
+      def top_level_structured_dates
+        <<~SQL
+          (
+          select
+          'structureddategroup' as dbtable,
+          substring(
+                      dhier.name for (position(':' in dhier.name) - 1)
+                    ) as main_table,
+          substring(
+                      dhier.name from (position(':' in dhier.name) + 1)
+                    ) as primarytype,
+          rhier.name as parentcsid,
+          dhier.pos,
+          tbl.*
+          from structureddategroup tbl
+          inner join hierarchy dhier on dhier.id = tbl.id
+          inner join hierarchy rhier on dhier.parentid = rhier.id
+          inner join misc on rhier.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          where position(':' in dhier.name) > 0
+          ) union (
+          select
+          'dategroup' as dbtable,
+          substring(
+                      dhier.name for (position(':' in dhier.name) - 1)
+                    ) as main_table,
+          substring(
+                      dhier.name from (position(':' in dhier.name) + 1)
+                    ) as primarytype,
+          rhier.name as parentcsid,
+          dhier.pos,
+          tbl.*
+          from dategroup tbl
+          inner join hierarchy dhier on dhier.id = tbl.id
+          inner join hierarchy rhier on dhier.parentid = rhier.id
+          inner join misc on rhier.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          where position(':' in dhier.name) > 0
+          )
+        SQL
+      end
+
+      def nested_structured_dates
+        <<~SQL
+          (
+          select
+          'structureddategroup' as dbtable,
+          substring(
+            dghier.name for (position(':' in dghier.name) - 1)
+          ) as main_table,
+          dghier.primarytype,
+          rhier.name as parentcsid,
+          dghier.id as groupid,
+          tbl.*
+          from structureddategroup tbl
+          inner join hierarchy dhier on dhier.id = tbl.id
+          inner join hierarchy dghier on dhier.parentid = dghier.id
+          inner join hierarchy rhier on dghier.parentid = rhier.id
+          inner join misc on misc.id = rhier.id and
+            misc.lifecyclestate != 'deleted'
+          where position(':' in dghier.name) > 0
+          ) union (
+          select
+          'dategroup' as dbtable,
+          substring(
+            dghier.name for (position(':' in dghier.name) - 1)
+          ) as main_table,
+          dghier.primarytype,
+          rhier.name as parentcsid,
+          dghier.id as groupid,
+          tbl.*
+          from dategroup tbl
+          inner join hierarchy dhier on dhier.id = tbl.id
+          inner join hierarchy dghier on dhier.parentid = dghier.id
+          inner join hierarchy rhier on dghier.parentid = rhier.id
+          inner join misc on misc.id = rhier.id and
+            misc.lifecyclestate != 'deleted'
+          where position(':' in dghier.name) > 0
+          )
+        SQL
+      end
+
       def contacts
         <<~SQL
           select
