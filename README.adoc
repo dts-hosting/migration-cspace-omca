@@ -69,6 +69,19 @@ These tables are categorized by the pattern of how the data in them gets merged 
 addtl_fields_tables:: One row per main table row; Adds single-valued, standalone fields to core; *All are custom to OMCA, and will need remapping according to specifications prepared by Jessi/Jadeen/OMCA.
 repeating_field_tables:: One or more rows per main table row; Data from standalone multi-valued fields, such as a list of inventory statuses. Position of each value is indicated. Null `item` values removed.
 group_tables:: One or more rows per main table; Data from repeatable groupings of fields, or "field blocks"; Position of each block is indicated.
+repeatable_in_group_tables:: One or more rows per group table row; Data from repeatable single field _inside a repeatable field block_; Positionality in play
 subgroup_tables:: One or more rows per group_table row; Data from repeatable a repeatable field block inside another repeatable field block; Position of each block is indicated.
+structured_dates:: Combined data from `dategroup` and `structureddategroup` tables, in two files based on whether the date is top-level in record, or nested inside a field group; Both of these extracted tables have multiple target record types and different target date fields within those.
 
 === Preprocess
+
+All tables get the following transforms applied:
+
+* Delete empty fields
+
+Per-table category preprocessing:
+
+* Main record types that are authorities
+** Extract the preferred term from `refname` value to `ingestid` field
+* All main record types
+** Disambiguate duplicate `ingestid` values
