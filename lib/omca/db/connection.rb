@@ -30,7 +30,7 @@ module Omca
     class Connection
       CREDS = {
         host: "localhost",
-        port: 5432,
+        port: 5433,
         dbname: "omca_domain_omca",
         user: "kristina",
         password: nil
