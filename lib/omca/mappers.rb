@@ -48,6 +48,13 @@ module Omca
         mappers.select { |k, _v| obj_or_procedure?(k) }
     end
 
+    # @param str [String] main table name, like "collectionobjects_common"
+    # @return field [Symbol] human readable id field for record type
+    def id_field_for_table(str)
+      rectype = Omca::Mappings.rectypes_by_main_table[str]
+      id_field_lookup[rectype]
+    end
+
     def id_field_lookup
       return @id_field_lookup if instance_variable_defined?(:@id_field_lookup)
 
