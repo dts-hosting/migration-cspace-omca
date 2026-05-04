@@ -2,6 +2,9 @@
 
 source "https://rubygems.org"
 
+gem "collectionspace-client",
+  github: "collectionspace/collectionspace-client",
+  branch: "main"
 gem "kiba-extend", github: "lyrasis/kiba-extend", branch: "main"
 gem "pg"
 gem "roo"
