@@ -14,7 +14,7 @@ module Omca
         )
       end
 
-      register_obj_and_procedure_preprocess_jobs
+      register_main_preprocess_jobs
 
       register_files
 
@@ -50,10 +50,11 @@ module Omca
     end
     private_class_method :register_files
 
-    def register_obj_and_procedure_preprocess_jobs
-      ns = "preprocess_obj_proc"
+    def register_main_preprocess_jobs
+      ns = "main_preprocess"
 
-      entries = Omca::Mappers.obj_and_procedures.keys
+      entries = (Omca::Mappers.obj_and_procedures.keys +
+                 Omca::Mappers.authorities.keys).sort
         .map do |rectype|
           table = Omca::Mappings.main_tables_by_rectype[rectype]
 
@@ -66,7 +67,7 @@ module Omca
           entry = {
             path: File.join(Omca.datadir, "preprocess", "#{rectype}.csv"),
             creator: {
-              callee: Omca::Jobs::PreprocessObjProc,
+              callee: Omca::Jobs::MainPreprocess,
               args: args
             },
             tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym],
@@ -82,6 +83,6 @@ module Omca
         entries.each { |entry| register entry[0], entry[1] }
       end
     end
-    private_class_method :register_obj_and_procedure_preprocess_jobs
+    private_class_method :register_main_preprocess_jobs
   end
 end

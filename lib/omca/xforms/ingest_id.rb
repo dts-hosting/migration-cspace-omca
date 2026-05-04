@@ -8,33 +8,34 @@ module Omca
         @target = Omca.ingestid_field
         @idfield = Omca::Mappers.id_field_lookup[rectype]
         fail("No id field for #{rectype}") unless @idfield
-        @rows = {}
       end
 
       def process(row)
-        existing_id = row[idfield]
-        row[target] = existing_id
-        rows[existing_id] = [] unless rows.key?(existing_id)
-        rows[existing_id] << row
+        row[target] = row[idfield]
 
-        nil
-      end
-
-      def close
-        rows.each do |id, arr|
-          if arr.length == 1
-            yield arr.first
-          else
-            Omca::Util::IdDisambiguator.new(arr)
-              .call
-              .each { |row| yield row }
-          end
-        end
+        row
       end
 
       private
 
-      attr_reader :rectype, :target, :rows, :idfield
+      attr_reader :rectype, :target, :idfield
     end
   end
 end
+
+# rows[existing_id] = [] unless rows.key?(existing_id)
+# rows[existing_id] << row
+
+# nil
+
+# def close
+#   rows.each do |id, arr|
+#     if arr.length == 1
+#       yield arr.first
+#     else
+#       Omca::Util::IdDisambiguator.new(arr)
+#         .call
+#         .each { |row| yield row }
+#     end
+#   end
+# end

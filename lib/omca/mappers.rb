@@ -60,10 +60,22 @@ module Omca
 
       @id_field_lookup = mappers.map do |k, v|
         next if relation?(k)
-        next [k, :preferredterm] if authority?(k)
+        next [k, Omca.ingestid_field] if authority?(k)
 
         [k, v.dig(:config, :identifier_field).downcase.to_sym]
       end.compact.to_h
+    end
+
+    # @param rectype [String]
+    # @return [String] name of table in which to look up preferred term
+    def term_table_for(rectype)
+      return unless authority?(rectype)
+
+      mappers[rectype].dig(:config, :search_field)
+        .split("/")
+        .first
+        .downcase
+        .delete_suffix("list")
     end
   end
 end

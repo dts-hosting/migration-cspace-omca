@@ -2,11 +2,12 @@
 
 module Omca
   module Jobs
-    module PreprocessObjProc
+    module MainPreprocess
       module_function
 
       # @param sources [Array<Symbol>]
       # @param dest [Symbol]
+      # @param rectype [String]
       def job(source:, dest:, rectype:)
         Kiba::Extend::Jobs::Job.new(
           files: {
@@ -19,8 +20,17 @@ module Omca
 
       def xforms(rectype)
         Kiba.job_segment do
-          transform Omca::Xforms::IngestId,
-            rectype: rectype
+          transform Delete::EmptyFields, report: true
+
+          if Omca::Mappers.authority?(rectype)
+            transform Omca::Xforms::MergePreferredTerm,
+              rectype: rectype
+          else
+            transform Omca::Xforms::IngestId,
+              rectype: rectype
+          end
+
+          transform Omca::Xforms::DisambiguateIngestId
         end
       end
     end
