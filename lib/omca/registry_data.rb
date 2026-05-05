@@ -12,7 +12,7 @@ module Omca
         )
       end
 
-      register_main_preprocess_jobs
+      register_preprocess_main_jobs
 
       register_files
 
@@ -48,8 +48,8 @@ module Omca
     end
     private_class_method :register_files
 
-    def register_main_preprocess_jobs
-      ns = "main_preprocess"
+    def register_preprocess_main_jobs
+      ns = "preprocess_main"
 
       entries = (Omca::Mappers.obj_and_procedures.keys +
                  Omca::Mappers.authorities.keys).sort
@@ -81,6 +81,6 @@ module Omca
         entries.each { |entry| register entry[0], entry[1] }
       end
     end
-    private_class_method :register_main_preprocess_jobs
+    private_class_method :register_preprocess_main_jobs
   end
 end
