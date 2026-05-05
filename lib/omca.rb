@@ -16,6 +16,7 @@ module Omca
   # Creates Zeitwerk::Loader, making it reloadable
   private def setup_loader
     @loader = Zeitwerk::Loader.for_gem
+    @loader.collapse(File.join(__dir__, "omca", "config"))
     @loader.enable_reloading
     @loader.setup
     @loader.eager_load
