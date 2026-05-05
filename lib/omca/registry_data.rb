@@ -6,11 +6,9 @@ module Omca
     module_function
 
     def register
-      %w[main_rectype repeating addtl_fields field_groups
-        field_subgroups subrecord repeatable_in_group
-        structured_dates].each do |val|
+      Dir.children(File.join(Omca.datadir, "orig")).each do |val|
         register_dir_files(
-          dir: File.join(Omca.datadir, val), ns: val
+          dir: File.join(Omca.datadir, "orig", val), ns: val
         )
       end
 

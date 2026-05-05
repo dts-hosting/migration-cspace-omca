@@ -35,6 +35,8 @@ module Omca
       File.join("~", "data", "omca", "mig")
     )
 
+  def orig_dirs = Dir.children(File.join(datadir, "orig"))
+
   # If I want to be lazy I can define this to avoid typing out full directory
   #   paths. It also makes a nice example for using a constructor:
   setting :derived_dirs,

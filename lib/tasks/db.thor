@@ -63,7 +63,7 @@ class Db < Thor
   desc "contacts", "Write main contacts table to `main_rectype` dir "\
     "as CSV"
   def contacts
-    path = File.join(Omca.datadir, "subrecord", "contacts_common.csv")
+    path = File.join(Omca.datadir, "orig", "subrecord", "contacts_common.csv")
     query = Omca::Db::Queries.contacts
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
@@ -71,7 +71,7 @@ class Db < Thor
   desc "blobs", "Write main blobs table to `main_rectype` dir "\
     "as CSV"
   def blobs
-    path = File.join(Omca.datadir, "subrecord", "blobs_common.csv")
+    path = File.join(Omca.datadir, "orig", "subrecord", "blobs_common.csv")
     query = Omca::Db::Queries.blobs
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
@@ -79,11 +79,11 @@ class Db < Thor
   desc "structured_dates", "Writes structured date data to "\
     "`structured_dates` dir as CSV"
   def structured_dates
-    path = File.join(Omca.datadir, "structured_dates", "nested.csv")
+    path = File.join(Omca.datadir, "orig", "structured_dates", "nested.csv")
     query = Omca::Db::Queries.nested_structured_dates
     Omca::Db::QueryWriter.call(query: query, path: path)
 
-    path = File.join(Omca.datadir, "structured_dates", "top.csv")
+    path = File.join(Omca.datadir, "orig", "structured_dates", "top.csv")
     query = Omca::Db::Queries.top_level_structured_dates
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
@@ -98,7 +98,7 @@ class Db < Thor
         table = args[0]
         queryargs = args.compact
 
-        path = File.join(Omca.datadir, type, "#{table}.csv")
+        path = File.join(Omca.datadir, "orig", type, "#{table}.csv")
         query = Omca::Db::Queries.send(query_meth, *queryargs)
         puts "Querying #{table}"
         results[table] = Omca::Db::QueryWriter.call(query: query, path: path)
