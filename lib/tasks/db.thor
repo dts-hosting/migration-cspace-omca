@@ -149,6 +149,12 @@ class Db < Thor
       end
     end
 
+    def csv_headers(path)
+      File.new(path).readline
+        .chomp
+        .split(",")
+    end
+
     def extract_from_file(dir, filename, csv)
       filepath = File.join(Omca.datadir, "orig", dir, filename)
       puts "Extracting from #{filepath}"
@@ -158,16 +164,14 @@ class Db < Thor
         "table" => table,
         "rectype" => Omca::Mappings::Db.rectype_for_table(table)
       }
-      File.new(filepath).readline
-        .chomp
-        .split(",")
-        .each do |field|
-          next if %w[csid deprecated groupid id item parentcsid proposed
-            pos recordcsid sas].include?(field)
 
-          data = base.dup.merge({"column" => field})
-          csv << data.values_at(*csv.headers)
-        end
+      csv_headers(filepath).each do |field|
+        next if %w[csid deprecated groupid id item parentcsid proposed
+          pos recordcsid sas].include?(field)
+
+        data = base.dup.merge({"column" => field})
+        csv << data.values_at(*csv.headers)
+      end
     end
   end
 end
