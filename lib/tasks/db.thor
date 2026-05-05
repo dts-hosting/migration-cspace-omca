@@ -88,6 +88,34 @@ class Db < Thor
     Omca::Db::QueryWriter.call(query: query, path: path)
   end
 
+  desc "tables_and_columns", "writes CSV of tables and columns"
+  def tables_and_columns
+    path = File.join(Omca.datadir, "db_tables_columns.csv")
+    csv = CSV.open(
+      path,
+      "w",
+      headers: %w[tabletype table column rectype],
+      write_headers: true
+    )
+    Omca.orig_dirs.each { |dir| extract_from_files(dir, csv) }
+    csv.close
+    puts "Wrote db tables and columns to #{path}"
+
+    dupecheck = {}
+    CSV.parse(File.read(path), headers: true).each do |row|
+      next if row["rectype"].blank?
+
+      key = [row["rectype"], row["column"]].join(".")
+      dupecheck[key] = [] unless dupecheck.key?(key)
+      dupecheck[key] << row["table"]
+    end
+    dupes = dupecheck.select { |_k, v| v.length > 1 }
+    return if dupes.empty?
+
+    puts "Duplicate column names in rectype:"
+    dupes.each { |k, v| puts "  #{k} is in tables: #{v.join(", ")}" }
+  end
+
   no_commands do
     def caller(tables:, table_type:, query_meth:)
       results = {}
@@ -112,6 +140,34 @@ class Db < Thor
       CSV.open(path, "w", headers: headers, write_headers: true) do |csv|
         results.each { |k, v| csv << [k, v] }
       end
+    end
+
+    def extract_from_files(dir, csv)
+      dirpath = File.join(Omca.datadir, "orig", dir)
+      Dir.children(dirpath).each do |filename|
+        extract_from_file(dir, filename, csv)
+      end
+    end
+
+    def extract_from_file(dir, filename, csv)
+      filepath = File.join(Omca.datadir, "orig", dir, filename)
+      puts "Extracting from #{filepath}"
+      table = File.basename(filename, ".csv")
+      base = {
+        "tabletype" => dir,
+        "table" => table,
+        "rectype" => Omca::Mappings::Db.rectype_for_table(table)
+      }
+      File.new(filepath).readline
+        .chomp
+        .split(",")
+        .each do |field|
+          next if %w[csid deprecated groupid id item parentcsid proposed
+            pos recordcsid sas].include?(field)
+
+          data = base.dup.merge({"column" => field})
+          csv << data.values_at(*csv.headers)
+        end
     end
   end
 end
