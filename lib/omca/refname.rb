@@ -6,9 +6,14 @@ module Omca
   module Refname
     module_function
 
+    # @param refname [String]
+    # @return [CollectionSpace::RefName]
     def parse(refname) = CollectionSpace::RefName.new(refname)
 
+    # @param refname [String]
+    # @return [String]
     def deurn(refname) = parse(refname).label
+
     # @param base [Hash] to which parsed details will be added
     # @param refname [String]
     # @return [Hash]
