@@ -58,12 +58,12 @@ module Omca
 
           args = {
             source: :"main_rectype__#{table}",
-            dest: :"#{ns}__#{rectype}",
+            dest: :"#{ns}__#{table}",
             rectype: rectype
           }
 
           entry = {
-            path: File.join(Omca.datadir, "preprocess", "#{rectype}.csv"),
+            path: File.join(Omca.datadir, "preprocess", "#{table}.csv"),
             creator: {
               callee: Omca::Jobs::MainPreprocess,
               args: args
@@ -74,7 +74,7 @@ module Omca
             }
           }
 
-          [rectype.to_sym, entry]
+          [table.to_sym, entry]
         end
 
       Omca.registry.namespace(ns) do
