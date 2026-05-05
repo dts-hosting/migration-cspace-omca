@@ -17,6 +17,18 @@ class At < Thor
   end
 
   no_commands do
+    def add_parsed_detail(base, val)
+      base["refname"] = val
+      parsed = Omca::Refname.parse(val)
+      base["authority"] = parsed.type
+      base["vocab"] = parsed.subtype
+      base["termid"] = parsed.identifier
+      base["form"] = parsed.label
+      base
+    rescue
+      base
+    end
+
     def extract_from_files(dir, csv)
       dirpath = File.join(Omca.datadir, "orig", dir)
       puts "Extracting from #{dirpath}"
@@ -49,16 +61,8 @@ class At < Thor
       return if val[":vocabularies:"]
 
       base["field"] = field
-      base["refname"] = val
-
-      parsed = Omca::Refname.parse(val)
-      base["authority"] = parsed.type
-      base["vocab"] = parsed.subtype
-      base["termid"] = parsed.identifier
-      base["form"] = parsed.label
-      csv << base.values_at(*csv.headers)
-    rescue
-      csv << base.values_at(*csv.headers)
+      termdata = add_parsed_detail(base, val)
+      csv << termdata.values_at(*csv.headers)
     end
   end
 end
