@@ -13,7 +13,7 @@ module Omca
           path = File.join(dir, filename)
           parsed = JSON.load_file(path, symbolize_names: true)
           rectype = parsed.dig(:config, :recordtype)
-          next unless Omca::Mappings.rectypes.include?(rectype)
+          next unless Omca::Mappings::Db.rectypes.include?(rectype)
 
           [rectype, parsed]
         end.compact.to_h
@@ -51,7 +51,7 @@ module Omca
     # @param str [String] main table name, like "collectionobjects_common"
     # @return field [Symbol] human readable id field for record type
     def id_field_for_table(str)
-      rectype = Omca::Mappings.rectypes_by_main_table[str]
+      rectype = Omca::Mappings::Db.rectypes_by_main_table[str]
       id_field_lookup[rectype]
     end
 

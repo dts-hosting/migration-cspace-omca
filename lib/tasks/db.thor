@@ -4,7 +4,7 @@ class Db < Thor
   desc "main_tables", "Write main tables to `main_rectype` dir as CSV"
   def main_tables
     caller(
-      tables: Omca::Mappings.main_tables,
+      tables: Omca::Mappings::Db.main_tables,
       table_type: "main_rectype",
       query_meth: :main_table
     )
@@ -14,7 +14,7 @@ class Db < Thor
     "`repeating` dir as CSV"
   def repeating_field_tables
     caller(
-      tables: Omca::Mappings.repeating_field_tables,
+      tables: Omca::Mappings::Db.repeating_field_tables,
       table_type: "repeating",
       query_meth: :repeating_field_table
     )
@@ -24,7 +24,7 @@ class Db < Thor
     "direct-id-linked tables to `addtl_fields` dir as CSV"
   def addtl_fields_tables
     caller(
-      tables: Omca::Mappings.addtl_fields_tables,
+      tables: Omca::Mappings::Db.addtl_fields_tables,
       table_type: "addtl_fields",
       query_meth: :addtl_fields_table
     )
@@ -34,7 +34,7 @@ class Db < Thor
     "to `field_groups` dir as CSV"
   def group_tables
     caller(
-      tables: Omca::Mappings.group_tables,
+      tables: Omca::Mappings::Db.group_tables,
       table_type: "field_groups",
       query_meth: :group_table
     )
@@ -44,7 +44,7 @@ class Db < Thor
     "to `field_groups` dir as CSV"
   def repeatable_in_group_tables
     caller(
-      tables: Omca::Mappings.repeatable_in_group_tables,
+      tables: Omca::Mappings::Db.repeatable_in_group_tables,
       table_type: "repeatable_in_group",
       query_meth: :repeatable_in_group_table
     )
@@ -54,7 +54,7 @@ class Db < Thor
     "to `field_subgroups` dir as CSV"
   def subgroup_tables
     caller(
-      tables: Omca::Mappings.subgroup_tables,
+      tables: Omca::Mappings::Db.subgroup_tables,
       table_type: "field_subgroups",
       query_meth: :subgroup_table
     )

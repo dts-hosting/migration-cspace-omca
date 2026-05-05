@@ -54,7 +54,7 @@ module Omca
       entries = (Omca::Mappers.obj_and_procedures.keys +
                  Omca::Mappers.authorities.keys).sort
         .map do |rectype|
-          table = Omca::Mappings.main_tables_by_rectype[rectype]
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
           args = {
             source: :"main_rectype__#{table}",
