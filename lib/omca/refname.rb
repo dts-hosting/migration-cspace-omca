@@ -9,5 +9,19 @@ module Omca
     def parse(refname) = CollectionSpace::RefName.new(refname)
 
     def deurn(refname) = parse(refname).label
+    # @param base [Hash] to which parsed details will be added
+    # @param refname [String]
+    # @return [Hash]
+    def add_parsed_detail(base, refname)
+      base["refname"] = refname
+      parsed = Omca::Refname.parse(refname)
+      base["authority"] = parsed.type
+      base["vocab"] = parsed.subtype
+      base["termid"] = parsed.identifier
+      base["form"] = parsed.label
+      base
+    rescue
+      base
+    end
   end
 end
