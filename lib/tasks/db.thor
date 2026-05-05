@@ -116,7 +116,46 @@ class Db < Thor
     dupes.each { |k, v| puts "  #{k} is in tables: #{v.join(", ")}" }
   end
 
+  desc "missing_id", "Identify orig tables without an id field"
+  def missing_id
+    path = File.join(Omca.datadir, "tables_missing_ids.csv")
+    CSV.open(
+      path,
+      "w",
+      headers: %w[tabletype table headers],
+      write_headers: true
+    )
+    acc = []
+    Omca.orig_dirs.each { |dir| chk_dir_files_for_id_field(dir, acc) }
+    if acc.empty?
+      puts "No tables missing id field"
+    else
+      CSV.open(
+        path,
+        "w",
+        headers: %w[tabletype table headers],
+        write_headers: true
+      ) { |csv| acc.each { |r| csv << r } }
+      puts "Wrote #{acc.length} tables to #{path}"
+    end
+  end
+
   no_commands do
+    def chk_dir_files_for_id_field(dir, acc)
+      dirpath = File.join(Omca.datadir, "orig", dir)
+      Dir.children(dirpath).each do |filename|
+        chk_dir_file_for_id_field(dir, dirpath, filename, acc)
+      end
+    end
+
+    def chk_dir_file_for_id_field(dir, dirpath, filename, acc)
+      filepath = File.join(dirpath, filename)
+      headers = csv_headers(filepath)
+      return if headers.include?("id")
+
+      acc << [dir, File.basename(filename, ".csv"), headers.join(Omca.delim)]
+    end
+
     def caller(tables:, table_type:, query_meth:)
       results = {}
       type = table_type
