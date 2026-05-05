@@ -4,26 +4,23 @@
 class At < Thor
   desc "usages", "Write all authority usages, with table, row id, and field"
   def usages
-    path = File.join(Omca.datadir, "authority_ref", "authority_usages.csv")
     csv = CSV.open(
-      path,
+      Omca::Authorities.usages_path,
       "w",
-      headers: %w[tabletype table id field authority vocab termid form refname],
+      headers: Omca::Authorities.usages_headers,
       write_headers: true
     )
     Omca.orig_dirs.each { |dir| extract_from_files(dir, csv) }
     csv.close
-    puts "Wrote all authority usages to #{path}"
+    puts "Wrote all authority usages to #{Omca::Authorities.usages_path}"
   end
 
   desc "unique_usages", "Write one row per used refname, with count of "\
     "usages. Note that different refnames for the same term record may have "\
     "been used, so this output may still have multiple rows per term"
   def unique_usages
-    srcpath = File.join(Omca.datadir, "authority_ref", "authority_usages.csv")
-    outpath = File.join(
-      Omca.datadir, "authority_ref", "authority_unique_usages.csv"
-    )
+    srcpath = Omca::Authorities.usages_path
+    outpath = Omca::Authorities.uniq_usages_path
     counter = {}
 
     File.open(srcpath) do |file|
@@ -37,7 +34,7 @@ class At < Thor
     CSV.open(
       outpath,
       "w",
-      headers: %w[refname usagect authority vocab termid form],
+      headers: Omca::Authorities.uniq_usages_headers,
       write_headers: true
     ) do |csv|
       counter.each do |refname, ct|
