@@ -2,9 +2,9 @@
 
 # Tasks related to authority terms
 class At < Thor
-  desc "extract_all", "Write all authority usages"
-  def extract_all
-    path = File.join(Omca.datadir, "authority_usages.csv")
+  desc "usages", "Write all authority usages, with table, row id, and field"
+  def usages
+    path = File.join(Omca.datadir, "authority_ref", "authority_usages.csv")
     csv = CSV.open(
       path,
       "w",
