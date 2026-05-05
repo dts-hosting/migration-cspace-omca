@@ -16,6 +16,41 @@ class At < Thor
     puts "Wrote all authority usages to #{path}"
   end
 
+  desc "unique_usages", "Write one row per used refname, with count of "\
+    "usages. Note that different refnames for the same term record may have "\
+    "been used, so this output may still have multiple rows per term"
+  def unique_usages
+    srcpath = File.join(Omca.datadir, "authority_ref", "authority_usages.csv")
+    outpath = File.join(
+      Omca.datadir, "authority_ref", "authority_unique_usages.csv"
+    )
+    counter = {}
+
+    File.open(srcpath) do |file|
+      CSV.foreach(file, headers: true) do |row|
+        refname = row["refname"]
+        counter[refname] = 0 unless counter.key?(refname)
+        counter[refname] += 1
+      end
+    end
+
+    CSV.open(
+      outpath,
+      "w",
+      headers: %w[refname usagect authority vocab termid form],
+      write_headers: true
+    ) do |csv|
+      counter.each do |refname, ct|
+        base = {
+          "usagect" => ct
+        }
+        termdata = add_parsed_detail(base, refname)
+        csv << termdata.values_at(*csv.headers)
+      end
+    end
+    puts "Wrote unique authority usages to #{outpath}"
+  end
+
   no_commands do
     def add_parsed_detail(base, val)
       base["refname"] = val
