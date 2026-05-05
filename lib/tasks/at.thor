@@ -2,17 +2,9 @@
 
 # Tasks related to authority terms
 class At < Thor
-  desc "usages", "Write all authority usages, with table, row id, and field"
+  desc "usages", Omca::Authorities::Usages.desc
   def usages
-    csv = CSV.open(
-      Omca::Authorities.usages_path,
-      "w",
-      headers: Omca::Authorities.usages_headers,
-      write_headers: true
-    )
-    Omca.orig_dirs.each { |dir| extract_from_files(dir, csv) }
-    csv.close
-    puts "Wrote all authority usages to #{Omca::Authorities.usages_path}"
+    Omca::Authorities::Usages.call
   end
 
   desc "unique_usages", "Write one row per used refname, with count of "\
@@ -46,43 +38,5 @@ class At < Thor
       end
     end
     puts "Wrote unique authority usages to #{outpath}"
-  end
-
-  no_commands do
-    def extract_from_files(dir, csv)
-      dirpath = File.join(Omca.datadir, "orig", dir)
-      puts "Extracting from #{dirpath}"
-      Dir.children(dirpath).each do |filename|
-        extract_from_file(dir, filename, csv)
-      end
-    end
-
-    def extract_from_file(dir, filename, csv)
-      filepath = File.join(Omca.datadir, "orig", dir, filename)
-      puts "Extracting from #{filepath}"
-      base = {
-        "tabletype" => dir,
-        "table" => File.basename(filename, ".csv")
-      }
-      CSV.foreach(filepath, headers: true) do |row|
-        extract_from_row(base.dup, row, csv)
-      end
-    end
-
-    def extract_from_row(base, row, csv)
-      base["id"] = row["id"]
-      row.each { |field, val| extract_from_field(base.dup, field, val, csv) }
-    end
-
-    def extract_from_field(base, field, val, csv)
-      return if field.end_with?("refname")
-      return if val.blank?
-      return unless val.start_with?("urn:cspace:")
-      return if val[":vocabularies:"]
-
-      base["field"] = field
-      termdata = Omca::Refname.add_parsed_detail(base, val)
-      csv << termdata.values_at(*csv.headers)
-    end
   end
 end
