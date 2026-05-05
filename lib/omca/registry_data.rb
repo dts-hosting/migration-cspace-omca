@@ -44,7 +44,19 @@ module Omca
     private_class_method :register_dir_files
 
     def register_files
-      # placeholder
+      Omca.registry.namespace("authorities") do
+        ns = "authorities"
+
+        %i[usages uniq_usages].each do |key|
+          register key, {
+            path: Omca::Authorities.send(:"#{key}_path"),
+            supplied: true,
+            tags: [key, ns.to_sym],
+            desc: "Produce by running `thor at #{key}`"
+          }
+          }
+        end
+      end
     end
     private_class_method :register_files
 
