@@ -6,6 +6,10 @@ module Omca
       module_function
 
       def main_table(table_name)
+        return main_authority_table(table_name) if Omca::Mappers.authority?(
+          Omca::Mappings::Db.rectype_for_table(table_name)
+        )
+
         <<~SQL
           select
           hier.name AS csid,
@@ -14,6 +18,24 @@ module Omca
           inner join misc on tbl.id = misc.id and
             misc.lifecyclestate != 'deleted'
           inner join hierarchy hier on tbl.id = hier.id
+        SQL
+      end
+
+      def main_authority_table(table_name)
+        rectype = Omca::Mappings::Db.rectype_for_table(table_name)
+        authtable = Omca::Mappers.auth_table_for(rectype)
+
+        <<~SQL
+          select
+          hier.name AS csid,
+          atbl.shortidentifier as authority,
+          tbl.*
+          from #{table_name} tbl
+          inner join misc on tbl.id = misc.id and
+            misc.lifecyclestate != 'deleted'
+          inner join hierarchy hier on tbl.id = hier.id
+          inner join hierarchy ahier on ahier.name = tbl.inauthority
+          inner join #{authtable} atbl on ahier.id = atbl.id
         SQL
       end
 

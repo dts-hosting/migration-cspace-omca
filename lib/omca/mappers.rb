@@ -77,5 +77,13 @@ module Omca
         .downcase
         .delete_suffix("list")
     end
+
+    # @param rectype [String]
+    # @return [String] name of table in which to look up inauthority csid
+    def auth_table_for(rectype)
+      return unless authority?(rectype)
+
+      "#{mappers[rectype].dig(:config, :service_path)}_common"
+    end
   end
 end
