@@ -35,6 +35,13 @@ module Omca
         def xforms
           Kiba.job_segment do
             transform Omca::Xforms::MalformedConceptRefnames
+
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                row[:vocab] == "citation" &&
+                  row[:form].blank?
+              end
           end
         end
       end
