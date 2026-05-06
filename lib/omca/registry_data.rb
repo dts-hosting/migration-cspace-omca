@@ -54,6 +54,19 @@ module Omca
             tags: [key, ns.to_sym],
             desc: "Produce by running `thor at #{key}`"
           }
+
+          fix_key = :"fix_#{key}"
+          args = {
+            source: :"#{ns}__#{key}",
+            dest: :"#{ns}__#{fix_key}"
+          }
+          register fix_key, {
+            path: Omca::Authorities.send(:"#{fix_key}_path"),
+            creator: {
+              callee: Omca::Jobs::Authorities::Fix,
+              args: args
+            },
+            tags: [key, :fix, ns.to_sym]
           }
         end
       end

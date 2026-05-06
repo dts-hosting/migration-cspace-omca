@@ -10,6 +10,10 @@ module Omca
       reader: true,
       default: File.join(Omca.datadir, "authority_ref", "usages.csv")
 
+    setting :fix_usages_path,
+      reader: true,
+      default: File.join(Omca.datadir, "fix", "usages_fixed.csv")
+
     setting :usages_headers,
       reader: true,
       default: %w[tabletype table id field authority vocab termid form refname]
@@ -17,6 +21,10 @@ module Omca
     setting :uniq_usages_path,
       reader: true,
       default: File.join(Omca.datadir, "authority_ref", "uniq_usages.csv")
+
+    setting :fix_uniq_usages_path,
+      reader: true,
+      default: File.join(Omca.datadir, "fix", "fixed_uniq_usages.csv")
 
     setting :uniq_usages_headers,
       reader: true,
