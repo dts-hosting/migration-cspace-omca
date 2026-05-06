@@ -48,10 +48,11 @@ module Omca
       end
 
       def extract_from_field(base, field, val, csv)
-        return if field.end_with?("refname")
         return if val.blank?
         return unless val.start_with?("urn:cspace:")
         return if val[":vocabularies:"]
+        return if field.end_with?("refname") ||
+          field == "computedcurrentlocation"
 
         base["field"] = field
         termdata = Omca::Refname.add_parsed_detail(base, val)
