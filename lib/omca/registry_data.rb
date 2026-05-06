@@ -69,6 +69,14 @@ module Omca
             tags: [key, :fix, ns.to_sym]
           }
         end
+
+        register :no_form_citations, {
+          path: File.join(
+            Omca.datadir, "reports", "authorities_no_form_citations.csv"
+          ),
+          creator: Omca::Jobs::Authorities::NoFormCitations,
+          tags: [ns.to_sym, :reports, :citation]
+        }
       end
     end
     private_class_method :register_files
