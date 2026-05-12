@@ -62,6 +62,10 @@ module Omca
       end
 
       def group_table(table)
+        return group_authority_table(table) if Omca::Mappers.authority?(
+          Omca::Mappings::Db.rectype_for_table(table)
+        )
+
         <<~SQL
           select
           phier.name as parentcsid,
@@ -72,6 +76,29 @@ module Omca
           inner join misc on misc.id = hier.parentid and
             misc.lifecyclestate != 'deleted'
           inner join hierarchy phier on phier.id = hier.parentid
+          order by phier.name, hier.pos
+        SQL
+      end
+
+      def group_authority_table(table)
+        rectype = Omca::Mappings::Db.rectype_for_table(table)
+        maintable = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+        authtable = Omca::Mappers.auth_table_for(rectype)
+
+        <<~SQL
+          select
+          phier.name as parentcsid,
+          auth.shortidentifier as authority,
+          hier.pos,
+          tbl.*
+          from #{table} tbl
+          inner join hierarchy hier on tbl.id = hier.id
+          inner join misc on misc.id = hier.parentid and
+            misc.lifecyclestate != 'deleted'
+          inner join hierarchy phier on phier.id = hier.parentid
+          inner join #{maintable} pcommon on phier.id = pcommon.id
+          inner join hierarchy ahier on ahier.name = pcommon.inauthority
+          inner join #{authtable} auth on auth.id = ahier.id
           order by phier.name, hier.pos
         SQL
       end
