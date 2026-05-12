@@ -9,13 +9,16 @@ module Omca
                               Omca::Mappings.worksheet
                                 .sheet("db_tables").parse(headers: true)
 
-      def rectype_for_table(table)
-        row = db_tables_sheet.find do |row|
-          row["table_name"] == table
-        end
+      # @param table [String]
+      def rectype_for_table(table) = val_from_table_row(
+        table, "rectype"
+      )
+
+      def val_from_table_row(table, val)
+        row = db_tables_sheet.find { |row| row["table_name"] == table }
         return unless row
 
-        row["rectype"]
+        row[val]
       end
 
       def main_table_rows = @main_table_rows ||=
