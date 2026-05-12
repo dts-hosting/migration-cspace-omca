@@ -3,8 +3,8 @@
 module Omca
   module Authorities
     class Usages
-      def self.desc = "Write all authority usages, with table, row id, and "\
-        "field"
+      def self.desc = "Write all authority refname usages, with table, row "\
+        "id, and field"
 
       def self.call = new.call
 
