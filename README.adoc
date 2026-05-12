@@ -109,7 +109,12 @@ Other extract tasks:
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor at usages` => >1GB CSV file)
 ** [ ] Split up/reformat usages file so that it is reasonably usable
 *** [x] Unique usages with usage counts (`thor at uniq_usages`)
-** [ ] Extract any values in authority-controlled fields that are not refnames and determine what to do with them
+*** [ ] Per authority for lookups
+** [x] Extract any values in authority-controlled fields (`thor at non_refnames`)
+
+=== Reporting/deciding/misc based on extracted data
+
+* [ ] Authority controlled field values that are not refnames
 
 === Preprocess
 
