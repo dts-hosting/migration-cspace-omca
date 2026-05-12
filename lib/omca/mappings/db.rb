@@ -70,6 +70,10 @@ module Omca
                                row["table_type"] == "group, multi-rectype"
                            end
                              .map { |r| r["table_name"] }
+                             .reject do |e|
+                               e == "dategroup" ||
+                                 e == "structureddategroup"
+                             end
 
       def repeatable_in_group_tables = @repeatable_in_group_tables ||=
                                          db_tables_sheet.select do |row|
