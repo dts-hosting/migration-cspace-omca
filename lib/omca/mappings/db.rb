@@ -14,8 +14,20 @@ module Omca
         table, "rectype"
       )
 
+      # @param table [String]
+      # @param mode [:info, :dir]
+      def table_type(table, mode = :info)
+        type = val_from_table_row(table, "table_type")
+        return unless type
+        return if mode == :info
+
+        type.tr(" ", "_")
+      end
+
       def val_from_table_row(table, val)
-        row = db_tables_sheet.find { |row| row["table_name"] == table }
+        row = db_tables_sheet.find do |row|
+          row["table_name"] == table
+        end
         return unless row
 
         row[val]

@@ -21,4 +21,9 @@ class At < Thor
   def uniq_non_refnames
     Omca::Authorities::UniqNonRefnameUsages.call
   end
+
+  desc "non_refname_lookup", Omca::Authorities::NonRefnameLookup.desc
+  def non_refname_lookup
+    Omca::Authorities::NonRefnameLookup.call
+  end
 end

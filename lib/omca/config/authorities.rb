@@ -47,5 +47,33 @@ module Omca
     setting :uniq_non_refname_usages_headers,
       reader: true,
       default: non_refname_usages_headers + ["usagect"] - ["id"]
+
+    setting :non_refname_lookup_path,
+      reader: true,
+      default: File.join(Omca.datadir, "authority_ref",
+        "non_refname_lookup.csv")
+
+    setting :non_refname_lookup_headers,
+      reader: true,
+      default: uniq_non_refname_usages_headers + %w[
+        matchtype refname
+      ]
+
+    setting :non_refname_lookup_config,
+      reader: true,
+      default: {
+        ["collectionobjects_common_contentplaces", "item"] =>
+          [["place", "local"]],
+        ["collectionobjects_omca",
+          "copyrightholder"] => [
+            ["person", "local"], ["organization", "local"]
+          ],
+        ["assocculturalcontextgroup", "assocculturalcontext"] =>
+          [["concept", "associated"]],
+        ["objectproductionorganizationgroup",
+          "objectproductionorganization"] => [["organization", "local"]],
+        ["objectproductionpersongroup", "objectproductionperson"] =>
+          [["person", "local"]]
+      }
   end
 end

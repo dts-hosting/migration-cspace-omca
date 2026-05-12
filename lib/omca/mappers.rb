@@ -85,5 +85,20 @@ module Omca
 
       "#{mappers[rectype].dig(:config, :service_path)}_common"
     end
+
+    # @param rectype [String]
+    # @param vocab [String] the authority subtype string (e.g. "local" for
+    #   person)
+    # @return [String] the db shortidentifier for the authority subtype
+    def auth_vocab_shortid(rectype, vocab)
+      mapper = mappers[rectype]
+      return unless mapper
+
+      subtype = mapper.dig(:config, :authority_subtypes)
+        .find { |st| st[:name].downcase == vocab.downcase }
+      return unless subtype
+
+      subtype[:subtype]
+    end
   end
 end
