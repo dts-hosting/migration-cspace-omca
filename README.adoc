@@ -43,7 +43,7 @@ However, I determined that the database timezone was set to Pacific, not UTC. I 
 The following commands (and associated https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/db/queries.rb[queries]) are used extract the data from the database:
 
 ----
-thor db:addtl_fields_tables
+thor db:addtl_fields
 thor db:blobs
 thor db:contacts
 thor db:group_tables
@@ -89,7 +89,7 @@ The main_tables extraction for these record types pulls the core, single-valued 
 There are 154 other tables containing data that belongs to these record types.
 These tables are categorized by the pattern of how the data in them gets merged into the main record types:
 
-addtl_fields_tables:: One row per main table row; Adds single-valued, standalone fields to core; All are custom to OMCA, and will need remapping according to specifications prepared by Jessi/Jadeen/OMCA.
+addtl_fields:: One row per main table row; Adds single-valued, standalone fields to core; All are custom to OMCA, and will need remapping according to specifications prepared by Jessi/Jadeen/OMCA.
 repeating_field_tables:: One or more rows per main table row; Data from standalone multi-valued fields, such as a list of inventory statuses. Position of each value is indicated. Null `item` values removed.
 group_tables:: One or more rows per main table; Data from repeatable groupings of fields, or "field blocks"; Position of each block is indicated.
 repeatable_in_group_tables:: One or more rows per group table row; Data from repeatable single field _inside a repeatable field block_; Positionality in play

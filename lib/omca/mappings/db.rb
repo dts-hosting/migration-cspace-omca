@@ -69,7 +69,7 @@ module Omca
 
       def addtl_fields_tables = @addtl_fields_tables ||=
                                   db_tables_sheet.select do |row|
-                                    row["table_type"] == "additional fields"
+                                    row["table_type"] == "addtl_fields"
                                   end
                                     .map do |r|
                                       [r["table_name"],

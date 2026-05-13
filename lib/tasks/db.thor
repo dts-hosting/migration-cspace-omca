@@ -20,9 +20,8 @@ class Db < Thor
     )
   end
 
-  desc "addtl_fields_tables", "Write other "\
-    "direct-id-linked tables to `addtl_fields` dir as CSV"
-  def addtl_fields_tables
+  desc "addtl_fields", "Write other direct-id-linked tables as CSVs"
+  def addtl_fields
     caller(
       tables: Omca::Mappings::Db.addtl_fields_tables,
       table_type: "addtl_fields",
