@@ -29,12 +29,22 @@ class Db < Thor
     )
   end
 
-  desc "group_tables", "Write repeatable field group tables "\
-    "to `field_groups` dir as CSV"
-  def group_tables
+  desc "repeatable_field_group", "Write repeatable field group tables "\
+    "as CSV"
+  def repeatable_field_group
     caller(
-      tables: Omca::Mappings::Db.group_tables,
-      table_type: "field_groups",
+      tables: Omca::Mappings::Db.repeatable_field_group_tables,
+      table_type: "repeatable_field_group",
+      query_meth: :group_table
+    )
+  end
+
+  desc "extension_field_group", "Write extension field group tables "\
+    "as CSV"
+  def extension_field_group
+    caller(
+      tables: Omca::Mappings::Db.extension_field_group_tables,
+      table_type: "extension_field_group",
       query_meth: :group_table
     )
   end

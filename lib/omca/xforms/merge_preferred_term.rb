@@ -25,7 +25,7 @@ module Omca
       def get_lookup(rectype)
         termtable = Omca::Mappers.term_table_for(rectype)
         Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :"field_groups__#{termtable}",
+          jobkey: :"repeatable_field_group__#{termtable}",
           lookup_on: :parentcsid
         )
       end
