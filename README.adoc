@@ -47,7 +47,7 @@ thor db:addtl_fields_tables
 thor db:blobs
 thor db:contacts
 thor db:group_tables
-thor db:main_tables
+thor db:main
 thor db:repeatable_in_group_tables
 thor db:repeating_field_tables
 thor db:structured_dates

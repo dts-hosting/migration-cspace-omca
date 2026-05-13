@@ -70,8 +70,7 @@ module Omca
 
       def populate_records
         table = Omca::Mappings::Db.main_tables_by_rectype[type]
-        path = File.join(Omca.datadir, "orig", "main_rectype",
-          "#{table}.csv")
+        path = File.join(Omca.datadir, "preprocess", "#{table}.csv")
         data = CSV.parse(File.read(path), headers: true)
         @records = data unless subtypeid
 

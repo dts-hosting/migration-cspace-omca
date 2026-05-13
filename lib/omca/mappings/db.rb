@@ -35,7 +35,7 @@ module Omca
 
       def main_table_rows = @main_table_rows ||=
                               db_tables_sheet.select do |row|
-                                row["table_type"] == "main rectype"
+                                row["table_type"] == "main"
                               end
 
       # @return [Array<String>] database table names of main rectype tables

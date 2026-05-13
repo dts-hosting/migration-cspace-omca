@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Db < Thor
-  desc "main_tables", "Write main tables to `main_rectype` dir as CSV"
-  def main_tables
+  desc "main", "Write main tables as CSVs"
+  def main
     caller(
       tables: Omca::Mappings::Db.main_tables,
-      table_type: "main_rectype",
+      table_type: "main",
       query_meth: :main_table
     )
   end

@@ -12,7 +12,7 @@ module Omca
               source: :authorities__usages,
               destination: :authorities__no_form_citations,
               lookup: [{
-                jobkey: :main_rectype__citations_common,
+                jobkey: :main__citations_common,
                 lookup_on: :shortidentifer
               }]
             },
@@ -30,7 +30,7 @@ module Omca
               end
 
             transform Merge::MultiRowLookup,
-              lookup: main_rectype__citations_common,
+              lookup: main__citations_common,
               keycolumn: :termid,
               fieldmap: {form: :ingestid}
 

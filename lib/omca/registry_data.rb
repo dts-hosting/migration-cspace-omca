@@ -97,7 +97,7 @@ module Omca
           table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
           args = {
-            source: :"main_rectype__#{table}",
+            source: :"main__#{table}",
             dest: :"#{ns}__#{table}",
             rectype: rectype
           }

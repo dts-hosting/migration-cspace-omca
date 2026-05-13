@@ -17,6 +17,10 @@ module Omca
         ct = results.num_tuples
         return ct if ct == 0
 
+        unless Dir.exist?(File.dirname(path))
+          FileUtils.mkdir_p(File.dirname(path))
+        end
+
         CSV.open(
           path,
           "w",
