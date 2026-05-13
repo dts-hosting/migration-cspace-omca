@@ -12,6 +12,11 @@ module Omca
         )
       end
 
+      %w[authority_ref].each do |dirname|
+        register_dir_files(
+          dir: File.join(Omca.datadir, dirname), ns: dirname
+        )
+      end
       register_preprocess_main_jobs
 
       register_files
