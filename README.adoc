@@ -107,9 +107,8 @@ Other extract tasks:
 
 * Authorities
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor at usages` => >1GB CSV file)
-** [ ] Split up/reformat usages file so that it is reasonably usable
+** [x] Split up/reformat usages file so that it is reasonably usable
 *** [x] Unique usages with usage counts (`thor at uniq_usages`)
-*** [ ] Per authority for lookups
 ** [x] Extract any values in authority-controlled fields (`thor at non_refnames`)
 
 === Reporting/deciding/misc based on extracted data
@@ -127,7 +126,7 @@ Per-table category preprocessing:
 
 * Main record types that are authorities
 ** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
-** [ ] Identify unused authority terms and tag them `:unused` = `y`
+** [x] Identify unused authority terms and tag them `:term_is_used` = `n`
 
 * All main record types
 ** [x] Disambiguate duplicate `ingestid` values
