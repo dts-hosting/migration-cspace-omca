@@ -53,11 +53,13 @@ module Omca
 
       def addtl_fields_table(table, main_table)
         <<~SQL
-          select tbl.*
+          select hier.name as parentcsid,
+            tbl.*
           from #{table} tbl
           inner join misc on tbl.id = misc.id and
             misc.lifecyclestate != 'deleted'
           inner join #{main_table} mt on tbl.id = mt.id
+          inner join hierarchy hier on hier.id = mt.id
         SQL
       end
 
