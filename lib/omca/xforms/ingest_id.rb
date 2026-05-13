@@ -22,20 +22,3 @@ module Omca
     end
   end
 end
-
-# rows[existing_id] = [] unless rows.key?(existing_id)
-# rows[existing_id] << row
-
-# nil
-
-# def close
-#   rows.each do |id, arr|
-#     if arr.length == 1
-#       yield arr.first
-#     else
-#       Omca::Util::IdDisambiguator.new(arr)
-#         .call
-#         .each { |row| yield row }
-#     end
-#   end
-# end
