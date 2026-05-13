@@ -10,8 +10,11 @@ module Omca
       end
 
       def process(row)
-        row[target] = pref_term(row)
-
+        row[target] = if unused?(row)
+          "#{pref_term(row)} (UNUSED TERM)"
+        else
+          pref_term(row)
+        end
         row
       end
 
@@ -30,6 +33,8 @@ module Omca
       def pref_term(row)
         lookup[row[:csid]].find { |t| t[:pos] == "0" }[:termdisplayname]
       end
+
+      def unused?(row) = row[Omca::Authorities.used_tag_field] == "n"
     end
   end
 end

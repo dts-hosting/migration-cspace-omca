@@ -17,7 +17,9 @@ module Omca
           dir: File.join(Omca.datadir, dirname), ns: dirname
         )
       end
+
       register_preprocess_main_jobs
+      register_unused_authority_reports
 
       register_files
 
@@ -120,5 +122,41 @@ module Omca
       end
     end
     private_class_method :register_preprocess_main_jobs
+
+    def register_unused_authority_reports
+      ns = "authority_unused"
+
+      entries = Omca::Mappers.authorities
+        .keys
+        .sort
+        .map do |rectype|
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+
+          args = {
+            source: :"preprocess_main__#{table}",
+            dest: :"#{ns}__#{table}"
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "reports", "unused_authority",
+              "#{table}.csv"),
+            creator: {
+              callee: Omca::Jobs::UnusedAuthority,
+              args: args
+            },
+            tags: [:authorities, ns.to_sym, table.to_sym, rectype.to_sym],
+            dest_special_opts: {
+              initial_headers: %i[preferred_form]
+            }
+          }
+
+          [table.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_unused_authority_reports
   end
 end

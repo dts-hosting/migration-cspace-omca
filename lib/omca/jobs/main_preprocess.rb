@@ -20,17 +20,20 @@ module Omca
 
       def xforms(rectype)
         Kiba.job_segment do
-          transform Delete::EmptyFields, report: true
-
           if Omca::Mappers.authority?(rectype)
+            transform Omca::Xforms::TagUnusedAuthorityTerms,
+              rectype: rectype
             transform Omca::Xforms::MergePreferredTerm,
               rectype: rectype
+            transform Delete::Fields,
+              fields: %i[sas proposed deprecated rev]
           else
             transform Omca::Xforms::IngestId,
               rectype: rectype
           end
 
           transform Omca::Xforms::DisambiguateIngestId
+          transform Delete::EmptyFields, report: true
         end
       end
     end

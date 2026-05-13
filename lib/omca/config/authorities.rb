@@ -6,6 +6,10 @@ module Omca
 
     extend Dry::Configurable
 
+    setting :used_tag_field,
+      reader: true,
+      default: :term_is_used
+
     setting :usages_path,
       reader: true,
       default: File.join(Omca.datadir, "authority_ref", "usages.csv")
