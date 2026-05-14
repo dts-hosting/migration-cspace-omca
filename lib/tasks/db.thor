@@ -1,24 +1,6 @@
 # frozen_string_literal: true
 
 class Db < Thor
-  desc "main", "Write main tables as CSVs"
-  def main
-    caller(
-      tables: Omca::Mappings::Db.main_tables,
-      table_type: "main",
-      query_meth: :main_table
-    )
-  end
-
-  desc "repeatable_field", "Write repeatable field tables as CSVs"
-  def repeatable_field
-    caller(
-      tables: Omca::Mappings::Db.repeatable_field_tables,
-      table_type: "repeatable_field",
-      query_meth: :repeatable_field_table
-    )
-  end
-
   desc "addtl_fields", "Write other direct-id-linked tables as CSVs"
   def addtl_fields
     caller(
@@ -28,14 +10,20 @@ class Db < Thor
     )
   end
 
-  desc "repeatable_field_group", "Write repeatable field group tables "\
+  desc "contacts", "Write main contacts table to `main_rectype` dir "\
     "as CSV"
-  def repeatable_field_group
-    caller(
-      tables: Omca::Mappings::Db.repeatable_field_group_tables,
-      table_type: "repeatable_field_group",
-      query_meth: :group_table
-    )
+  def contacts
+    path = File.join(Omca.datadir, "orig", "subrecord", "contacts_common.csv")
+    query = Omca::Db::Queries.contacts
+    Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
+  desc "blobs", "Write main blobs table to `main_rectype` dir "\
+    "as CSV"
+  def blobs
+    path = File.join(Omca.datadir, "orig", "subrecord", "blobs_common.csv")
+    query = Omca::Db::Queries.blobs
+    Omca::Db::QueryWriter.call(query: query, path: path)
   end
 
   desc "extension_field_group", "Write extension field group tables "\
@@ -57,6 +45,58 @@ class Db < Thor
     )
   end
 
+  desc "main", "Write main tables as CSVs"
+  def main
+    caller(
+      tables: Omca::Mappings::Db.main_tables,
+      table_type: "main",
+      query_meth: :main_table
+    )
+  end
+
+  desc "missing_id", "Identify orig tables without an id field"
+  def missing_id
+    path = File.join(Omca.datadir, "tables_missing_ids.csv")
+    CSV.open(
+      path,
+      "w",
+      headers: %w[tabletype table headers],
+      write_headers: true
+    )
+    acc = []
+    Omca.orig_dirs.each { |dir| chk_dir_files_for_id_field(dir, acc) }
+    if acc.empty?
+      puts "No tables missing id field"
+    else
+      CSV.open(
+        path,
+        "w",
+        headers: %w[tabletype table headers],
+        write_headers: true
+      ) { |csv| acc.each { |r| csv << r } }
+      puts "Wrote #{acc.length} tables to #{path}"
+    end
+  end
+
+  desc "repeatable_field", "Write repeatable field tables as CSVs"
+  def repeatable_field
+    caller(
+      tables: Omca::Mappings::Db.repeatable_field_tables,
+      table_type: "repeatable_field",
+      query_meth: :repeatable_field_table
+    )
+  end
+
+  desc "repeatable_field_group", "Write repeatable field group tables "\
+    "as CSV"
+  def repeatable_field_group
+    caller(
+      tables: Omca::Mappings::Db.repeatable_field_group_tables,
+      table_type: "repeatable_field_group",
+      query_meth: :group_table
+    )
+  end
+
   desc "repeatable_in_group", "Write repeatable in field group tables as CSVs"
   def repeatable_in_group
     caller(
@@ -64,31 +104,6 @@ class Db < Thor
       table_type: "repeatable_in_group",
       query_meth: :repeatable_in_group_table
     )
-  end
-
-  desc "subgroup", "Write repeatable field subgroup tables as CSVs "
-  def subgroup
-    caller(
-      tables: Omca::Mappings::Db.subgroup_tables,
-      table_type: "subgroup",
-      query_meth: :subgroup_table
-    )
-  end
-
-  desc "contacts", "Write main contacts table to `main_rectype` dir "\
-    "as CSV"
-  def contacts
-    path = File.join(Omca.datadir, "orig", "subrecord", "contacts_common.csv")
-    query = Omca::Db::Queries.contacts
-    Omca::Db::QueryWriter.call(query: query, path: path)
-  end
-
-  desc "blobs", "Write main blobs table to `main_rectype` dir "\
-    "as CSV"
-  def blobs
-    path = File.join(Omca.datadir, "orig", "subrecord", "blobs_common.csv")
-    query = Omca::Db::Queries.blobs
-    Omca::Db::QueryWriter.call(query: query, path: path)
   end
 
   desc "structured_dates", "Writes structured date data to "\
@@ -101,6 +116,15 @@ class Db < Thor
     path = File.join(Omca.datadir, "orig", "structured_dates", "top.csv")
     query = Omca::Db::Queries.top_level_structured_dates
     Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
+  desc "subgroup", "Write repeatable field subgroup tables as CSVs "
+  def subgroup
+    caller(
+      tables: Omca::Mappings::Db.subgroup_tables,
+      table_type: "subgroup",
+      query_meth: :subgroup_table
+    )
   end
 
   desc "tables_and_columns", "writes CSV of tables and columns"
@@ -129,30 +153,6 @@ class Db < Thor
 
     puts "Duplicate column names in rectype:"
     dupes.each { |k, v| puts "  #{k} is in tables: #{v.join(", ")}" }
-  end
-
-  desc "missing_id", "Identify orig tables without an id field"
-  def missing_id
-    path = File.join(Omca.datadir, "tables_missing_ids.csv")
-    CSV.open(
-      path,
-      "w",
-      headers: %w[tabletype table headers],
-      write_headers: true
-    )
-    acc = []
-    Omca.orig_dirs.each { |dir| chk_dir_files_for_id_field(dir, acc) }
-    if acc.empty?
-      puts "No tables missing id field"
-    else
-      CSV.open(
-        path,
-        "w",
-        headers: %w[tabletype table headers],
-        write_headers: true
-      ) { |csv| acc.each { |r| csv << r } }
-      puts "Wrote #{acc.length} tables to #{path}"
-    end
   end
 
   no_commands do

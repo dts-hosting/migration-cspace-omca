@@ -38,10 +38,6 @@ module Omca
                                 row["table_type"] == "main"
                               end
 
-      # @return [Array<String>] database table names of main rectype tables
-      def main_tables = @main_tables ||=
-                          main_table_rows.map { |row| row["table_name"] }
-
       # @return [Hash] keys are rectypes; values are main table names
       def main_tables_by_rectype
         @main_tables_by_rectype ||=
@@ -58,21 +54,40 @@ module Omca
             .to_h
       end
 
-      def repeatable_field_tables
-        @repeatable_field_tables ||=
-          db_tables_sheet.select do |row|
-            row["table_type"] == "repeatable_field"
-          end.map do |r|
-            [r["table_name"], main_tables_by_rectype[r["rectype"]]]
-          end
-      end
-
       def addtl_fields_tables
         @addtl_fields_tables ||=
           db_tables_sheet.select { |row| row["table_type"] == "addtl_fields" }
             .map do |r|
               [r["table_name"],
                 main_tables_by_rectype[r["rectype"]]]
+          end
+      end
+
+      def extension_field_group_tables
+        @extension_field_group_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "extension_field_group"
+          end.map { |r| r["table_name"] }
+            .reject { |e| e == "dategroup" || e == "structureddategroup" }
+      end
+
+      def extension_subgroup_tables
+        @extension_subgroup_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "extension_subgroup"
+          end.map { |r| r["table_name"] }
+      end
+
+      # @return [Array<String>] database table names of main rectype tables
+      def main_tables = @main_tables ||=
+                          main_table_rows.map { |row| row["table_name"] }
+
+      def repeatable_field_tables
+        @repeatable_field_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "repeatable_field"
+          end.map do |r|
+            [r["table_name"], main_tables_by_rectype[r["rectype"]]]
           end
       end
 
@@ -84,25 +99,10 @@ module Omca
             .reject { |e| e == "dategroup" || e == "structureddategroup" }
       end
 
-      def extension_field_group_tables
-        @extension_field_group_tables ||=
-          db_tables_sheet.select do |row|
-            row["table_type"] == "extension_field_group"
-          end.map { |r| r["table_name"] }
-            .reject { |e| e == "dategroup" || e == "structureddategroup" }
-      end
-
       def repeatable_in_group_tables
         @repeatable_in_group_tables ||=
           db_tables_sheet.select do |row|
             row["table_type"] == "repeatable_in_group"
-          end.map { |r| r["table_name"] }
-      end
-
-      def extension_subgroup_tables
-        @extension_subgroup_tables ||=
-          db_tables_sheet.select do |row|
-            row["table_type"] == "extension_subgroup"
           end.map { |r| r["table_name"] }
       end
 
