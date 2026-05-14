@@ -43,47 +43,44 @@ module Omca
                           main_table_rows.map { |row| row["table_name"] }
 
       # @return [Hash] keys are rectypes; values are main table names
-      def main_tables_by_rectype = @main_tables_by_rectype ||=
-                                     main_table_rows.map do |row|
-                                       [row["rectype"], row["table_name"]]
-                                     end
-                                       .to_h
+      def main_tables_by_rectype
+        @main_tables_by_rectype ||=
+          main_table_rows.map { |row| [row["rectype"], row["table_name"]] }
+            .to_h
+      end
 
       def rectypes = @rectypes ||= main_tables_by_rectype.keys
 
       # @return [Hash] keys are main table names; values are rectypes
-      def rectypes_by_main_table = @rectypes_by_main_table ||=
-                                     main_table_rows.map do |row|
-                                       [row["table_name"], row["rectype"]]
-                                     end
-                                       .to_h
+      def rectypes_by_main_table
+        @rectypes_by_main_table ||=
+          main_table_rows.map { |row| [row["table_name"], row["rectype"]] }
+            .to_h
+      end
 
-      def repeatable_field_tables = @repeatable_field_tables ||=
-                                      db_tables_sheet.select do |row|
-                                        row["table_type"] == "repeatable_field"
-                                      end
-                                        .map do |r|
-                                          [
-                                            r["table_name"],
-                                            main_tables_by_rectype[r["rectype"]]
-                                          ]
-                                        end
+      def repeatable_field_tables
+        @repeatable_field_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "repeatable_field"
+          end.map do |r|
+            [r["table_name"], main_tables_by_rectype[r["rectype"]]]
+          end
+      end
 
-      def addtl_fields_tables = @addtl_fields_tables ||=
-                                  db_tables_sheet.select do |row|
-                                    row["table_type"] == "addtl_fields"
-                                  end
-                                    .map do |r|
-                                      [r["table_name"],
-                                        main_tables_by_rectype[r["rectype"]]]
-                                    end
+      def addtl_fields_tables
+        @addtl_fields_tables ||=
+          db_tables_sheet.select { |row| row["table_type"] == "addtl_fields" }
+            .map do |r|
+              [r["table_name"],
+                main_tables_by_rectype[r["rectype"]]]
+          end
+      end
 
       def repeatable_field_group_tables
         @repeatable_field_group_tables ||=
           db_tables_sheet.select do |row|
             row["table_type"] == "repeatable_field_group"
-          end
-            .map { |r| r["table_name"] }
+          end.map { |r| r["table_name"] }
             .reject { |e| e == "dategroup" || e == "structureddategroup" }
       end
 
@@ -91,29 +88,29 @@ module Omca
         @extension_field_group_tables ||=
           db_tables_sheet.select do |row|
             row["table_type"] == "extension_field_group"
-          end
-            .map { |r| r["table_name"] }
+          end.map { |r| r["table_name"] }
             .reject { |e| e == "dategroup" || e == "structureddategroup" }
       end
 
-      def repeatable_in_group_tables = @repeatable_in_group_tables ||=
-                                         db_tables_sheet.select do |row|
-                                           row["table_type"] ==
-                                             "repeatable_in_group"
-                                         end
-                                           .map { |r| r["table_name"] }
+      def repeatable_in_group_tables
+        @repeatable_in_group_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "repeatable_in_group"
+          end.map { |r| r["table_name"] }
+      end
 
-      def extension_subgroup_tables = @extension_subgroup_tables ||=
-                                        db_tables_sheet.select do |row|
-                                          row["table_type"] == "extension_subgroup"
-                                        end
-                                          .map { |r| r["table_name"] }
+      def extension_subgroup_tables
+        @extension_subgroup_tables ||=
+          db_tables_sheet.select do |row|
+            row["table_type"] == "extension_subgroup"
+          end.map { |r| r["table_name"] }
+      end
 
-      def subgroup_tables = @subgroup_tables ||=
-                              db_tables_sheet.select do |row|
-                                row["table_type"] == "subgroup"
-                              end
-                                .map { |r| r["table_name"] }
+      def subgroup_tables
+        @subgroup_tables ||=
+          db_tables_sheet.select { |row| row["table_type"] == "subgroup" }
+            .map { |r| r["table_name"] }
+      end
     end
   end
 end
