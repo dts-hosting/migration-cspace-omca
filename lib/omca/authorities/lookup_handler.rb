@@ -16,28 +16,37 @@ module Omca
       # @param val [String]
       # @param type [:all, :pref, :nonpref]
       # @param caseinsensitive [Boolean]
-      def by_termdisplayname(val, type: :all, caseinsensitive: true)
+      # @param include_unused [Boolean]
+      def by_termdisplayname(val, type: :all, caseinsensitive: true,
+        include_unused: false)
         populate_terms if terms.empty?
+        populate_pref_terms if !instance_variable_defined?(:@pref_terms) &&
+          type == :pref
+        if !instance_variable_defined?(:@nonpref_terms) && type == :nonpref
+          populate_nonpref_terms
+        end
+        populate_used_terms if !instance_variable_defined?(:@used_terms) &&
+          !include_unused
 
-        all = if caseinsensitive
-          terms.select do |t|
-            t["termdisplayname"].downcase == val.downcase
-          end
+        sources = []
+        sources << pref_terms if type == :pref
+        sources << nonpref_terms if type == :nonpref
+        sources << used_terms unless include_unused
+        sources = [terms] if sources.empty?
+
+        query = caseinsensitive ? val.downcase : val
+        corpus = sources.inject(:intersection)
+        match = if caseinsensitive
+          corpus.select { |ct| ct["termdisplayname"].downcase == query }
         else
-          terms.select { |t| t["termdisplayname"] == val }
+          corpus.select { |ct| ct["termdisplayname"] == query }
         end
-        return merge_refnames(all) if type == :all
-
-        if type == :pref
-          merge_refnames(all.select { |t| t["pos"] == "0" })
-        elsif type == :nonpref
-          merge_refnames(all.reject { |t| t["pos"] == "0" })
-        end
+        merge_refnames(match)
       end
 
       private
 
-      attr_reader :terms, :records
+      attr_reader :terms, :records, :pref_terms, :nonpref_terms, :used_terms
 
       def merge_refnames(matches)
         populate_records if records.empty?
@@ -59,18 +68,40 @@ module Omca
 
       def populate_terms
         termtable = Omca::Mappers.term_table_for(type)
-        # dir = Omca::Mappings::Db.table_type(termtable, :dir)
-        path = File.join(Omca.datadir, "orig", "field_groups",
+        path = File.join(Omca.datadir, "preprocess", "repeatable_field_group",
           "#{termtable}.csv")
-        data = CSV.parse(File.read(path), headers: true)
-        @terms = data unless subtypeid
 
-        @terms = data.select { |r| r["authority"] == subtypeid }
+        unless File.exist?(path)
+          Kiba::Extend::Command::Run.job(
+            :"preprocess_repeatable_field_group__#{termtable}"
+          )
+        end
+
+        data = CSV.parse(File.read(path), headers: true)
+        @terms = if subtypeid
+          data.select { |r| r["authority"] == subtypeid }
+        else
+          data
+        end
+      end
+
+      def populate_pref_terms
+        @pref_terms = terms.select { |t| t["pos"] == "0" }
+      end
+
+      def populate_nonpref_terms
+        @nonpref_terms = terms.reject { |t| t["pos"] == "0" }
+      end
+
+      def populate_used_terms
+        @used_terms = terms.select do |t|
+          t[Omca::Authorities.used_tag_field.to_s] == "y"
+        end
       end
 
       def populate_records
         table = Omca::Mappings::Db.main_tables_by_rectype[type]
-        path = File.join(Omca.datadir, "preprocess", "#{table}.csv")
+        path = File.join(Omca.datadir, "preprocess", "main", "#{table}.csv")
         data = CSV.parse(File.read(path), headers: true)
         @records = data unless subtypeid
 

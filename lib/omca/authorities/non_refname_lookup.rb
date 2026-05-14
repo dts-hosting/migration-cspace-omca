@@ -15,17 +15,21 @@ module Omca
         @srcpath = Omca::Authorities.uniq_non_refname_usages_path
         @outpath = Omca::Authorities.non_refname_lookup_path
         @config = Omca::Authorities.non_refname_lookup_config
+        @headers = Omca::Authorities.non_refname_lookup_headers
         @handlers = {}
         @outrows = []
       end
 
       def call
         rows_by_field.each { |fdata, rows| lookup_for_field(fdata, rows) }
+        CSV.open(outpath, "w", headers: headers, write_headers: true) do |csv|
+          outrows.each { |r| csv << r.values_at(*headers) }
+        end
       end
 
       private
 
-      attr_reader :srcpath, :outpath, :config, :handlers, :outrows
+      attr_reader :srcpath, :outpath, :config, :headers, :handlers, :outrows
 
       def rows_by_field = CSV.parse(File.read(srcpath), headers: true)
         .group_by { |r| [r["table"], r["field"]] }
@@ -52,14 +56,24 @@ module Omca
 
       def prepare_for_write(matches, row)
         if matches.empty?
-          outrows << row.to_h.merge({matchtype: "none"})
+          outrows << row.to_h.merge({"matchtype" => "none"})
         elsif matches.length == 1
           outrows << row.to_h.merge({
-            matchtype: "single", refname: matches[0]["refname"]
+            "matchtype" => "single", "refname" => matches[0]["refname"]
           })
         else
-          # binding.pry
+          m = select_most_populated_or_first(matches)
+          outrows << row.to_h.merge({
+            "matchtype" => "multi", "refname" => m["refname"]
+          })
         end
+      end
+
+      def select_most_populated_or_first(matches)
+        matches.map { |m| [m, m.compact.size] }
+          .to_h
+          .max_by { |a| a[1] }
+          .first
       end
 
       def generate_handler(fsig)
