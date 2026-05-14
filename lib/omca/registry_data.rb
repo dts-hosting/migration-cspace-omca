@@ -19,6 +19,10 @@ module Omca
       end
 
       register_preprocess_main_jobs
+      %w[addtl_fields repeatable_field repeatable_field_group
+        repeatable_in_group subgroup].each do |dir|
+        register_preprocess_non_main_jobs(dir)
+      end
       register_unused_authority_reports
 
       register_files
@@ -103,7 +107,7 @@ module Omca
           }
 
           entry = {
-            path: File.join(Omca.datadir, "preprocess", "#{table}.csv"),
+            path: File.join(Omca.datadir, "preprocess", "main", "#{table}.csv"),
             creator: {
               callee: Omca::Jobs::MainPreprocess,
               args: args
@@ -122,6 +126,39 @@ module Omca
       end
     end
     private_class_method :register_preprocess_main_jobs
+
+    def register_preprocess_non_main_jobs(dir)
+      ns = "preprocess_#{dir}"
+
+      origpath = File.join(Omca.datadir, "orig", dir)
+      entries = Dir.children(origpath).map do |tablefilename|
+        table = tablefilename.delete_suffix(".csv")
+        rectype = Omca::Mappings::Db.rectype_for_table(table)
+
+        args = {
+          source: :"#{dir}__#{table}",
+          dest: :"#{ns}__#{table}",
+          rectype: rectype,
+          tabletype: dir
+        }
+
+        entry = {
+          path: File.join(Omca.datadir, "preprocess", dir, "#{table}.csv"),
+          creator: {
+            callee: Omca::Jobs::NonMainPreprocess,
+            args: args
+          },
+          tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym]
+        }
+
+        [table.to_sym, entry]
+      end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_preprocess_non_main_jobs
 
     def register_unused_authority_reports
       ns = "authority_unused"
