@@ -99,7 +99,7 @@ module Omca
       def repeatable_in_group_tables = @repeatable_in_group_tables ||=
                                          db_tables_sheet.select do |row|
                                            row["table_type"] ==
-                                             "repeatable in group"
+                                             "repeatable_in_group"
                                          end
                                            .map { |r| r["table_name"] }
 

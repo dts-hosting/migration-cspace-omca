@@ -48,9 +48,8 @@ class Db < Thor
     )
   end
 
-  desc "repeatable_in_group_tables", "Write repeatable field group tables "\
-    "to `field_groups` dir as CSV"
-  def repeatable_in_group_tables
+  desc "repeatable_in_group", "Write repeatable in field group tables as CSVs"
+  def repeatable_in_group
     caller(
       tables: Omca::Mappings::Db.repeatable_in_group_tables,
       table_type: "repeatable_in_group",

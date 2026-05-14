@@ -110,7 +110,7 @@ module Omca
       def repeatable_in_group_table(table)
         <<~SQL
           select
-          rechier.name as recordcsid,
+          rechier.name as parentcsid,
           rechier.id as recordid,
           ghier.id as groupid,
           tbl.*
