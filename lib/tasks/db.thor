@@ -48,6 +48,15 @@ class Db < Thor
     )
   end
 
+  desc "extension_subgroup", "Write extension subgroup tables as CSVs "
+  def extension_subgroup
+    caller(
+      tables: Omca::Mappings::Db.extension_subgroup_tables,
+      table_type: "extension_subgroup",
+      query_meth: :subgroup_table
+    )
+  end
+
   desc "repeatable_in_group", "Write repeatable in field group tables as CSVs"
   def repeatable_in_group
     caller(
@@ -57,12 +66,11 @@ class Db < Thor
     )
   end
 
-  desc "subgroup_tables", "Write repeatable field subgroup tables "\
-    "to `field_subgroups` dir as CSV"
-  def subgroup_tables
+  desc "subgroup", "Write repeatable field subgroup tables as CSVs "
+  def subgroup
     caller(
       tables: Omca::Mappings::Db.subgroup_tables,
-      table_type: "field_subgroups",
+      table_type: "subgroup",
       query_meth: :subgroup_table
     )
   end

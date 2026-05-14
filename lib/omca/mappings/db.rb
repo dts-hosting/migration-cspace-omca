@@ -103,9 +103,15 @@ module Omca
                                          end
                                            .map { |r| r["table_name"] }
 
+      def extension_subgroup_tables = @extension_subgroup_tables ||=
+                                        db_tables_sheet.select do |row|
+                                          row["table_type"] == "extension_subgroup"
+                                        end
+                                          .map { |r| r["table_name"] }
+
       def subgroup_tables = @subgroup_tables ||=
                               db_tables_sheet.select do |row|
-                                row["table_type"].start_with?("subgroup")
+                                row["table_type"] == "subgroup"
                               end
                                 .map { |r| r["table_name"] }
     end

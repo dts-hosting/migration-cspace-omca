@@ -126,7 +126,7 @@ module Omca
 
       def subgroup_table(table)
         <<~SQL
-          SELECT phier.name as recordcsid,
+          SELECT phier.name as parentcsid,
           ghier.id as groupid,
           sghier.pos,
           tbl.*

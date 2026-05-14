@@ -47,12 +47,13 @@ thor db:addtl_fields
 thor db:blobs
 thor db:contacts
 thor db:extension_field_group
+thor db:extension_subgroup
 thor db:main
 thor db:repeatable_field
 thor db:repeatable_field_group
 thor db:repeatable_in_group
 thor db:structured_dates
-thor db:subgroup_tables
+thor db:subgroup
 ----
 
 `thor db:missing_id` is then run to verify all query output includes the expected id values
@@ -92,10 +93,11 @@ These tables are categorized by the pattern of how the data in them gets merged 
 
 addtl_fields:: One row per main table row; Adds single-valued, standalone fields to core; All are custom to OMCA, and will need remapping according to specifications prepared by Jessi/Jadeen/OMCA.
 extension_field_group:: The same as `repeatable_field_group`, except the field group is defined and used in multiple main record types.
+extension_subgroup:: The same as `subgroup`, except the field subgroup is defined and used in multiple main record types.
 repeatable_field:: One or more rows per main table row; Data from standalone multi-valued fields, such as a list of inventory statuses. Position of each value is indicated. Null `item` values removed.
 repeatable_field_group:: One or more rows per main table; Data from repeatable groupings of fields, or "field blocks"; Position of each block is indicated.
 repeatable_in_group:: One or more rows per group table row; Data from repeatable single field _inside a repeatable field block_; Positionality in play
-subgroup_tables:: One or more rows per group_table row; Data from repeatable a repeatable field block inside another repeatable field block; Position of each block is indicated.
+subgroup:: One or more rows per group_table row; Data from repeatable a repeatable field block inside another repeatable field block; Position of each block is indicated.
 subrecord:: Blob and contact tables
 structured_dates:: Combined data from `dategroup` and `structureddategroup` tables, in two files based on whether the date is top-level in record, or nested inside a field group; Both of these extracted tables have multiple target record types and different target date fields within those.
 
