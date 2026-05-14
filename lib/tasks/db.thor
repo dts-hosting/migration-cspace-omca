@@ -10,13 +10,12 @@ class Db < Thor
     )
   end
 
-  desc "repeating_field_tables", "Write repeating field tables to "\
-    "`repeating` dir as CSV"
-  def repeating_field_tables
+  desc "repeatable_field", "Write repeatable field tables as CSVs"
+  def repeatable_field
     caller(
-      tables: Omca::Mappings::Db.repeating_field_tables,
-      table_type: "repeating",
-      query_meth: :repeating_field_table
+      tables: Omca::Mappings::Db.repeatable_field_tables,
+      table_type: "repeatable_field",
+      query_meth: :repeatable_field_table
     )
   end
 

@@ -58,14 +58,16 @@ module Omca
                                      end
                                        .to_h
 
-      def repeating_field_tables = @repeating_field_tables ||=
-                                     db_tables_sheet.select do |row|
-                                       row["table_type"] == "repeatable field"
-                                     end
-                                       .map do |r|
-                                         [r["table_name"],
-                                           main_tables_by_rectype[r["rectype"]]]
-                                       end
+      def repeatable_field_tables = @repeatable_field_tables ||=
+                                      db_tables_sheet.select do |row|
+                                        row["table_type"] == "repeatable_field"
+                                      end
+                                        .map do |r|
+                                          [
+                                            r["table_name"],
+                                            main_tables_by_rectype[r["rectype"]]
+                                          ]
+                                        end
 
       def addtl_fields_tables = @addtl_fields_tables ||=
                                   db_tables_sheet.select do |row|

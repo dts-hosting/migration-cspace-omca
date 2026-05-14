@@ -48,9 +48,9 @@ thor db:blobs
 thor db:contacts
 thor db:extension_field_group
 thor db:main
+thor db:repeatable_field
 thor db:repeatable_field_group
 thor db:repeatable_in_group_tables
-thor db:repeating_field_tables
 thor db:structured_dates
 thor db:subgroup_tables
 ----
@@ -92,7 +92,7 @@ These tables are categorized by the pattern of how the data in them gets merged 
 
 addtl_fields:: One row per main table row; Adds single-valued, standalone fields to core; All are custom to OMCA, and will need remapping according to specifications prepared by Jessi/Jadeen/OMCA.
 extension_field_group:: The same as `repeatable_field_group`, except the field group is defined and used in multiple main record types.
-repeating_field_tables:: One or more rows per main table row; Data from standalone multi-valued fields, such as a list of inventory statuses. Position of each value is indicated. Null `item` values removed.
+repeatable_field:: One or more rows per main table row; Data from standalone multi-valued fields, such as a list of inventory statuses. Position of each value is indicated. Null `item` values removed.
 repeatable_field_group:: One or more rows per main table; Data from repeatable groupings of fields, or "field blocks"; Position of each block is indicated.
 repeatable_in_group_tables:: One or more rows per group table row; Data from repeatable single field _inside a repeatable field block_; Positionality in play
 subgroup_tables:: One or more rows per group_table row; Data from repeatable a repeatable field block inside another repeatable field block; Position of each block is indicated.

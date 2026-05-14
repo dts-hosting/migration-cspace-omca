@@ -39,13 +39,15 @@ module Omca
         SQL
       end
 
-      def repeating_field_table(table, main_table)
+      def repeatable_field_table(table, main_table)
         <<~SQL
-          select tbl.*
+          select hier.name as parentcsid,
+          tbl.*
           from #{table} tbl
           inner join misc on tbl.id = misc.id and
             misc.lifecyclestate != 'deleted'
           inner join #{main_table} mt on tbl.id = mt.id
+          inner join hierarchy hier on tbl.id = hier.id
           where tbl.item is not null
           order by tbl.id, tbl.pos
         SQL
