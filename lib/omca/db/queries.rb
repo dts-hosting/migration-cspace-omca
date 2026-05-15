@@ -12,7 +12,7 @@ module Omca
 
         <<~SQL
           select
-          hier.name AS csid,
+          hier.name AS recordcsid,
           tbl.*
           from #{table_name} tbl
           inner join misc on tbl.id = misc.id and
@@ -27,7 +27,7 @@ module Omca
 
         <<~SQL
           select
-          hier.name AS csid,
+          hier.name AS recordcsid,
           atbl.shortidentifier as authority,
           tbl.*
           from #{table_name} tbl
@@ -41,7 +41,7 @@ module Omca
 
       def repeatable_field_table(table, main_table)
         <<~SQL
-          select hier.name as parentcsid,
+          select hier.name as recordcsid,
           tbl.*
           from #{table} tbl
           inner join misc on tbl.id = misc.id and
@@ -55,7 +55,7 @@ module Omca
 
       def addtl_fields_table(table, main_table)
         <<~SQL
-          select hier.name as parentcsid,
+          select hier.name as recordcsid,
             tbl.*
           from #{table} tbl
           inner join misc on tbl.id = misc.id and
@@ -72,7 +72,7 @@ module Omca
 
         <<~SQL
           select
-          phier.name as parentcsid,
+          phier.name as recordcsid,
           hier.pos,
           tbl.*
           from #{table} tbl
@@ -91,7 +91,7 @@ module Omca
 
         <<~SQL
           select
-          phier.name as parentcsid,
+          phier.name as recordcsid,
           auth.shortidentifier as authority,
           hier.pos,
           tbl.*
@@ -110,7 +110,7 @@ module Omca
       def repeatable_in_group_table(table)
         <<~SQL
           select
-          rechier.name as parentcsid,
+          rechier.name as recordcsid,
           rechier.id as recordid,
           ghier.id as groupid,
           tbl.*
@@ -126,7 +126,7 @@ module Omca
 
       def subgroup_table(table)
         <<~SQL
-          SELECT phier.name as parentcsid,
+          SELECT phier.name as recordcsid,
           ghier.id as groupid,
           sghier.pos,
           tbl.*
@@ -151,7 +151,7 @@ module Omca
           substring(
                       dhier.name from (position(':' in dhier.name) + 1)
                     ) as primarytype,
-          rhier.name as parentcsid,
+          rhier.name as recordcsid,
           dhier.pos,
           tbl.*
           from structureddategroup tbl
@@ -169,7 +169,7 @@ module Omca
           substring(
                       dhier.name from (position(':' in dhier.name) + 1)
                     ) as primarytype,
-          rhier.name as parentcsid,
+          rhier.name as recordcsid,
           dhier.pos,
           tbl.*
           from dategroup tbl
@@ -191,7 +191,7 @@ module Omca
             dghier.name for (position(':' in dghier.name) - 1)
           ) as main_table,
           dghier.primarytype,
-          rhier.name as parentcsid,
+          rhier.name as recordcsid,
           dghier.id as groupid,
           tbl.*
           from structureddategroup tbl
@@ -208,7 +208,7 @@ module Omca
             dghier.name for (position(':' in dghier.name) - 1)
           ) as main_table,
           dghier.primarytype,
-          rhier.name as parentcsid,
+          rhier.name as recordcsid,
           dghier.id as groupid,
           tbl.*
           from dategroup tbl
@@ -225,7 +225,7 @@ module Omca
       def contacts
         <<~SQL
           select
-          chier.name AS contactcsid,
+          chier.name AS recordcsid,
           ahier.name AS termcsid,
           cc.uri AS termuri,
           ahier.id AS term_db_id,
@@ -244,7 +244,7 @@ module Omca
           with media as (
           select
           'media' as mediatype,
-          mch.name as mediacsid,
+          mch.name as recordcsid,
           mc.blobcsid
           from media_common mc
           inner join misc on mc.id = misc.id and
@@ -255,7 +255,7 @@ module Omca
 
           select
           'restrictedmedia' as mediatype,
-          rmch.name as mediacsid,
+          rmch.name as recordcsid,
           rmc.blobcsid
           from restrictedmedia_common rmc
           inner join misc on rmc.id = misc.id and
@@ -267,7 +267,7 @@ module Omca
           from media
           inner join hierarchy hier on media.blobcsid = hier.name
           inner join blobs_common bc on hier.id = bc.id
-          order by mediacsid
+          order by recordcsid
         SQL
       end
     end
