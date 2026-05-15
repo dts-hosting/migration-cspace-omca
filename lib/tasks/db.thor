@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 class Db < Thor
+  desc "extract_all", "Run all db extraction commands"
+  def extract_all
+    invoke :addtl_fields
+    invoke :contacts
+    invoke :blobs
+    invoke :extension_field_group
+    invoke :extension_subgroup
+    invoke :main
+    invoke :repeatable_field
+    invoke :repeatable_field_group
+    invoke :repeatable_in_group
+    invoke :structured_dates
+    invoke :subgroup
+  end
+
   desc "addtl_fields", "Write other direct-id-linked tables as CSVs"
   def addtl_fields
     caller(
