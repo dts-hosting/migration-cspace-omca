@@ -38,7 +38,7 @@ module Omca
 
       def fix_bad_domain(val)
         good = "urn:cspace:museumca.org:concept"
-        "#{good}{#{val.delete_prefix(bad_domain_pattern)}"
+        "#{good}#{val.delete_prefix(bad_domain_pattern)}"
       end
 
       def fix_bad_item(val)
