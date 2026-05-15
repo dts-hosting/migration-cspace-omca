@@ -58,28 +58,19 @@ module Omca
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 
-        %i[usages uniq_usages].each do |key|
-          register key, {
-            path: Omca::Authorities.send(:"#{key}_path"),
-            supplied: true,
-            tags: [key, ns.to_sym],
-            desc: "Produce by running `thor at #{key}`"
-          }
+        register :fix_usages, {
+          path: File.join(Omca.datadir, "fix", "authority_ref", "usages.csv"),
+          creator: Omca::Jobs::Authorities::FixUsages,
+          tags: [ns.to_sym, :fix]
+        }
 
-          fix_key = :"fix_#{key}"
-          args = {
-            source: :"#{ns}__#{key}",
-            dest: :"#{ns}__#{fix_key}"
-          }
-          register fix_key, {
-            path: Omca::Authorities.send(:"#{fix_key}_path"),
-            creator: {
-              callee: Omca::Jobs::Authorities::Fix,
-              args: args
-            },
-            tags: [key, :fix, ns.to_sym]
-          }
-        end
+        register :fix_uniq_usages, {
+          path: File.join(Omca.datadir, "fix", "authority_ref",
+            "uniq_usages.csv"),
+          creator: Omca::Jobs::Authorities::FixUniqUsages,
+          tags: [ns.to_sym, :fix]
+        }
+
 
         register :no_form_citations, {
           path: File.join(
