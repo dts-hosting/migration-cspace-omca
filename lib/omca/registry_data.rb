@@ -19,10 +19,13 @@ module Omca
       end
 
       register_preprocess_main_jobs
+
       %w[addtl_fields repeatable_field repeatable_field_group
         repeatable_in_group subgroup].each do |dir|
         register_preprocess_non_main_jobs(dir)
       end
+
+      register_fix_jobs
       register_unused_authority_reports
 
       register_files
@@ -150,6 +153,47 @@ module Omca
       end
     end
     private_class_method :register_preprocess_non_main_jobs
+
+    def register_fix_jobs
+      Dir.children(File.join(Omca.datadir, "preprocess")).each do |dir|
+        register_fix_dir_jobs(dir)
+      end
+    end
+    private_class_method :register_fix_jobs
+
+    def register_fix_dir_jobs(dir)
+      ns = "fix_#{dir}"
+
+      path = File.join(Omca.datadir, "preprocess", dir)
+      entries = Dir.children(path).map do |tablefilename|
+        table = tablefilename.delete_suffix(".csv")
+        rectype = Omca::Mappings::Db.rectype_for_table(table)
+
+        args = {
+          source: :"preprocess_#{dir}__#{table}",
+          dest: :"#{ns}__#{table}",
+          table: table,
+          rectype: rectype,
+          tabletype: dir
+        }
+
+        entry = {
+          path: File.join(Omca.datadir, "fix", dir, "#{table}.csv"),
+          creator: {
+            callee: Omca::Jobs::FixTableData,
+            args: args
+          },
+          tags: [:fix, ns.to_sym, table.to_sym, rectype.to_sym]
+        }
+
+        [table.to_sym, entry]
+      end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_fix_dir_jobs
 
     def register_unused_authority_reports
       ns = "authority_unused"
