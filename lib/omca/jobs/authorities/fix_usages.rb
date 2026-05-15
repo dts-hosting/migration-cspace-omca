@@ -27,6 +27,13 @@ module Omca
                   row[:form].blank?
               end
 
+            removals = Omca::Mappings::Fields.usage_removals
+            transform do |row|
+              next if removals.include?([row[:table], row[:field]])
+
+              row
+            end
+
             transform CombineValues::FromFieldsWithDelimiter,
               sources: %i[authority vocab termid],
               target: :index,

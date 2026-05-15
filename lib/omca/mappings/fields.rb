@@ -28,6 +28,12 @@ module Omca
           row["source_db_table"] == rectype && row["migrating?"] == "y"
         end
       end
+
+      def usage_removals
+        fields_sheet.select do |row|
+          row["mapping_treatment"] == "uncontrol and remove usage"
+        end.map { |r| [r["source_db_table"], r["db_field"]] }
+      end
     end
   end
 end
