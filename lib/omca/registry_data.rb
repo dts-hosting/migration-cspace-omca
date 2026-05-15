@@ -74,6 +74,12 @@ module Omca
           tags: [ns.to_sym, :fix]
         }
 
+        register :collapse_to_pref, {
+          path: File.join(Omca.datadir, "fix", "authority_ref",
+            "collapse_to_pref.csv"),
+          creator: Omca::Jobs::Authorities::CollapseToPref,
+          tags: [ns.to_sym, :fix]
+        }
 
         register :no_form_citations, {
           path: File.join(
