@@ -117,8 +117,8 @@ Other extract tasks:
 
 === Reporting/deciding/misc based on extracted data
 
-* Authority controlled field values that are not refnames
-** [x] Create report (`thor at:non_refname_lookup`)
+* [x] Create report of Authority controlled field values that are not refnames (`thor at:non_refname_lookup`)
+* [ ] Create report of Unlinked authority usages -- these are well-formed refname usages of authority terms, but when you try to identify the authority record for the term based on the id portion of the refname, there is no record.
 
 === Preprocess
 
@@ -139,6 +139,7 @@ Per-table category preprocessing:
 ** [x] Disambiguate duplicate `ingestid` values
 ** If rectype is an authority
 *** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
+*** [x] If a concept/associated term is ONLY used in taxon/common name field, mark it unused, as that field is uncontrolled in anthro - this is handled by the `uncontrol and remove usage` implementation in the `authorities__fix_usages` job
 *** [x] Identify unused authority terms and tag them `:term_is_used` = `n`
 * repeatable_field
 ** [x] Delete empty fields
@@ -158,11 +159,13 @@ Per-table category preprocessing:
 
 This layer applies identified fixes to:
 
-* Preprocess output
-** [ ] Drop unused authorities
+* fix_main jobs (`thor jobs tagged fix_main -r`)
+** [x] AUTHORITY TABLES ONLY: Drop unused authorities **except** for in location and taxon authorities (Implememted by changing the `TagUnusedAuthorityTerms` xform applied in the preprocess layer to tag all rows in locations_common and taxon_common tables as used
 
-* Any additional extracted artifacts (such as authority usage lists)
+* authority_ref/usages.csv - `thor run job authorities__fix_usages`
 ** [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
+** [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
+** [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 
 === FCAR
 
@@ -193,4 +196,4 @@ This allows us to:
 
 === Reporting
 
-* [ ] Unused authority terms that will be dropped from migration
+* [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
