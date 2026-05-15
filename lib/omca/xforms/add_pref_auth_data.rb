@@ -30,8 +30,14 @@ module Omca
         rectype = Omca::Mappings::Db.rectype_for_table("#{auth}_common")
         table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
+        fix_jobkey = :"fix_main__#{table}"
+        unless Kiba::Extend::Job.registered?(fix_jobkey)
+          Kiba::Extend::Command::Run.job(:"preprocess_main__#{table}")
+          Omca.reset_registry
+        end
+
         lookups[auth] = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :"fix_main__#{table}",
+          jobkey: fix_jobkey,
           lookup_on: :shortidentifier
         )
         lookups[auth]
