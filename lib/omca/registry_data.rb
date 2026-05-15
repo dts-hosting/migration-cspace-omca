@@ -88,6 +88,13 @@ module Omca
           tags: [ns.to_sym, :reports]
         }
 
+        register :unlinked_usages, {
+          path: File.join(Omca.datadir, "reports",
+            "unlinked_authority_usages.csv"),
+          creator: Omca::Jobs::Authorities::UnlinkedUsages,
+          tags: [ns.to_sym, :reports]
+        }
+
         register :no_form_citations, {
           path: File.join(
             Omca.datadir, "reports", "authorities_no_form_citations.csv"
