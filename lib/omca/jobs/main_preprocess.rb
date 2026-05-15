@@ -26,7 +26,7 @@ module Omca
             transform Omca::Xforms::MergePreferredTerm,
               rectype: rectype
             transform Delete::Fields,
-              fields: %i[sas proposed deprecated rev]
+              fields: %i[sas proposed deprecated rev inauthority]
           else
             transform Omca::Xforms::IngestId,
               rectype: rectype
