@@ -97,9 +97,12 @@ module Omca
 
         register :unlinked_usages, {
           path: File.join(Omca.datadir, "reports",
-                          "unlinked_authority_usages.csv"),
+            "unlinked_authority_usages.csv"),
           creator: Omca::Jobs::Authorities::UnlinkedUsages,
-          tags: [ns.to_sym, :reports]
+          tags: [ns.to_sym, :reports],
+          dest_special_opts: {
+            initial_headers: %i[rectype table tabletype recordcsid field]
+          }
         }
 
         register :no_form_citations, {
