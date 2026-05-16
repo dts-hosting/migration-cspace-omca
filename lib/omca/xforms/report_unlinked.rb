@@ -2,7 +2,7 @@
 
 module Omca
   module Xforms
-    class SelectUnlinked
+    class ReportUnlinked
       def initialize(lookup:)
         @lookup = lookup
       end

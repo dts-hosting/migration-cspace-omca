@@ -20,7 +20,7 @@ module Omca
 
         def xforms
           Kiba.job_segment do
-            transform Omca::Xforms::SelectUnlinked,
+            transform Omca::Xforms::ReportUnlinked,
               lookup: authorities__unlinked_uniq_usages
           end
         end
