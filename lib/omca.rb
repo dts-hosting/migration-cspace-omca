@@ -83,6 +83,13 @@ module Omca
     puts "New DB connection created for #{connection_obj.db}"
     @connection = connection_obj
   end
+
+  def reset_registry
+    Kiba::Extend.config.registry =
+      Kiba::Extend::Registry::FileRegistry.new
+    Omca.config.registry = Kiba::Extend.registry
+    Omca::RegistryData.register
+  end
 end
 
 Omca.loader
