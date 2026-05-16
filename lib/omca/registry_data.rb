@@ -85,21 +85,28 @@ module Omca
           path: File.join(Omca.datadir, "reports",
             "unlinked_uniq_authority_usages.csv"),
           creator: Omca::Jobs::Authorities::UnlinkedUniqUsages,
-          tags: [ns.to_sym, :reports]
+          tags: [ns.to_sym, :reports, :unlinked]
+        }
+
+        register :unlinked_uniq_usages_explode, {
+          path: File.join(Omca.datadir, "working",
+            "unlinked_uniq_authority_usages_explode.csv"),
+          creator: Omca::Jobs::Authorities::UnlinkedUniqUsagesExplode,
+          tags: [ns.to_sym, :unlinked]
         }
 
         register :unlinked_usages_base, {
           path: File.join(Omca.datadir, "working",
             "unlinked_authority_usages_base.csv"),
           creator: Omca::Jobs::Authorities::UnlinkedUsagesBase,
-          tags: [ns.to_sym]
+          tags: [ns.to_sym, :unlinked]
         }
 
         register :unlinked_usages, {
           path: File.join(Omca.datadir, "reports",
             "unlinked_authority_usages.csv"),
           creator: Omca::Jobs::Authorities::UnlinkedUsages,
-          tags: [ns.to_sym, :reports],
+          tags: [ns.to_sym, :reports, :unlinked],
           dest_special_opts: {
             initial_headers: %i[rectype table tabletype recordcsid field]
           }
