@@ -122,6 +122,11 @@ Other extract tasks:
 
 === Preprocess
 
+All tables:
+
+* [x] Delete empty fields
+* [ ] DeURN vocabulary terms
+
 Per-table category preprocessing:
 
 * addtl_fields
@@ -135,7 +140,6 @@ Per-table category preprocessing:
 * extension_subgroup
 ** [ ] Delete empty fields
 * main
-** [x] Delete empty fields
 ** [x] Disambiguate duplicate `ingestid` values
 ** If rectype is an authority
 *** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
@@ -167,6 +171,10 @@ This layer applies identified fixes to:
 ** [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
 ** [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 
+* repeatable_field/collectionobjects_common_responsibledepartments.csv
+** [ ] Keep only "Art Department", "History Department", and "Science Department"
+** [ ] Delete " Department" from the end of values
+
 === FCAR
 
 * [ ] Need to collapse used forms of authority refnames to preferred form, retaining/summing usage of all forms of that term. Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
@@ -178,6 +186,8 @@ First we load the "rectypes_common" table data for main record types with:
 
 * disambiguated human readable record id
 * contents of any other fields from *_common table not populated by authorities or optionlists
+* any data from addtl_fields table types that does not involve controlled fields or remapping
+* any data from repeatable_field table types that does not involve controlled fields or remapping
 
 This allows us to:
 
@@ -185,6 +195,12 @@ This allows us to:
 * Show some progress
 * Implement uri/csid lookups between migrating and migrated data
 * Load relationships when we are ready
+
+Implement for:
+
+* [x] objects
+* [ ] procedures
+* [ ] authorities
 
 === ...and more phases to be fully documented
 
