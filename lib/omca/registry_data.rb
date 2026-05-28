@@ -120,6 +120,27 @@ module Omca
           tags: [ns.to_sym, :reports, :citation]
         }
       end
+
+      Omca.registry.namespace("map_report") do
+        register :conditioncheck_condition, {
+          path: File.join(
+            Omca.datadir, "reports", "mapping_reports",
+            "conditioncheck_condition_values.csv"
+          ),
+          creator: Omca::Jobs::MapReport::ConditioncheckCondition,
+          tags: [:map_report, :reports, :conditioncheck],
+          dest_special_opts: {
+            initial_headers: %i[condition_migrating_j condition_migrating_k
+              condition_orig
+              needstreatment_orig
+              needstreatment_jmapping
+              needstreatment_kmapping
+              okforexhibitloanaccession_orig
+              okforexhibitloanaccession_jmapping
+              okforexhibitloanaccession_kmapping]
+          }
+        }
+      end
     end
     private_class_method :register_files
 
