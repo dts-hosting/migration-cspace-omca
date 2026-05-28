@@ -29,6 +29,16 @@ module Omca
         end
       end
 
+      # @param rectype [String]
+      # @param tabletype [String]
+      # @return [Array<Hash>] of migrating rows
+      def skeleton_fields(rectype, tabletype)
+        for_rectype(rectype, side: :target).select do |r|
+          r["mapping_treatment"] == "skeleton" &&
+            r["db_table_type"] == tabletype
+        end
+      end
+
       def usage_removals
         fields_sheet.select do |row|
           row["mapping_treatment"] == "uncontrol and remove usage"
