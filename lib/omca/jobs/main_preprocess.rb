@@ -14,7 +14,10 @@ module Omca
             source: source,
             destination: dest
           },
-          transformer: xforms(rectype)
+          transformer: [
+            xforms(rectype),
+            Omca::Preprocess.common_xforms
+          ]
         )
       end
 
@@ -33,7 +36,6 @@ module Omca
           end
 
           transform Omca::Xforms::DisambiguateIngestId
-          transform Delete::EmptyFields, report: true
         end
       end
     end

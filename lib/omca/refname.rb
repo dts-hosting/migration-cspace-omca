@@ -30,5 +30,11 @@ module Omca
       base.transform_keys!(&:to_sym) if sym
       base
     end
+
+    # @param refname [String]
+    # @return [Boolean]
+    def vocabulary_term?(refname)
+      true if refname["urn:cspace:museumca.org:vocabularies:name"]
+    end
   end
 end

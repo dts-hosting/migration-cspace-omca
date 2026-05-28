@@ -15,7 +15,10 @@ module Omca
             source: source,
             destination: dest
           },
-          transformer: xforms(rectype, tabletype)
+          transformer: [
+            xforms(rectype, tabletype),
+            Omca::Preprocess.common_xforms
+          ]
         )
       end
 
@@ -26,8 +29,6 @@ module Omca
             transform Omca::Xforms::InheritUnusedAuthorityTags,
               rectype: rectype
           end
-
-          transform Delete::EmptyFields, report: true
         end
       end
     end
