@@ -162,28 +162,29 @@ module Omca
       ns = "preprocess_#{dir}"
 
       origpath = File.join(Omca.datadir, "orig", dir)
-      entries = Dir.children(origpath).map do |tablefilename|
-        table = tablefilename.delete_suffix(".csv")
-        rectype = Omca::Mappings::Db.rectype_for_table(table)
+      entries = Dir.children(origpath).reject { |f| f.end_with?("#") }
+        .map do |tablefilename|
+          table = tablefilename.delete_suffix(".csv")
+          rectype = Omca::Mappings::Db.rectype_for_table(table)
 
-        args = {
-          source: :"#{dir}__#{table}",
-          dest: :"#{ns}__#{table}",
-          rectype: rectype,
-          tabletype: dir
-        }
+          args = {
+            source: :"#{dir}__#{table}",
+            dest: :"#{ns}__#{table}",
+            rectype: rectype,
+            tabletype: dir
+          }
 
-        entry = {
-          path: File.join(Omca.datadir, "preprocess", dir, "#{table}.csv"),
-          creator: {
-            callee: Omca::Jobs::NonMainPreprocess,
-            args: args
-          },
-          tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym]
-        }
+          entry = {
+            path: File.join(Omca.datadir, "preprocess", dir, "#{table}.csv"),
+            creator: {
+              callee: Omca::Jobs::NonMainPreprocess,
+              args: args
+            },
+            tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym]
+          }
 
-        [table.to_sym, entry]
-      end
+          [table.to_sym, entry]
+        end
 
       Omca.registry.namespace(ns) do
         entries.each { |entry| register entry[0], entry[1] }
