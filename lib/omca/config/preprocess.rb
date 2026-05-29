@@ -13,6 +13,12 @@ module Omca
         Kiba.job_segment do
           transform Delete::EmptyFields, report: true
           transform Omca::Xforms::DeurnVocabTerms
+          transform Clean::StripFields,
+            fields: :all
+          transform Clean::RegexpFindReplaceFieldVals,
+            fields: :all,
+            find: /\|/,
+            replace: "\u{2758}"
         end
       end
   end
