@@ -125,38 +125,21 @@ Other extract tasks:
 All tables:
 
 * [x] Delete empty fields
-* [ ] DeURN vocabulary terms
+* [x] Replace `|` with \u{2758}
+* [x] DeURN vocabulary terms
+* [x] Delete timestamps with 00, 16, and 17 hour values from end of fields - Non-structured date values must be imported without timestamps
 
 Per-table category preprocessing:
 
-* addtl_fields
-** [x] Delete empty fields
-* blobs
-** [ ] Delete empty fields
-* contacts
-** [ ] Delete empty fields
-* extension_field_group
-** [ ] Delete empty fields
-* extension_subgroup
-** [ ] Delete empty fields
 * main
 ** [x] Disambiguate duplicate `ingestid` values
 ** If rectype is an authority
 *** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
 *** [x] If a concept/associated term is ONLY used in taxon/common name field, mark it unused, as that field is uncontrolled in anthro - this is handled by the `uncontrol and remove usage` implementation in the `authorities__fix_usages` job
 *** [x] Identify unused authority terms and tag them `:term_is_used` = `n`
-* repeatable_field
-** [x] Delete empty fields
 * repeatable_field_group
-** [x] Delete empty fields
 ** If rectype is an authority
 *** [x] Merge in `:term_is_used` value from parent record
-* repeatable_in_group
-** [x] Delete empty fields
-* structured_dates
-** [ ] Delete empty fields
-* subgroup
-** [x] Delete empty fields
 
 
 === Fix
