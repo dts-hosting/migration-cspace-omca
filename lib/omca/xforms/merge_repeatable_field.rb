@@ -3,12 +3,11 @@
 module Omca
   module Xforms
     class MergeRepeatableField
+      include MergeLookupable
+
       def initialize(config:)
         @config = config
-        @lookup = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :"fix_repeatable_field__#{config["source_db_table"]}",
-          lookup_on: :recordcsid
-        )
+        @lookup = get_lookup(config["source_db_table"])
         @target = config["target_field"].to_sym
       end
 

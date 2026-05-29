@@ -5,17 +5,20 @@ module Omca
     module Skeleton
       module_function
 
-      # @param sources [Array<Symbol>]
-      # @param dest [Symbol]
-      # @param rectype [String]
-      def job(source:, dest:, rectype:, id_field:)
+      def job(source:, dest:, table:, rectype:, id_field:)
         Kiba::Extend::Jobs::Job.new(
           files: {
-            source: source,
+            source: get_source(source, table),
             destination: dest
           },
           transformer: xforms(rectype, id_field)
         )
+      end
+
+      def get_source(source, table)
+        Omca::Dependencies.ensure_fix(table)
+
+        source
       end
 
       def xforms(rectype, id_field)
