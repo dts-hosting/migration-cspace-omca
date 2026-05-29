@@ -227,27 +227,27 @@ module Omca
       path = File.join(Omca.datadir, "preprocess", dir)
       entries = Dir.children(path).reject { |f| f.end_with?("#") }
         .map do |tablefilename|
-        table = tablefilename.delete_suffix(".csv")
-        rectype = Omca::Mappings::Db.rectype_for_table(table)
+          table = tablefilename.delete_suffix(".csv")
+          rectype = Omca::Mappings::Db.rectype_for_table(table)
 
-        args = {
-          source: :"preprocess_#{dir}__#{table}",
-          dest: :"#{ns}__#{table}",
-          table: table,
-          rectype: rectype,
-          tabletype: dir
-        }
+          args = {
+            source: :"preprocess_#{dir}__#{table}",
+            dest: :"#{ns}__#{table}",
+            table: table,
+            rectype: rectype,
+            tabletype: dir
+          }
 
-        entry = {
-          path: File.join(Omca.datadir, "fix", dir, "#{table}.csv"),
-          creator: {
-            callee: Omca::Jobs::FixTableData,
-            args: args
-          },
-          tags: [:fix, ns.to_sym, table.to_sym, rectype.to_sym]
-        }
+          entry = {
+            path: File.join(Omca.datadir, "fix", dir, "#{table}.csv"),
+            creator: {
+              callee: Omca::Jobs::FixTableData,
+              args: args
+            },
+            tags: [:fix, ns.to_sym, table.to_sym, rectype.to_sym]
+          }
 
-        [table.to_sym, entry]
+          [table.to_sym, entry]
       end
 
       Omca.registry.namespace(ns) do
