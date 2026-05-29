@@ -41,7 +41,7 @@ module Omca
   # If I want to be lazy I can define this to avoid typing out full directory
   #   paths. It also makes a nice example for using a constructor:
   setting :derived_dirs,
-    default: %w[preprocess fix],
+    default: %w[preprocess fix reports],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
   setting :backup_dir,
