@@ -26,6 +26,7 @@ module Omca
       end
 
       register_fix_jobs
+      register_skeleton_jobs
       register_unused_authority_reports
 
       register_files
@@ -253,6 +254,43 @@ module Omca
       end
     end
     private_class_method :register_fix_dir_jobs
+
+    def register_skeleton_jobs
+      ns = "skeleton"
+
+      entries = Omca::Mappings::Fields.skeleton_rectypes
+        .map do |rectype|
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+          id_field = Omca::Mappers.id_field_for_table(table)
+
+          args = {
+            source: :"fix_main__#{table}",
+            dest: :"#{ns}__#{rectype}",
+            table: table,
+            rectype: rectype,
+            id_field: id_field
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "skeleton", "#{rectype}.csv"),
+            creator: {
+              callee: Omca::Jobs::Skeleton,
+              args: args
+            },
+            tags: [ns.to_sym, rectype.to_sym],
+            dest_special_opts: {
+              initial_headers: [id_field]
+            }
+          }
+
+          [rectype.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_skeleton_jobs
 
     def register_unused_authority_reports
       ns = "authority_unused"

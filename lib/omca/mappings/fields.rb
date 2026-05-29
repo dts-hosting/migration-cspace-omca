@@ -11,22 +11,23 @@ module Omca
             .sheet("mappings").parse(headers: true)
       end
 
+      # @return [Array<Hash>] of rows representing migrating fields
+      def migrating
+        @migrating ||=
+          fields_sheet.select { |row| row["migrating?"] == "y" }
+      end
+
       # @param rectype [String]
       # @param side [:source, :target] of migration
       # @return [Array<Hash>] of rows representing migrating fields
       def for_rectype(rectype, side: :source)
-        fields_sheet.select do |row|
-          row["#{side}_record_type"] == rectype &&
-            row["migrating?"] == "y"
-        end
+        migrating.select { |row| row["#{side}_record_type"] == rectype }
       end
 
       # @param table [String]
       # @return [Array<Hash>] of migrating rows where data comes from db table
       def for_table(table)
-        fields_sheet.select do |row|
-          row["source_db_table"] == rectype && row["migrating?"] == "y"
-        end
+        fields_sheet.select { |row| row["source_db_table"] == rectype }
       end
 
       # @param rectype [String]
@@ -37,6 +38,21 @@ module Omca
           r["mapping_treatment"] == "skeleton" &&
             r["db_table_type"] == tabletype
         end
+      end
+
+      # @return [Array<String>]
+      def skeleton_rectypes
+        migrating.select { |row| row["mapping_treatment"] == "skeleton" }
+          .map { |row| row["target_record_type"] }
+          .uniq
+          .sort
+      end
+
+      # @return [Array<String>]
+      def target_rectypes
+        migrating.map { |row| row["target_record_type"] }
+          .uniq
+          .sort
       end
 
       def usage_removals
