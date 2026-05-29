@@ -19,6 +19,10 @@ module Omca
             fields: :all,
             find: /\|/,
             replace: "\u{2758}"
+          transform Clean::RegexpFindReplaceFieldVals,
+            fields: :all,
+            find: / (?:00|16|17):00:00$/,
+            replace: ""
         end
       end
   end
