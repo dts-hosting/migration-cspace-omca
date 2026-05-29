@@ -225,7 +225,8 @@ module Omca
       ns = "fix_#{dir}"
 
       path = File.join(Omca.datadir, "preprocess", dir)
-      entries = Dir.children(path).map do |tablefilename|
+      entries = Dir.children(path).reject { |f| f.end_with?("#") }
+        .map do |tablefilename|
         table = tablefilename.delete_suffix(".csv")
         rectype = Omca::Mappings::Db.rectype_for_table(table)
 
