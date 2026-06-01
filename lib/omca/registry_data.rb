@@ -123,6 +123,14 @@ module Omca
       end
 
       Omca.registry.namespace("map_report") do
+        register :arguscount, {
+          path: File.join(
+            Omca.datadir, "reports", "mapping_reports",
+            "arguscount.csv"
+          ),
+          creator: Omca::Jobs::MapReport::Arguscount,
+          tags: [:map_report, :reports]
+        }
         register :conditioncheck_condition, {
           path: File.join(
             Omca.datadir, "reports", "mapping_reports",
