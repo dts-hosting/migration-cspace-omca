@@ -21,10 +21,15 @@ module Omca
       end
 
       def call
+        unless File.exist?(srcpath)
+          Omca::Authorities::UniqNonRefnameUsages.call
+        end
+
         rows_by_field.each { |fdata, rows| lookup_for_field(fdata, rows) }
         CSV.open(outpath, "w", headers: headers, write_headers: true) do |csv|
           outrows.each { |r| csv << r.values_at(*headers) }
         end
+        puts "Wrote to #{outpath}"
       end
 
       private

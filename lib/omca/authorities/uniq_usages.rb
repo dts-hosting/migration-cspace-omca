@@ -16,6 +16,10 @@ module Omca
       end
 
       def call
+        unless File.exist?(srcpath)
+          Omca::Authorities::Usages.call
+        end
+
         populate_counter
         write_csv
       end

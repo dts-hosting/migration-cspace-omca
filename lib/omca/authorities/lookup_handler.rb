@@ -49,13 +49,14 @@ module Omca
       attr_reader :terms, :records, :pref_terms, :nonpref_terms, :used_terms
 
       def merge_refnames(matches)
+        return [] if matches.empty?
         populate_records if records.empty?
 
         matches.map { |match| merge_refname(match) }
       end
 
       def merge_refname(match)
-        rec = records.find { |rec| rec["csid"] == match["parentcsid"] }
+        rec = records.find { |rec| rec["recordcsid"] == match["recordcsid"] }
         match["refname"] = rec["refname"]
         match.to_h
       end
@@ -101,7 +102,10 @@ module Omca
 
       def populate_records
         table = Omca::Mappings::Db.main_tables_by_rectype[type]
-        path = File.join(Omca.datadir, "preprocess", "main", "#{table}.csv")
+        Omca::Dependencies.ensure_preprocess(table)
+
+        jobkey = Omca::Dependencies.jobkey_for(:preprocess, table)
+        path = Omca.registry.resolve(jobkey).path
         data = CSV.parse(File.read(path), headers: true)
         @records = data unless subtypeid
 

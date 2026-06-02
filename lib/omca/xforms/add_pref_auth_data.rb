@@ -14,7 +14,7 @@ module Omca
 
         row.merge({
           preferred_term: pref[Omca.ingestid_field],
-          csid: pref[:csid],
+          csid: pref[:recordcsid],
           refname: pref[:refname]
         })
       end
@@ -44,7 +44,7 @@ module Omca
       end
 
       def pref_term(row)
-        lookup[row[:csid]].find { |t| t[:pos] == "0" }[:termdisplayname]
+        lookup[row[:recordcsid]].find { |t| t[:pos] == "0" }[:termdisplayname]
       end
 
       def unused?(row) = row[Omca::Authorities.used_tag_field] == "n"

@@ -13,6 +13,10 @@ module Omca
       end
 
       def call
+        unless File.exist?(Omca::Authorities.usages_path)
+          Omca::Authorities::Usages.call
+        end
+
         get_auth_fields
         csv = CSV.open(
           Omca::Authorities.non_refname_usages_path,

@@ -26,12 +26,12 @@ module Omca
         termtable = Omca::Mappers.term_table_for(rectype)
         Kiba::Extend::Utils::Lookup.from_job(
           jobkey: :"repeatable_field_group__#{termtable}",
-          lookup_on: :parentcsid
+          lookup_on: :recordcsid
         )
       end
 
       def pref_term(row)
-        lookup[row[:csid]].find { |t| t[:pos] == "0" }[:termdisplayname]
+        lookup[row[:recordcsid]].find { |t| t[:pos] == "0" }[:termdisplayname]
       end
 
       def unused?(row) = row[Omca::Authorities.used_tag_field] == "n"
