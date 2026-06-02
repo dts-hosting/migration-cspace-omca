@@ -107,13 +107,12 @@ Other extract tasks:
 ** [x] Extract all vocabulary terms used (`thor vt extract_all`)
 ** [ ] Flag vocabularies that do not exist in anthro
 ** [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
-** [ ] Extract any terms in vocabulary-controlled fields that are not refnames and determine what to do with them
 
 * Authorities
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor at usages` => >1GB CSV file)
 ** [x] Split up/reformat usages file so that it is reasonably usable
 *** [x] Unique usages with usage counts (`thor at uniq_usages`)
-** [x] Extract any values in authority-controlled fields (`thor at non_refnames`)
+** [x] Extract any non-refname values in authority-controlled fields (`thor at non_refnames`)
 
 === Reporting/deciding/misc based on extracted data
 
