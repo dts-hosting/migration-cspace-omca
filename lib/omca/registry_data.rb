@@ -26,6 +26,7 @@ module Omca
       end
 
       register_fix_jobs
+      register_fcarmerge_jobs
       register_skeleton_jobs
       register_unused_authority_reports
 
@@ -271,6 +272,50 @@ module Omca
       end
     end
     private_class_method :register_fix_dir_jobs
+
+    def register_fcarmerge_jobs
+      Dir.children(File.join(Omca.datadir, "fix"))
+        .reject { |dir| dir == "authority_ref" }
+        .each do |dir|
+          register_fcarmerge_dir_jobs(dir)
+      end
+    end
+    private_class_method :register_fcarmerge_jobs
+
+    def register_fcarmerge_dir_jobs(dir)
+      ns = "fcarmerge_#{dir}"
+
+      path = File.join(Omca.datadir, "fix", dir)
+      entries = Dir.children(path).reject { |f| f.end_with?("#") }
+        .map do |tablefilename|
+          table = tablefilename.delete_suffix(".csv")
+          rectype = Omca::Mappings::Db.rectype_for_table(table)
+
+          args = {
+            source: :"fix_#{dir}__#{table}",
+            dest: :"#{ns}__#{table}",
+            table: table,
+            rectype: rectype,
+            tabletype: dir
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "fcarmerge", dir, "#{table}.csv"),
+            creator: {
+              callee: Omca::Jobs::FcarMerge,
+              args: args
+            },
+            tags: [:fcarmerge, ns.to_sym, table.to_sym, rectype.to_sym]
+          }
+
+          [table.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_fcarmerge_dir_jobs
 
     def register_skeleton_jobs
       ns = "skeleton"
