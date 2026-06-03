@@ -51,8 +51,8 @@ module Omca
   Kiba::Extend.config.pre_job_task_run = true
   Kiba::Extend.config.pre_job_task_directories = derived_dirs
   Kiba::Extend.config.pre_job_task_backup_dir = backup_dir
-  Kiba::Extend.config.pre_job_task_action = :nuke
   Kiba::Extend.config.pre_job_task_mode = :job
+  Kiba::Extend.config.pre_job_task_action = :recursive_nuke
 
   # ### Re-namespacing Kiba:Extend settings
   setting :registry, default: Kiba::Extend.registry, reader: true
