@@ -139,7 +139,7 @@ Per-table category preprocessing:
 * repeatable_field_group
 ** If rectype is an authority
 *** [x] Merge in `:term_is_used` value from parent record
-
+*** [x] Merge :shortidentifier in from parent record
 
 === Fix
 

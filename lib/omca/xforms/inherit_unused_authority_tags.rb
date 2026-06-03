@@ -21,6 +21,7 @@ module Omca
           "no parent record"
         end
 
+        row[:shortidentifier] = parent[:shortidentifier]
         row
       end
 
