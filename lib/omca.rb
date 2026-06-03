@@ -103,11 +103,11 @@ Omca.loader
 # `Kiba::Extend::Mixins::IterativeCleanup` in your project.
 Kiba::Extend.config.config_namespaces = [Omca]
 
-Omca::RegistryData.register
+Omca::BigAuthFcar.config.provided_worksheets = [
+  "big_auth_worksheet0.csv"
+]
+Omca::BigAuthFcar.config.returned_files = [
+  "big_auth_worksheet0.csv"
+]
 
-# Omca::PlacesCleanup.config.provided_worksheets = [
-#   "places_cleanup_worksheet_1.csv"
-# ]
-# Omca::PlacesCleanup.config.returned_files = [
-#   "places_cleanup_worksheet_done_1.csv"
-# ]
+Omca::RegistryData.register
