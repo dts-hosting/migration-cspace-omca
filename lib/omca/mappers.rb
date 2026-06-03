@@ -86,6 +86,20 @@ module Omca
       "#{mappers[rectype].dig(:config, :service_path)}_common"
     end
 
+    def rectypes_by_authority_type
+      @rectypes_by_authority_type ||=
+        authorities.values
+          .map do |m|
+            [m[:config][:authority_type],
+              m[:config][:recordtype]]
+        end
+          .to_h
+    end
+
+    def rectype_by_authority_type(authtype)
+      rectypes_by_authority_type[authtype]
+    end
+
     # @param rectype [String]
     # @param vocab [String] the authority subtype string (e.g. "local" for
     #   person)
