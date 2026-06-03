@@ -122,6 +122,14 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("big_auth") do
+        register :prep, {
+          path: File.join(Omca.wrkdir, "big_auth_prep.csv"),
+          creator: Omca::Jobs::BigAuth::Prep,
+          tags: %i[big_auth]
+        }
+      end
+
       Omca.registry.namespace("map_report") do
         register :arguscount, {
           path: File.join(
