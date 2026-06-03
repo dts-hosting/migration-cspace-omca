@@ -15,8 +15,8 @@ module Omca
             destination: dest
           },
           transformer: [
-            xforms(rectype),
-            Omca::Preprocess.common_xforms
+            Omca::Preprocess.common_xforms,
+            xforms(rectype)
           ]
         )
       end
