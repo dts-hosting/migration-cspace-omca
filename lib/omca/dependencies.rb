@@ -9,26 +9,36 @@ module Omca
       :"#{stage}_#{tabletype}__#{table}"
     end
 
-    def ensure_fix(table)
-      Omca::Mappings::Db.table_type(table, mode: :dir)
-      jobkey = jobkey_for(:fix, table)
-      return if Kiba::Extend::Job.registered?(jobkey)
-
-      ensure_preprocess(table)
-      run_and_register(jobkey)
-    end
-
     def ensure_preprocess(table)
       Omca::Mappings::Db.table_type(table, mode: :dir)
       jobkey = jobkey_for(:preprocess, table)
       return if Kiba::Extend::Job.output?(jobkey)
 
-      run_and_register(jobkey)
+      Kiba::Extend::Command::Run.job(jobkey)
+      nil
     end
 
-    def run_and_register(jobkey)
-      Kiba::Extend::Command::Run.job(jobkey)
+    def ensure_fix(table)
+      Omca::Mappings::Db.table_type(table, mode: :dir)
+      jobkey = jobkey_for(:fix, table)
+      return if Kiba::Extend::Job.registered?(jobkey) &&
+        Kiba::Extend::Job.output?(jobkey)
+
+      ensure_preprocess(table) unless Kiba::Extend::Job.registered?(jobkey)
       Omca.reset_registry
+      Kiba::Extend::Command::Run.job(jobkey)
+      nil
+    end
+
+    def ensure_fcarmerge(table)
+      Omca::Mappings::Db.table_type(table, mode: :dir)
+      jobkey = jobkey_for(:fcarmerge, table)
+      return if Kiba::Extend::Job.registered?(jobkey) &&
+        Kiba::Extend::Job.output?(jobkey)
+
+      ensure_fix(table) unless Kiba::Extend::Job.registered?(jobkey)
+      Omca.reset_registry
+      Kiba::Extend::Command::Run.job(jobkey)
       nil
     end
   end
