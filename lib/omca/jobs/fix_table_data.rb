@@ -27,6 +27,27 @@ module Omca
               action: :keep,
               field: Omca::Authorities.used_tag_field,
               value: "y"
+          elsif tabletype == "main" && rectype == "group"
+            transform do |row|
+              val = row[Omca.ingestid_field]
+              fulltitle = "Guy Rose, American Impressionist: OMCA "\
+                "7/1-9/24/95, Irvine Museum 10/20/95-2/24/96, Norton Museum "\
+                "of Art, West Palm Beach, FL 9/14-11/10/96, Greenville "\
+                "County Museum of Art, Greenville, SC 12/4/96-1/19/97, The "\
+                "Montclair Art Museum 4/27/97-7/27/97"
+              next row unless val == fulltitle
+
+              row[:scopenote] = [
+                row[:scopenote],
+                "Pre-migration title: #{fulltitle}"
+              ].reject(&:blank?)
+                .join("\n\n")
+
+              row[Omca.ingestid_field] = "Guy Rose, American Impressionist "\
+                "(venue/date list)"
+
+              row
+            end
 
           end
         end
