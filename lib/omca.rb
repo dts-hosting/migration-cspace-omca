@@ -35,6 +35,11 @@ module Omca
     default: File.expand_path(
       File.join("~", "data", "omca", "mig")
     )
+  setting :wrkdir,
+    reader: true,
+    default: File.expand_path(
+      File.join(datadir, "working")
+    )
 
   def orig_dirs = Dir.children(File.join(datadir, "orig"))
 
