@@ -169,6 +169,13 @@ module Omca
           tags: [ns.to_sym],
           desc: -> { Omca::Jobs::NonRefnameAuth::UniqUsages.desc }
         }
+        register :refname_lookup, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "non_refname_auth_refname_lookup.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::RefnameLookup,
+          tags: [ns.to_sym],
+          desc: -> { Omca::Jobs::NonRefnameAuth::RefnameLookup.desc }
+        }
       end
 
       Omca.registry.namespace("big_auth") do

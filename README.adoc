@@ -116,7 +116,7 @@ Other extract tasks:
 
 === Reporting/deciding/misc based on extracted data
 
-* [x] Create report of Authority controlled field values that are not refnames (`thor at:non_refname_lookup`)
+* [x] Create report of Authority controlled field values that are not refnames (`thor run job non_refname_auth__refname_lookup`)
 * [ ] Create report of Unlinked authority usages -- these are well-formed refname usages of authority terms, but when you try to identify the authority record for the term based on the id portion of the refname, there is no record.
 
 === Preprocess

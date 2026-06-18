@@ -6,9 +6,4 @@ class At < Thor
   def usages
     Omca::Authorities::Usages.run
   end
-
-  desc "non_refname_lookup", Omca::Authorities::NonRefnameLookup.desc
-  def non_refname_lookup
-    Omca::Authorities::NonRefnameLookup.call
-  end
 end
