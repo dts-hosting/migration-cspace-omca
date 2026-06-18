@@ -66,22 +66,39 @@ module Omca
         register :fix_usages, {
           path: File.join(Omca.datadir, "fix", "authority_ref", "usages.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,
-          tags: [ns.to_sym, :fix]
+          tags: [ns.to_sym, :fix],
+          desc: "- Fix malformed concept refnames\n"\
+            "- Drop citation terms whose refnames have no label/form\n"\
+            "- Drop field usages tagged in mappings for usage removal\n"\
+            "- Add :index"
         }
 
         register :fix_uniq_usages, {
           path: File.join(Omca.datadir, "fix", "authority_ref",
             "uniq_usages.csv"),
           creator: Omca::Jobs::Authorities::FixUniqUsages,
-          tags: [ns.to_sym, :fix]
+          tags: [ns.to_sym, :fix],
+          desc: "Re-derive unique usages from fixed usages"
         }
 
         register :collapse_to_pref, {
           path: File.join(Omca.datadir, "fix", "authority_ref",
             "collapse_to_pref.csv"),
           creator: Omca::Jobs::Authorities::CollapseToPref,
-          tags: [ns.to_sym, :fix]
+          tags: [ns.to_sym, :fix],
+          desc: "Add :#{Omca.ingestid_field}, :recordcsid, and :refname "\
+            "into source data from authority term tables."
         }
+        register :no_form_citations, {
+          path: File.join(
+            Omca.datadir, "reports", "authorities_no_form_citations.csv"
+          ),
+          creator: Omca::Jobs::Authorities::NoFormCitations,
+          tags: [ns.to_sym, :reports, :citation],
+          desc: "Citation terms where the refname does not contain a label "\
+            "(e.g. used form)"
+        }
+      end
 
         register :unlinked_uniq_usages, {
           path: File.join(Omca.datadir, "reports",
