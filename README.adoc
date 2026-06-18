@@ -109,7 +109,7 @@ Other extract tasks:
 ** [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
 
 * Authorities
-** [x] Extract all authority refnames used, parse, and write to usages file (`thor at usages` => >1GB CSV file)
+** [x] Extract all authority refnames used, parse, and write to usages file (`thor run job authorities__usages` => >1GB CSV file)
 ** [x] Split up/reformat usages file so that it is reasonably usable
 *** [x] Unique usages with usage counts (`thor at uniq_usages`)
 ** [x] Extract any non-refname values in authority-controlled fields (`thor at non_refnames`)

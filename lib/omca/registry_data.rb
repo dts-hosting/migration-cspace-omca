@@ -63,6 +63,12 @@ module Omca
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 
+        register :usages, {
+          path: Omca::Authorities.usages_path,
+          creator: Omca::Authorities::Usages.method(:new),
+          tags: [ns.to_sym],
+          desc: -> { Omca::Authorities::Usages.desc }
+        }
         register :fix_usages, {
           path: File.join(Omca.datadir, "fix", "authority_ref", "usages.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,

@@ -6,9 +6,9 @@ module Omca
       def self.desc = "Write all authority refname usages, with table, row "\
         "id, and field"
 
-      def self.call = new.call
+      def self.run = new.run
 
-      def call
+      def run
         csv = CSV.open(
           Omca::Authorities.usages_path,
           "w",
