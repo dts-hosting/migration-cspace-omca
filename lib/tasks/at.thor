@@ -7,11 +7,6 @@ class At < Thor
     Omca::Authorities::Usages.run
   end
 
-  desc "non_refnames", Omca::Authorities::NonRefnameUsages.desc
-  def non_refnames
-    Omca::Authorities::NonRefnameUsages.call
-  end
-
   desc "uniq_non_refnames", Omca::Authorities::UniqNonRefnameUsages.desc
   def uniq_non_refnames
     Omca::Authorities::UniqNonRefnameUsages.call

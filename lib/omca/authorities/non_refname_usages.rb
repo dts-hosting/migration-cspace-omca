@@ -3,18 +3,18 @@
 module Omca
   module Authorities
     class NonRefnameUsages
-      def self.desc = "Get values in authority controlled fields "\
-        "that are not refnames"
+      def self.desc = "Get non-refname values used in authority controlled "\
+        "fields "
 
-      def self.call = new.call
+      def self.run = new.run
 
       def initialize
         @authfields = {}
       end
 
-      def call
+      def run
         unless File.exist?(Omca::Authorities.usages_path)
-          Omca::Authorities::Usages.call
+          Omca::Authorities::Usages.run
         end
 
         get_auth_fields

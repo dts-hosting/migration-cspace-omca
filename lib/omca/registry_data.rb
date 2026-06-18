@@ -154,6 +154,17 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("non_refname_auth") do
+        ns = "non_refname_auth"
+
+        register :usages, {
+          path: Omca::Authorities.non_refname_usages_path,
+          creator: Omca::Authorities::NonRefnameUsages.method(:new),
+          tags: [ns.to_sym],
+          desc: -> { Omca::Authorities::NonRefnameUsages.desc }
+        }
+      end
+
       Omca.registry.namespace("big_auth") do
         register :prep, {
           path: File.join(Omca.wrkdir, "big_auth_prep.csv"),

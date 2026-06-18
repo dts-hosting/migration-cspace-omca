@@ -111,8 +111,8 @@ Other extract tasks:
 * Authorities
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor run job authorities__usages` => >1GB CSV file)
 ** [x] Split up/reformat usages file so that it is reasonably usable
-** [x] Extract any non-refname values in authority-controlled fields (`thor at non_refnames`)
 *** [x] Unique usages with usage counts (`thor run job authorities__uniq_usages`)
+** [x] Extract any non-refname values in authority-controlled fields (`thor run job non_refname_auth__usages`)
 
 === Reporting/deciding/misc based on extracted data
 
