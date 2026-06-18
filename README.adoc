@@ -159,6 +159,16 @@ This layer applies identified fixes to:
 
 === FCAR
 
+* [ ] Unlinked refnames: Refname authority usages that do not match established terms
+** Worksheet
+*** Allow to provide established refname that could not be programmatically identified
+** Merge
+*** Merge manual and programmatic refnames into usages
+*** Add fake rows to relevant main and term authority tables for skeleton record load.
+** After load of skeleton records, we will pull the new refnames created for the terms, and replace the usage values with the new refnames.
+* [ ] Non-refname usages with refname of matching established term if one exists.
+** Replace non-refname usages with refname of matching established term if one exists.
+** If no existing match, add fake rows to relevant main and term tables
 * [ ] Need to collapse used forms of authority refnames to preferred form, retaining/summing usage of all forms of that term. Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
 **  Merge should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 
