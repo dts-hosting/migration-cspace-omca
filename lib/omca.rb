@@ -99,6 +99,10 @@ end
 
 Omca.loader
 
+Kiba::Extend::ProjectConfig.config.graph_dir = File.join(
+  Omca.datadir, "graphs"
+)
+
 # The following line is necessary if you wish to use
 # `Kiba::Extend::Mixins::IterativeCleanup` in your project.
 Kiba::Extend.config.config_namespaces = [Omca]
