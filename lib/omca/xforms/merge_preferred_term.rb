@@ -10,11 +10,13 @@ module Omca
       end
 
       def process(row)
+        pref = pref_term(row)
         row[target] = if unused?(row)
-          "#{pref_term(row)} (UNUSED TERM)"
+          "#{pref} (UNUSED TERM)"
         else
-          pref_term(row)
+          pref
         end
+        row[:origpref] = pref
         row
       end
 
