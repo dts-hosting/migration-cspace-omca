@@ -100,43 +100,45 @@ module Omca
         }
       end
 
-        register :unlinked_uniq_usages, {
+      Omca.registry.namespace("unlinked_auth") do
+        ns = "unlinked_auth"
+
+        register :uniq_usages, {
           path: File.join(Omca.datadir, "reports",
-            "unlinked_uniq_authority_usages.csv"),
-          creator: Omca::Jobs::Authorities::UnlinkedUniqUsages,
-          tags: [ns.to_sym, :reports, :unlinked]
+            "unlinked_auth_uniq_usages.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::UniqUsages,
+          tags: [ns.to_sym, :reports],
+          desc: "Deletes rows with a refname merged in from authority term "\
+            "table"
         }
 
-        register :unlinked_uniq_usages_explode, {
+        register :uniq_usages_explode, {
           path: File.join(Omca.datadir, "working",
-            "unlinked_uniq_authority_usages_explode.csv"),
-          creator: Omca::Jobs::Authorities::UnlinkedUniqUsagesExplode,
-          tags: [ns.to_sym, :unlinked]
+            "unlinked_auth_uniq_usages_explode.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::UniqUsagesExplode,
+          tags: [ns.to_sym],
+          desc: "Generate one row per termid/form combination (deals with "\
+            "values that have multiple term ids/forms concatenated)"
         }
 
-        register :unlinked_usages_base, {
+        register :usages_base, {
           path: File.join(Omca.datadir, "working",
-            "unlinked_authority_usages_base.csv"),
-          creator: Omca::Jobs::Authorities::UnlinkedUsagesBase,
-          tags: [ns.to_sym, :unlinked]
+            "unlinked_auth_usages_base.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::UsagesBase,
+          tags: [ns.to_sym],
+          desc: "Filter rows, keeping those that are unlinked"
         }
 
-        register :unlinked_usages, {
+        register :usages, {
           path: File.join(Omca.datadir, "reports",
-            "unlinked_authority_usages.csv"),
-          creator: Omca::Jobs::Authorities::UnlinkedUsages,
-          tags: [ns.to_sym, :reports, :unlinked],
+            "unlinked_auth_usages.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::Usages,
+          tags: [ns.to_sym, :reports],
           dest_special_opts: {
             initial_headers: %i[rectype table tabletype recordcsid field]
-          }
-        }
-
-        register :no_form_citations, {
-          path: File.join(
-            Omca.datadir, "reports", "authorities_no_form_citations.csv"
-          ),
-          creator: Omca::Jobs::Authorities::NoFormCitations,
-          tags: [ns.to_sym, :reports, :citation]
+          },
+          desc: "- Adds :rectype, (using) :recordcsid, and :index fields"\
+            "- renames :usage_refname to :refname and :used_form to :form"
         }
       end
 

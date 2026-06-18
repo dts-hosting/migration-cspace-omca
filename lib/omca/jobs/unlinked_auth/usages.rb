@@ -2,15 +2,15 @@
 
 module Omca
   module Jobs
-    module Authorities
-      module UnlinkedUsages
+    module UnlinkedAuth
+      module Usages
         module_function
 
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__unlinked_usages_base,
-              destination: :authorities__unlinked_usages
+              source: :unlinked_auth__usages_base,
+              destination: :unlinked_auth__usages
             },
             transformer: xforms
           )
