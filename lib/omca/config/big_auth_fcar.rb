@@ -47,6 +47,7 @@ module Omca
           )
           row
         end
+        transform Omca::Xforms::BigAuthFlagTermCombos
       end
     end
   end

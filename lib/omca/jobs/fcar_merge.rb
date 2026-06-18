@@ -39,6 +39,15 @@ module Omca
                 rectype: rectype,
                 mergerows: big_auth__final[rectype]
             end
+
+            if big_auth__final.key?(rectype) &&
+                table == Omca::Mappers.term_table_for(rectype)
+              transform Omca::Xforms::BigAuthMergeTerm,
+                table: table,
+                tabletype: tabletype,
+                rectype: rectype,
+                mergerows: big_auth__final[rectype]
+            end
           end
         end
       end

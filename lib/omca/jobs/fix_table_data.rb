@@ -22,12 +22,7 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
-          if tabletype == "main" && Omca::Mappers.authority?(rectype)
-            transform FilterRows::FieldEqualTo,
-              action: :keep,
-              field: Omca::Authorities.used_tag_field,
-              value: "y"
-          elsif tabletype == "main" && rectype == "group"
+          if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
               fulltitle = "Guy Rose, American Impressionist: OMCA "\
