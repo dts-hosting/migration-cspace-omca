@@ -163,6 +163,12 @@ module Omca
           tags: [ns.to_sym],
           desc: -> { Omca::Authorities::NonRefnameUsages.desc }
         }
+        register :uniq_usages, {
+          path: Omca::Authorities.uniq_non_refname_usages_path,
+          creator: Omca::Jobs::NonRefnameAuth::UniqUsages,
+          tags: [ns.to_sym],
+          desc: -> { Omca::Jobs::NonRefnameAuth::UniqUsages.desc }
+        }
       end
 
       Omca.registry.namespace("big_auth") do
