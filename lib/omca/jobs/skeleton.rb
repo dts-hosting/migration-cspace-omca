@@ -26,8 +26,16 @@ module Omca
           keepfields = Omca::Mappings::Fields.skeleton_fields(
             rectype, "main"
           ).map { |row| row["target_field"].to_sym } - [id_field] +
-            [:recordcsid, Omca.ingestid_field]
+            [:recordcsid, Omca.ingestid_field, Omca::Authorities.used_tag_field]
 
+          if Omca::Mappers.authority?(rectype)
+            transform FilterRows::FieldEqualTo,
+              action: :keep,
+              field: Omca::Authorities.used_tag_field,
+              value: "y"
+            transform Delete::Fields,
+              fields: Omca::Authorities.used_tag_field
+          end
           transform Delete::FieldsExcept,
             fields: keepfields
 
