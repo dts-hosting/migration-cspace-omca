@@ -4,11 +4,6 @@
 class At < Thor
   desc "usages", Omca::Authorities::Usages.desc
   def usages
-  end
-
-  desc "uniq_usages", Omca::Authorities::UniqUsages.desc
-  def uniq_usages
-    Omca::Authorities::UniqUsages.call
     Omca::Authorities::Usages.run
   end
 

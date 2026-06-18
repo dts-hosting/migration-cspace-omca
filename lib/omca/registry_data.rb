@@ -69,6 +69,12 @@ module Omca
           tags: [ns.to_sym],
           desc: -> { Omca::Authorities::Usages.desc }
         }
+        register :uniq_usages, {
+          path: Omca::Authorities.uniq_usages_path,
+          creator: Omca::Jobs::Authorities::UniqUsages,
+          tags: [ns.to_sym],
+          desc: -> { Omca::Jobs::Authorities::UniqUsages.desc }
+        }
         register :fix_usages, {
           path: File.join(Omca.datadir, "fix", "authority_ref", "usages.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,
