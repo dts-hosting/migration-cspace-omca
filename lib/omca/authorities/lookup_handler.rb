@@ -37,9 +37,9 @@ module Omca
         query = caseinsensitive ? val.downcase : val
         corpus = sources.inject(:intersection)
         match = if caseinsensitive
-          corpus.select { |ct| ct["termdisplayname"].downcase == query }
+          corpus.select { |ct| ct[:termdisplayname].downcase == query }
         else
-          corpus.select { |ct| ct["termdisplayname"] == query }
+          corpus.select { |ct| ct[:termdisplayname] == query }
         end
         merge_refnames(match)
       end
@@ -56,8 +56,8 @@ module Omca
       end
 
       def merge_refname(match)
-        rec = records.find { |rec| rec["recordcsid"] == match["recordcsid"] }
-        match["refname"] = rec["refname"]
+        rec = records.find { |rec| rec[:recordcsid] == match[:recordcsid] }
+        match[:refname] = rec[:refname]
         match.to_h
       end
 
@@ -78,25 +78,27 @@ module Omca
           )
         end
 
-        data = CSV.parse(File.read(path), headers: true)
+        data = CSV.parse(
+          File.read(path), headers: true, header_converters: :symbol
+        )
         @terms = if subtypeid
-          data.select { |r| r["authority"] == subtypeid }
+          data.select { |r| r[:authority] == subtypeid }
         else
           data
         end
       end
 
       def populate_pref_terms
-        @pref_terms = terms.select { |t| t["pos"] == "0" }
+        @pref_terms = terms.select { |t| t[:pos] == "0" }
       end
 
       def populate_nonpref_terms
-        @nonpref_terms = terms.reject { |t| t["pos"] == "0" }
+        @nonpref_terms = terms.reject { |t| t[:pos] == "0" }
       end
 
       def populate_used_terms
         @used_terms = terms.select do |t|
-          t[Omca::Authorities.used_tag_field.to_s] == "y"
+          t[Omca::Authorities.used_tag_field] == "y"
         end
       end
 
@@ -106,10 +108,12 @@ module Omca
 
         jobkey = Omca::Dependencies.jobkey_for(:preprocess, table)
         path = Omca.registry.resolve(jobkey).path
-        data = CSV.parse(File.read(path), headers: true)
+        data = CSV.parse(
+          File.read(path), headers: true, header_converters: :symbol
+        )
         @records = data unless subtypeid
 
-        @records = data.select { |r| r["authority"] == subtypeid }
+        @records = data.select { |r| r[:authority] == subtypeid }
       end
     end
   end
