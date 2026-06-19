@@ -141,6 +141,10 @@ Per-table category preprocessing:
 *** [x] Merge in `:term_is_used` value from parent record
 *** [x] Merge :shortidentifier in from parent record
 
+* [ ] Non-refname usages with refname of matching established term.
+** Replace non-refname usages with refname of matching established term if one exists.
+
+
 === Fix
 
 This layer applies identified fixes to:
