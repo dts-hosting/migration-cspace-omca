@@ -183,6 +183,13 @@ module Omca
           tags: [ns.to_sym],
           desc: "Rows from source where lookup was successful"
         }
+        register :not_matched, {
+          path: File.join(Omca.wrkdir,
+                          "non_refname_auth_refname_not_matched.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::NotMatched,
+          tags: [ns.to_sym],
+          desc: "Rows from source where lookup was not successful"
+        }
       end
 
       Omca.registry.namespace("big_auth") do
