@@ -5,6 +5,22 @@ module Omca
   module RegistryData
     module_function
 
+    def phase_config
+      {
+        "preprocess" => :skip,
+        "fix" => Omca::Jobs::FixTableData,
+        "fcarmerge" => Omca::Jobs::FcarMerge
+      }
+    end
+
+    def previous_phase(phase)
+      phase_idx = phase_config.keys.find_index(phase)
+      return nil if phase_idx == 0
+
+      prev_idx = phase_idx - 1
+      phase_config.keys[prev_idx]
+    end
+
     def register
       Dir.children(File.join(Omca.datadir, "orig")).each do |val|
         register_dir_files(
@@ -20,13 +36,12 @@ module Omca
 
       register_preprocess_main_jobs
 
-      %w[addtl_fields repeatable_field repeatable_field_group
-        repeatable_in_group subgroup].each do |dir|
+      Omca.non_main_table_dirs.each do |dir|
         register_preprocess_non_main_jobs(dir)
       end
 
-      register_fix_jobs
-      register_fcarmerge_jobs
+      phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
+
       register_skeleton_jobs
       register_unused_authority_reports
 
@@ -178,14 +193,14 @@ module Omca
         }
         register :refname_looked_up, {
           path: File.join(Omca.wrkdir,
-                          "non_refname_auth_refname_looked_up.csv"),
+            "non_refname_auth_refname_looked_up.csv"),
           creator: Omca::Jobs::NonRefnameAuth::RefnameLookedUp,
           tags: [ns.to_sym],
           desc: "Rows from source where lookup was successful"
         }
         register :not_matched, {
           path: File.join(Omca.wrkdir,
-                          "non_refname_auth_refname_not_matched.csv"),
+            "non_refname_auth_refname_not_matched.csv"),
           creator: Omca::Jobs::NonRefnameAuth::NotMatched,
           tags: [ns.to_sym],
           desc: "Rows from source where lookup was not successful"
@@ -282,13 +297,16 @@ module Omca
             tabletype: dir
           }
 
+          tags = [:preprocess, ns.to_sym, table.to_sym]
+          tags << rectype.to_sym if rectype
+
           entry = {
             path: File.join(Omca.datadir, "preprocess", dir, "#{table}.csv"),
             creator: {
               callee: Omca::Jobs::NonMainPreprocess,
               args: args
             },
-            tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym]
+            tags: tags
           }
 
           [table.to_sym, entry]
@@ -300,91 +318,52 @@ module Omca
     end
     private_class_method :register_preprocess_non_main_jobs
 
-    def register_fix_jobs
-      Dir.children(File.join(Omca.datadir, "preprocess")).each do |dir|
-        register_fix_dir_jobs(dir)
+    def register_phase_jobs(phase, callee)
+      return if callee == :skip
+
+      Dir.children(File.join(Omca.datadir, "orig")).each do |dir|
+        register_phase_dir_jobs(phase, callee, dir)
       end
     end
-    private_class_method :register_fix_jobs
+    private_class_method :register_phase_jobs
 
-    def register_fix_dir_jobs(dir)
-      ns = "fix_#{dir}"
+    def register_phase_dir_jobs(phase, callee, dir)
+      ns = "#{phase}_#{dir}"
 
-      path = File.join(Omca.datadir, "preprocess", dir)
-      entries = Dir.children(path).reject { |f| f.end_with?("#") }
+      orig_dir_path = File.join(Omca.datadir, "orig", dir)
+      entries = Dir.children(orig_dir_path).reject { |f| f.end_with?("#") }
         .map do |tablefilename|
           table = tablefilename.delete_suffix(".csv")
           rectype = Omca::Mappings::Db.rectype_for_table(table)
+          prev_phase = previous_phase(phase)
 
           args = {
-            source: :"preprocess_#{dir}__#{table}",
+            source: :"#{prev_phase}_#{dir}__#{table}",
             dest: :"#{ns}__#{table}",
             table: table,
             rectype: rectype,
             tabletype: dir
           }
 
-          entry = {
-            path: File.join(Omca.datadir, "fix", dir, "#{table}.csv"),
-            creator: {
-              callee: Omca::Jobs::FixTableData,
-              args: args
-            },
-            tags: [:fix, ns.to_sym, table.to_sym, rectype.to_sym]
-          }
-
-          [table.to_sym, entry]
-      end
-
-      Omca.registry.namespace(ns) do
-        entries.each { |entry| register entry[0], entry[1] }
-      end
-    end
-    private_class_method :register_fix_dir_jobs
-
-    def register_fcarmerge_jobs
-      Dir.children(File.join(Omca.datadir, "fix"))
-        .reject { |dir| dir == "authority_ref" }
-        .each do |dir|
-          register_fcarmerge_dir_jobs(dir)
-      end
-    end
-    private_class_method :register_fcarmerge_jobs
-
-    def register_fcarmerge_dir_jobs(dir)
-      ns = "fcarmerge_#{dir}"
-
-      path = File.join(Omca.datadir, "fix", dir)
-      entries = Dir.children(path).reject { |f| f.end_with?("#") }
-        .map do |tablefilename|
-          table = tablefilename.delete_suffix(".csv")
-          rectype = Omca::Mappings::Db.rectype_for_table(table)
-
-          args = {
-            source: :"fix_#{dir}__#{table}",
-            dest: :"#{ns}__#{table}",
-            table: table,
-            rectype: rectype,
-            tabletype: dir
-          }
+          tags = [:fix, ns.to_sym, table.to_sym]
+          tags << rectype.to_sym if rectype
 
           entry = {
-            path: File.join(Omca.datadir, "fcarmerge", dir, "#{table}.csv"),
+            path: File.join(Omca.datadir, phase, dir, "#{table}.csv"),
             creator: {
-              callee: Omca::Jobs::FcarMerge,
+              callee: callee,
               args: args
             },
-            tags: [:fcarmerge, ns.to_sym, table.to_sym, rectype.to_sym]
+            tags: tags
           }
 
           [table.to_sym, entry]
         end
-
       Omca.registry.namespace(ns) do
         entries.each { |entry| register entry[0], entry[1] }
       end
     end
-    private_class_method :register_fcarmerge_dir_jobs
+    private_class_method :register_phase_dir_jobs
 
     def register_skeleton_jobs
       ns = "skeleton"
@@ -395,7 +374,7 @@ module Omca
           id_field = Omca::Mappers.id_field_for_table(table)
 
           args = {
-            source: :"fix_main__#{table}",
+            source: :"fcarmerge_main__#{table}",
             dest: :"#{ns}__#{rectype}",
             table: table,
             rectype: rectype,

@@ -79,6 +79,24 @@ module Omca
     reader: true,
     default: :ingestid
 
+  setting :normal_table_types,
+    reader: true,
+    default: %w[addtl_fields repeatable_field repeatable_field_group
+      repeatable_in_group subgroup]
+
+  setting :multi_rectype_table_types,
+    reader: true,
+    default: %w[extension_field_group extension_subgroup structured_dates
+      subrecord]
+
+  setting :table_dirs,
+    reader: true,
+    default: ["main"] + normal_table_types + multi_rectype_table_types
+
+  setting :non_main_table_dirs,
+    reader: true,
+    default: table_dirs - ["main"]
+
   def connection = @connection
 
   # @param connection_obj [PG::Connection]
