@@ -126,10 +126,10 @@ Kiba::Extend::ProjectConfig.config.graph_dir = File.join(
 Kiba::Extend.config.config_namespaces = [Omca]
 
 Omca::BigAuthFcar.config.provided_worksheets = [
-  "big_auth_worksheet0.csv"
+  "big_auth_worksheet_0.csv"
 ]
 Omca::BigAuthFcar.config.returned_files = [
-  "big_auth_worksheet0.csv"
+  "big_auth_worksheet_0.csv"
 ]
 
 Omca::NonRefnameAuthManualFcar.config.provided_worksheets = [
