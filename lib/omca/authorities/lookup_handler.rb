@@ -16,22 +16,18 @@ module Omca
       # @param val [String]
       # @param type [:all, :pref, :nonpref]
       # @param caseinsensitive [Boolean]
-      # @param include_unused [Boolean]
-      def by_termdisplayname(val, type: :all, caseinsensitive: true,
-        include_unused: false)
+      def by_termdisplayname(val, type: :all, caseinsensitive: true)
         populate_terms if terms.empty?
         populate_pref_terms if !instance_variable_defined?(:@pref_terms) &&
           type == :pref
         if !instance_variable_defined?(:@nonpref_terms) && type == :nonpref
           populate_nonpref_terms
         end
-        populate_used_terms if !instance_variable_defined?(:@used_terms) &&
-          !include_unused
 
         sources = []
         sources << pref_terms if type == :pref
         sources << nonpref_terms if type == :nonpref
-        sources << used_terms unless include_unused
+        # sources << used_terms unless include_unused
         sources = [terms] if sources.empty?
 
         query = caseinsensitive ? val.downcase : val
@@ -69,14 +65,8 @@ module Omca
 
       def populate_terms
         termtable = Omca::Mappers.term_table_for(type)
-        path = File.join(Omca.datadir, "preprocess", "repeatable_field_group",
+        path = File.join(Omca.datadir, "orig", "repeatable_field_group",
           "#{termtable}.csv")
-
-        unless File.exist?(path)
-          Kiba::Extend::Command::Run.job(
-            :"preprocess_repeatable_field_group__#{termtable}"
-          )
-        end
 
         data = CSV.parse(
           File.read(path), headers: true, header_converters: :symbol
@@ -94,12 +84,6 @@ module Omca
 
       def populate_nonpref_terms
         @nonpref_terms = terms.reject { |t| t[:pos] == "0" }
-      end
-
-      def populate_used_terms
-        @used_terms = terms.select do |t|
-          t[Omca::Authorities.used_tag_field] == "y"
-        end
       end
 
       def populate_records
