@@ -132,4 +132,11 @@ Omca::BigAuthFcar.config.returned_files = [
   "big_auth_worksheet0.csv"
 ]
 
+Omca::NonRefnameAuthManualFcar.config.provided_worksheets = [
+  "non_refname_auth_0.csv"
+]
+Omca::NonRefnameAuthManualFcar.config.returned_files = [
+  "non_refname_auth_0.csv"
+]
+
 Omca::RegistryData.register

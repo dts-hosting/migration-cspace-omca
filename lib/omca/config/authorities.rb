@@ -18,10 +18,6 @@ module Omca
       reader: true,
       default: %w[tabletype table id field authority vocab termid form refname]
 
-    setting :fix_usages_path,
-      reader: true,
-      default: File.join(Omca.datadir, "fix", "usages_fixed.csv")
-
     setting :uniq_usages_path,
       reader: true,
       default: File.join(Omca.datadir, "authority_ref", "uniq_usages.csv")
@@ -30,14 +26,9 @@ module Omca
       reader: true,
       default: %w[refname usagect authority vocab termid form]
 
-    setting :fix_uniq_usages_path,
-      reader: true,
-      default: File.join(Omca.datadir, "fix", "fixed_uniq_usages.csv")
-
     setting :non_refname_usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "authority_ref",
-        "usages_non_refname.csv")
+      default: File.join(Omca.wrkdir, "usages_non_refname.csv")
 
     setting :non_refname_usages_headers,
       reader: true,
@@ -45,8 +36,7 @@ module Omca
 
     setting :uniq_non_refname_usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "authority_ref",
-        "uniq_usages_non_refname.csv")
+      default: File.join(Omca.wrkdir, "uniq_usages_non_refname.csv")
 
     setting :uniq_non_refname_usages_headers,
       reader: true,
@@ -54,14 +44,26 @@ module Omca
 
     setting :non_refname_lookup_path,
       reader: true,
-      default: File.join(Omca.datadir, "authority_ref",
-        "non_refname_lookup.csv")
+      default: File.join(Omca.wrkdir, "non_refname_lookup.csv")
 
     setting :non_refname_lookup_headers,
       reader: true,
       default: uniq_non_refname_usages_headers + %w[
         matchtype refname
       ]
+
+    setting :add_non_refname_index,
+      reader: true,
+      default: nil,
+      constructor: ->(default) do
+        Kiba.job_segment do
+          transform CombineValues::FromFieldsWithDelimiter,
+            sources: %i[table field value],
+            target: :nonrefnameindex,
+            delete_sources: false,
+            delim: "###"
+        end
+      end
 
     setting :non_refname_lookup_config,
       reader: true,
@@ -79,5 +81,13 @@ module Omca
         ["objectproductionpersongroup", "objectproductionperson"] =>
           [["person", "local"]]
       }
+
+    setting :fix_usages_path,
+      reader: true,
+      default: File.join(Omca.datadir, "fix", "usages_fixed.csv")
+
+    setting :fix_uniq_usages_path,
+      reader: true,
+      default: File.join(Omca.datadir, "fix", "fixed_uniq_usages.csv")
   end
 end

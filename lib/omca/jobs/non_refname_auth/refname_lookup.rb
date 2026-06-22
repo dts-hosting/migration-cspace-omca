@@ -18,7 +18,10 @@ module Omca
               source: :non_refname_auth__uniq_usages,
               destination: :non_refname_auth__refname_lookup
             },
-            transformer: xforms
+            transformer: [
+              xforms,
+              Omca::Authorities.add_non_refname_index
+            ]
           )
         end
 

@@ -119,6 +119,14 @@ Other extract tasks:
 * [x] Create report of Authority controlled field values that are not refnames (`thor run job non_refname_auth__refname_lookup`)
 * [ ] Create report of Unlinked authority usages -- these are well-formed refname usages of authority terms, but when you try to identify the authority record for the term based on the id portion of the refname, there is no record.
 
+=== Non-refname authority usages
+
+- [x] Programmatically match to existing terms to get refnames to use (`thor run job non_refname_auth__refname_lookup`)
+- [x] Create FCAR worksheet for Migration Specialist to provide refnames for ones that did not get programmatically matched, where Migration Specialist could unambibuously identify the correct refname to use and the assignment would not require population of a different field (`thor run job non_refname_auth__worksheet`)
+- [x] Merge programmatically and manually provided usages into `authorities__usages` (`thor run job non_refname_auth__usages_final`)
+- [x] Compile uniq usages after merge (`thor run job non_refname_auth__usages_uniq_final`)
+- [x] Create report of individual usages where no existing refname was identified programmatically or manually, and ask client to resolve in existing instance. Unresolved non-refname authority usages still in the data at the time of final migration will be dropped. (`thor run job non_refname_auth__not_matched_client_cleanup`, https://3.basecamp.com/3410311/buckets/46717409/todos/10021612471[Basecamp To-Do])
+
 === Preprocess
 
 All tables:
@@ -140,10 +148,6 @@ Per-table category preprocessing:
 ** If rectype is an authority
 *** [x] Merge in `:term_is_used` value from parent record
 *** [x] Merge :shortidentifier in from parent record
-
-* [ ] Non-refname usages with refname of matching established term.
-** Replace non-refname usages with refname of matching established term if one exists.
-
 
 === Fix
 
@@ -170,9 +174,6 @@ This layer applies identified fixes to:
 *** Merge manual and programmatic refnames into usages
 *** Add fake rows to relevant main and term authority tables for skeleton record load.
 ** After load of skeleton records, we will pull the new refnames created for the terms, and replace the usage values with the new refnames.
-* [ ] Non-refname usages with refname of matching established term if one exists.
-** Replace non-refname usages with refname of matching established term if one exists.
-** If no existing match, add fake rows to relevant main and term tables
 * [ ] Need to collapse used forms of authority refnames to preferred form, retaining/summing usage of all forms of that term. Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
 **  Merge should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 

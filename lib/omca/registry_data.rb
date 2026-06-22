@@ -186,8 +186,7 @@ module Omca
           desc: -> { Omca::Jobs::NonRefnameAuth::UniqUsages.desc }
         }
         register :refname_lookup, {
-          path: File.join(Omca.datadir, "authority_ref",
-            "non_refname_auth_refname_lookup.csv"),
+          path: File.join(Omca.wrkdir, "non_refname_auth_refname_lookup.csv"),
           creator: Omca::Jobs::NonRefnameAuth::RefnameLookup,
           tags: [ns.to_sym],
           desc: -> { Omca::Jobs::NonRefnameAuth::RefnameLookup.desc }
@@ -205,6 +204,61 @@ module Omca
           creator: Omca::Jobs::NonRefnameAuth::NotMatched,
           tags: [ns.to_sym],
           desc: "Rows from source where lookup was not successful"
+        }
+        register :not_matched_provided, {
+          path: File.join(Omca.wrkdir,
+            "non_refname_auth_refname_not_matched_provided.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::NotMatchedProvided,
+          tags: [ns.to_sym],
+          desc: "Rows from source where lookup was not successful, where "\
+            "refname provided by FCAR process"
+        }
+        register :not_matched_client_cleanup, {
+          path: File.join(Omca.wrkdir,
+            "non_refname_auth_refname_nomatch_client_cleanup.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::NotMatchedClientCleanup,
+          tags: [ns.to_sym],
+          desc: "Rows from source where lookup was not successful, where no"\
+            "refname provided by FCAR process and client needs to clean up"
+        }
+        register :client_cleanup, {
+          path: File.join(Omca.datadir, "reports",
+            "non_refname_auth_client_cleanup.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::ClientCleanup,
+          tags: [ns.to_sym],
+          desc: "Individual usages corresponding to not matched client "\
+            "cleanup usages"
+        }
+        register :usage_merge, {
+          path: File.join(Omca.wrkdir,
+            "non_refname_auth_usage_merge.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::UsageMerge,
+          tags: [ns.to_sym],
+          desc: "Individual usages with provided refnames merged in, "\
+            "formatted for use as an additional source to create "\
+            "non_refname_auth__usages_final"
+        }
+        register :usages_final, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_non_refname_merged.csv"),
+          creator: Omca::Jobs::NonRefnameAuth::UsagesFinal,
+          tags: [ns.to_sym],
+          desc: "Adds result of non_refname_auth__usage_merge to "\
+            "authorities__usages"
+        }
+        register :usages_uniq_final, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_non_refname_merged.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :non_refname_auth__usages_final,
+              destination: :non_refname_auth__usages_uniq_final
+            }
+          },
+          tags: [ns.to_sym],
+          desc: "Derive unique values with occurrence counts from "\
+            "non_refname_auth__usages_final"
         }
       end
 
