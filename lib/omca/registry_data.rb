@@ -7,7 +7,8 @@ module Omca
 
     def phase_config
       {
-        "preprocess" => :skip,
+        "orig" => :skip,
+        "preprocess" => Omca::Jobs::Preprocess,
         "fix" => Omca::Jobs::FixTableData,
         "fcarmerge" => Omca::Jobs::FcarMerge
       }
@@ -32,12 +33,6 @@ module Omca
         register_dir_files(
           dir: File.join(Omca.datadir, dirname), ns: dirname
         )
-      end
-
-      register_preprocess_main_jobs
-
-      Omca.non_main_table_dirs.each do |dir|
-        register_preprocess_non_main_jobs(dir)
       end
 
       phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
@@ -246,78 +241,6 @@ module Omca
     end
     private_class_method :register_files
 
-    def register_preprocess_main_jobs
-      ns = "preprocess_main"
-
-      entries = (Omca::Mappers.obj_and_procedures.keys +
-                 Omca::Mappers.authorities.keys).sort
-        .map do |rectype|
-          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
-
-          args = {
-            source: :"main__#{table}",
-            dest: :"#{ns}__#{table}",
-            rectype: rectype
-          }
-
-          entry = {
-            path: File.join(Omca.datadir, "preprocess", "main", "#{table}.csv"),
-            creator: {
-              callee: Omca::Jobs::MainPreprocess,
-              args: args
-            },
-            tags: [:preprocess, ns.to_sym, table.to_sym, rectype.to_sym],
-            dest_special_opts: {
-              initial_headers: [Omca.ingestid_field]
-            }
-          }
-
-          [table.to_sym, entry]
-        end
-
-      Omca.registry.namespace(ns) do
-        entries.each { |entry| register entry[0], entry[1] }
-      end
-    end
-    private_class_method :register_preprocess_main_jobs
-
-    def register_preprocess_non_main_jobs(dir)
-      ns = "preprocess_#{dir}"
-
-      origpath = File.join(Omca.datadir, "orig", dir)
-      entries = Dir.children(origpath).reject { |f| f.end_with?("#") }
-        .map do |tablefilename|
-          table = tablefilename.delete_suffix(".csv")
-          rectype = Omca::Mappings::Db.rectype_for_table(table)
-
-          args = {
-            source: :"#{dir}__#{table}",
-            dest: :"#{ns}__#{table}",
-            rectype: rectype,
-            tabletype: dir
-          }
-
-          tags = [:preprocess, ns.to_sym, table.to_sym]
-          tags << rectype.to_sym if rectype
-
-          entry = {
-            path: File.join(Omca.datadir, "preprocess", dir, "#{table}.csv"),
-            creator: {
-              callee: Omca::Jobs::NonMainPreprocess,
-              args: args
-            },
-            tags: tags
-          }
-
-          [table.to_sym, entry]
-        end
-
-      Omca.registry.namespace(ns) do
-        entries.each { |entry| register entry[0], entry[1] }
-      end
-    end
-    private_class_method :register_preprocess_non_main_jobs
-
     def register_phase_jobs(phase, callee)
       return if callee == :skip
 
@@ -336,9 +259,14 @@ module Omca
           table = tablefilename.delete_suffix(".csv")
           rectype = Omca::Mappings::Db.rectype_for_table(table)
           prev_phase = previous_phase(phase)
+          srckey = if prev_phase == "orig"
+            :"#{dir}__#{table}"
+          else
+            :"#{prev_phase}_#{dir}__#{table}"
+          end
 
           args = {
-            source: :"#{prev_phase}_#{dir}__#{table}",
+            source: srckey,
             dest: :"#{ns}__#{table}",
             table: table,
             rectype: rectype,
