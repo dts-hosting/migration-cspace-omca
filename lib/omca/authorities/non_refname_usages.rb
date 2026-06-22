@@ -57,6 +57,7 @@ module Omca
 
       def extract_from_fields(base, row, fields, csv)
         base["id"] = row["id"]
+        base["recordcsid"] = row["recordcsid"]
         fields.each { |field| extract_from_field(base.dup, row, field, csv) }
       end
 

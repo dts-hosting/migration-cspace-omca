@@ -12,6 +12,7 @@ module Omca
       def process(row)
         rowhash = row.to_h
         rowhash.delete(:id)
+        rowhash.delete(:recordcsid)
         counter[rowhash] = 0 unless counter.key?(rowhash)
         counter[rowhash] += 1
         nil

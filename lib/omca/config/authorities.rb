@@ -41,7 +41,7 @@ module Omca
 
     setting :non_refname_usages_headers,
       reader: true,
-      default: %w[tabletype table id field value]
+      default: %w[tabletype table id recordcsid field value]
 
     setting :uniq_non_refname_usages_path,
       reader: true,
@@ -50,7 +50,7 @@ module Omca
 
     setting :uniq_non_refname_usages_headers,
       reader: true,
-      default: non_refname_usages_headers + ["usagect"] - ["id"]
+      default: non_refname_usages_headers + ["usagect"] - %w[id recordcsid]
 
     setting :non_refname_lookup_path,
       reader: true,
