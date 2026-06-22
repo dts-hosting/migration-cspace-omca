@@ -273,7 +273,7 @@ module Omca
             tabletype: dir
           }
 
-          tags = [:fix, ns.to_sym, table.to_sym]
+          tags = [phase.to_sym, ns.to_sym, table.to_sym]
           tags << rectype.to_sym if rectype
 
           entry = {
