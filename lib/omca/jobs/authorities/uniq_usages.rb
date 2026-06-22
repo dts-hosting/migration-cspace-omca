@@ -10,11 +10,11 @@ module Omca
           "usages. Note that different refnames for the same term record may "\
           "have been used, so this output may still have multiple rows per term"
 
-        def job
+        def job(source:, destination:)
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__usages,
-              destination: :authorities__uniq_usages
+              source: source,
+              destination: destination
             },
             transformer: xforms
           )

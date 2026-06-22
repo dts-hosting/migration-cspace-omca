@@ -81,7 +81,13 @@ module Omca
         }
         register :uniq_usages, {
           path: Omca::Authorities.uniq_usages_path,
-          creator: Omca::Jobs::Authorities::UniqUsages,
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :authorities__usages,
+              destination: :authorities__uniq_usages
+            }
+          },
           tags: [ns.to_sym],
           desc: -> { Omca::Jobs::Authorities::UniqUsages.desc }
         }
