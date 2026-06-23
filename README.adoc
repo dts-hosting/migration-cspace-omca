@@ -117,7 +117,7 @@ Other extract tasks:
 === Reporting/deciding/misc based on extracted data
 
 * [x] Create report of Authority controlled field values that are not refnames (`thor run job non_refname_auth__refname_lookup`)
-* [ ] Create report of Unlinked authority usages -- these are well-formed refname usages of authority terms, but when you try to identify the authority record for the term based on the id portion of the refname, there is no record.
+* [x] Create report of Unlinked authority usages -- these are well-formed refname usages of authority terms, but when you try to identify the authority record for the term based on the id portion of the refname, there is no record. (`thor run job unlinked_auth__uniq_usages_explode`)
 
 === Non-refname authority usages
 
@@ -134,6 +134,16 @@ Other extract tasks:
 * [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
 * [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
 * [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
+
+=== Unlinked authority refnames
+
+These are refname URI values used to populate fields, but where no authority record with the `shortidentifier` encoded in the refname can be found in the authority vocabulary encoded in the refname.
+
+* [x] Programmatically match to existing terms in specified authority vocabulary to identify a correct, linked to authority record, refname to use (`thor run job unlinked_auth__refname_lookup`)
+* [x] Create FCAR worksheet for Migration Specialist to manually provide correct existing refnames for usages of unlinked auth refnames where the term is used many times
+* [x] Merge programmatically and manually corrected refnames into usages (`thor run job unlinked_auth__usage_merge`)
+* [x] Create initial report of uncorrected usages for client cleanup pre-migration (`thor run job unlinked_auth__client_cleanup`)
+* [ ] Create initial report of uncorrected usages for client cleanup post-migration, merging in new record CSIDs and field names as applicable
 
 === Preprocess
 
@@ -170,13 +180,6 @@ This layer applies identified fixes to:
 
 === FCAR
 
-* [ ] Unlinked refnames: Refname authority usages that do not match established terms
-** Worksheet
-*** Allow to provide established refname that could not be programmatically identified
-** Merge
-*** Merge manual and programmatic refnames into usages
-*** Add fake rows to relevant main and term authority tables for skeleton record load.
-** After load of skeleton records, we will pull the new refnames created for the terms, and replace the usage values with the new refnames.
 * [ ] Need to collapse used forms of authority refnames to preferred form, retaining/summing usage of all forms of that term. Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
 **  Merge should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 

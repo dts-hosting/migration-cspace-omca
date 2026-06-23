@@ -110,7 +110,7 @@ module Omca
 
         register :fix_uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
-                          "uniq_usages_fixed.csv"),
+            "uniq_usages_fixed.csv"),
           creator: {
             callee: Omca::Jobs::Authorities::UniqUsages,
             args: {
@@ -137,41 +137,94 @@ module Omca
         ns = "unlinked_auth"
 
         register :uniq_usages, {
-          path: File.join(Omca.datadir, "reports",
-            "unlinked_auth_uniq_usages.csv"),
+          path: File.join(Omca.wrkdir, "unlinked_auth_uniq_usages.csv"),
           creator: Omca::Jobs::UnlinkedAuth::UniqUsages,
-          tags: [ns.to_sym, :reports],
-          desc: "Deletes rows with a refname merged in from authority term "\
-            "table"
+          tags: [ns.to_sym],
+          desc: "Deletes :authorities__collapse_to_pref rows with a refname "\
+            "merged in from authority term table. Adds :index for later merge "\
+            "back into usages"
         }
-
         register :uniq_usages_explode, {
-          path: File.join(Omca.datadir, "working",
-            "unlinked_auth_uniq_usages_explode.csv"),
+          path: File.join(Omca.wrkdir, "unlinked_auth_uniq_usages_explode.csv"),
           creator: Omca::Jobs::UnlinkedAuth::UniqUsagesExplode,
           tags: [ns.to_sym],
           desc: "Generate one row per termid/form combination (deals with "\
             "values that have multiple term ids/forms concatenated)"
         }
-
-        register :usages_base, {
-          path: File.join(Omca.datadir, "working",
-            "unlinked_auth_usages_base.csv"),
-          creator: Omca::Jobs::UnlinkedAuth::UsagesBase,
+        register :refname_lookup, {
+          path: File.join(Omca.wrkdir, "unlinked_auth_refname_lookup.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::RefnameLookup,
           tags: [ns.to_sym],
-          desc: "Filter rows, keeping those that are unlinked"
+          desc: -> { Omca::Jobs::NonRefnameAuth::RefnameLookup.desc }
         }
-
+        register :refname_looked_up, {
+          path: File.join(Omca.wrkdir, "unlinked_auth_refname_looked_up.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::RefnameLookedUp,
+          tags: [ns.to_sym],
+          desc: "Filter :unlinked_auth__refname_lookup to only rows with "\
+            "matching refname found"
+        }
+        register :refname_no_match, {
+          path: File.join(Omca.wrkdir, "unlinked_auth_refname_no_match.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::RefnameNoMatch,
+          tags: [ns.to_sym],
+          desc: "Filter :unlinked_auth__refname_lookup to only rows without "\
+            "matching refname found"
+        }
+        register :refname_fcar_provided, {
+          path: File.join(Omca.wrkdir,
+            "unlinked_auth_refname_fcar_provided.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::RefnameFcarProvided,
+          tags: [ns.to_sym],
+          desc: "Filter :unlinked_auth__final to only rows with "\
+            "refname provided"
+        }
+        register :refname_fcar_fail, {
+          path: File.join(Omca.wrkdir,
+            "unlinked_auth_refname_fcar_fail.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::RefnameFcarFail,
+          tags: [ns.to_sym],
+          desc: "Filter :unlinked_auth__final to only rows with no"\
+            "refname provided"
+        }
+        register :for_merge, {
+          path: File.join(Omca.wrkdir,
+            "unlinked_auth_for_merge.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::ForMerge,
+          tags: [ns.to_sym],
+          desc: "Uniq and looked up and FCAR-provided refnames to update in "\
+            "usages"
+        }
         register :usages, {
-          path: File.join(Omca.datadir, "reports",
-            "unlinked_auth_usages.csv"),
-          creator: Omca::Jobs::UnlinkedAuth::Usages,
-          tags: [ns.to_sym, :reports],
-          dest_special_opts: {
-            initial_headers: %i[rectype table tabletype recordcsid field]
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_unlinked_auth.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::UsageMerge,
+          tags: [ns.to_sym],
+          desc: "Updates usages_fixed with unlinked auth fixes"
+        }
+        register :uniq_usages_final, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_unlinked_auth.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :unlinked_auth__usages,
+              destination: :unlinked_auth__uniq_usages_final
+            }
           },
-          desc: "- Adds :rectype, (using) :recordcsid, and :index fields"\
-            "- renames :usage_refname to :refname and :used_form to :form"
+          tags: [ns.to_sym],
+          desc: "Re-derive unique usages from unlinked auth usages"
+        }
+        register :client_cleanup, {
+          path: File.join(Omca.datadir, "reports",
+            "unlinked_auth_client_cleanup.csv"),
+          creator: Omca::Jobs::UnlinkedAuth::ClientCleanup,
+          tags: [ns.to_sym],
+          desc: "Unlinked auth usages that the client needs to clean up "\
+            "pre- or post-migration",
+          dest_special_opts: {
+            initial_headers: %i[recordcsid]
+          }
         }
       end
 

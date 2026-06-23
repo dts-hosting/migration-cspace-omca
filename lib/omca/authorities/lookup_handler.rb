@@ -37,6 +37,8 @@ module Omca
         else
           corpus.select { |ct| ct[:termdisplayname] == query }
         end
+        return [] unless match
+
         merge_refnames(match)
       end
 
@@ -46,8 +48,8 @@ module Omca
 
       def merge_refnames(matches)
         return [] if matches.empty?
-        populate_records if records.empty?
 
+        populate_records if records.empty?
         matches.map { |match| merge_refname(match) }
       end
 
@@ -60,7 +62,8 @@ module Omca
       def set_subtypeid
         return unless subtype
 
-        Omca::Mappers.auth_vocab_shortid(type, subtype)
+        res = Omca::Mappers.auth_vocab_shortid(type, subtype)
+        res || subtype
       end
 
       def populate_terms
@@ -88,14 +91,15 @@ module Omca
 
       def populate_records
         table = Omca::Mappings::Db.main_tables_by_rectype[type]
-        Omca::Dependencies.ensure_preprocess(table)
-
-        jobkey = Omca::Dependencies.jobkey_for(:preprocess, table)
+        jobkey = :"main__#{table}"
         path = Omca.registry.resolve(jobkey).path
         data = CSV.parse(
           File.read(path), headers: true, header_converters: :symbol
         )
-        @records = data unless subtypeid
+        unless subtypeid
+          @records = data
+          return data
+        end
 
         @records = data.select { |r| r[:authority] == subtypeid }
       end

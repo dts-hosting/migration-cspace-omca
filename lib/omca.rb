@@ -139,4 +139,11 @@ Omca::NonRefnameAuthManualFcar.config.returned_files = [
   "non_refname_auth_0.csv"
 ]
 
+Omca::UnlinkedAuthManualFcar.config.provided_worksheets = [
+  "unlinked_auth_0.csv"
+]
+Omca::UnlinkedAuthManualFcar.config.returned_files = [
+  "unlinked_auth_0.csv"
+]
+
 Omca::RegistryData.register

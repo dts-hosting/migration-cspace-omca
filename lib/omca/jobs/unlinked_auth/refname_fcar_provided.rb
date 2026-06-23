@@ -3,18 +3,17 @@
 module Omca
   module Jobs
     module UnlinkedAuth
-      module UniqUsages
+      module RefnameFcarProvided
         module_function
 
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__add_pref_term_data,
-              destination: :unlinked_auth__uniq_usages
+              source: :unlinked_auth__final,
+              destination: :unlinked_auth__refname_fcar_provided
             },
             transformer: [
-              xforms,
-              Omca::Authorities.add_term_index
+              xforms
             ]
           )
         end
@@ -22,10 +21,10 @@ module Omca
         def xforms
           Kiba.job_segment do
             transform FilterRows::FieldPopulated,
-              action: :reject,
-              field: :preftermrefname
+              action: :keep,
+              field: :refname
             transform Delete::Fields,
-              fields: %i[preftermcsid preftermrefname refname]
+              fields: %i[prepfingerprint clean_fingerprint]
           end
         end
       end
