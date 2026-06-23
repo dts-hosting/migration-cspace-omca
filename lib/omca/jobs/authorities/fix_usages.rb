@@ -9,7 +9,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authority_ref__usages,
+              source: :non_refname_auth__usages_final,
               destination: :authorities__fix_usages
             },
             transformer: xforms
@@ -33,12 +33,6 @@ module Omca
 
               row
             end
-
-            transform CombineValues::FromFieldsWithDelimiter,
-              sources: %i[authority vocab termid],
-              target: :index,
-              delete_sources: false,
-              delim: " "
           end
         end
       end

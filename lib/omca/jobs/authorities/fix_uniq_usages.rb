@@ -18,16 +18,12 @@ module Omca
 
         def xforms
           Kiba.job_segment do
-            transform Delete::FieldsExcept,
-              fields: %i[authority vocab termid index form]
+            transform Delete::Fields,
+              fields: %i[tabletype table id field]
             transform Deduplicate::Table,
               field: :index,
               delete_field: false,
-              include_occs: true,
-              compile_uniq_fieldvals: true
-            # transform Sort::ByFieldValue,
-            #   field: :occurrences,
-            #   order: :desc
+              include_occs: true
           end
         end
       end

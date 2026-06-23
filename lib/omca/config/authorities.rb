@@ -89,5 +89,18 @@ module Omca
     setting :fix_uniq_usages_path,
       reader: true,
       default: File.join(Omca.datadir, "fix", "fixed_uniq_usages.csv")
+
+    setting :add_term_index,
+      reader: true,
+      default: nil,
+      constructor: ->(default) do
+        Kiba.job_segment do
+          transform CombineValues::FromFieldsWithDelimiter,
+            sources: %i[authority vocab termid],
+            target: :index,
+            delete_sources: false,
+            delim: " "
+        end
+      end
   end
 end

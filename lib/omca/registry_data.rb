@@ -91,32 +91,37 @@ module Omca
           tags: [ns.to_sym],
           desc: -> { Omca::Jobs::Authorities::UniqUsages.desc }
         }
+        register :add_pref_term_data, {
+          path: File.join(Omca.wrkdir, "uniq_usages_add_pref_term_data.csv"),
+          creator: Omca::Jobs::Authorities::AddPrefTermData,
+          tags: [ns.to_sym],
+          desc: "Add :#{Omca.ingestid_field}, :recordcsid, and :refname "\
+            "into source data from authority term tables."
+        }
+
         register :fix_usages, {
-          path: File.join(Omca.datadir, "fix", "authority_ref", "usages.csv"),
+          path: File.join(Omca.datadir, "authority_ref", "usages_fixed.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,
           tags: [ns.to_sym, :fix],
           desc: "- Fix malformed concept refnames\n"\
             "- Drop citation terms whose refnames have no label/form\n"\
-            "- Drop field usages tagged in mappings for usage removal\n"\
-            "- Add :index"
+            "- Drop field usages tagged in mappings for usage removal"
         }
 
         register :fix_uniq_usages, {
-          path: File.join(Omca.datadir, "fix", "authority_ref",
-            "uniq_usages.csv"),
-          creator: Omca::Jobs::Authorities::FixUniqUsages,
+          path: File.join(Omca.datadir, "authority_ref",
+                          "uniq_usages_fixed.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :authorities__fix_usages,
+              destination: :authorities__fix_uniq_usages
+            }
+          },
           tags: [ns.to_sym, :fix],
           desc: "Re-derive unique usages from fixed usages"
         }
 
-        register :collapse_to_pref, {
-          path: File.join(Omca.datadir, "fix", "authority_ref",
-            "collapse_to_pref.csv"),
-          creator: Omca::Jobs::Authorities::CollapseToPref,
-          tags: [ns.to_sym, :fix],
-          desc: "Add :#{Omca.ingestid_field}, :recordcsid, and :refname "\
-            "into source data from authority term tables."
-        }
         register :no_form_citations, {
           path: File.join(
             Omca.datadir, "reports", "authorities_no_form_citations.csv"

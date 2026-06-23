@@ -8,14 +8,15 @@ module Omca
       end
 
       def process(row)
+        row[:preftermrecordcsid] = nil
+        row[:preftermrefname] = nil
         lkup = get_lookup(row)
         pref = lkup[row[:termid]]&.first
         return row unless pref
 
         row.merge({
-          preferred_term: pref[Omca.ingestid_field],
-          csid: pref[:recordcsid],
-          refname: pref[:refname]
+          preftermrecordcsid: pref[:recordcsid],
+          preftermrefname: pref[:refname]
         })
       end
 
@@ -30,24 +31,12 @@ module Omca
         rectype = Omca::Mappings::Db.rectype_for_table("#{auth}_common")
         table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
-        fix_jobkey = :"fix_main__#{table}"
-        unless Kiba::Extend::Job.registered?(fix_jobkey)
-          Kiba::Extend::Command::Run.job(:"preprocess_main__#{table}")
-          Omca.reset_registry
-        end
-
         lookups[auth] = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: fix_jobkey,
+          jobkey: :"main__#{table}",
           lookup_on: :shortidentifier
         )
         lookups[auth]
       end
-
-      def pref_term(row)
-        lookup[row[:recordcsid]].find { |t| t[:pos] == "0" }[:termdisplayname]
-      end
-
-      def unused?(row) = row[Omca::Authorities.used_tag_field] == "n"
     end
   end
 end

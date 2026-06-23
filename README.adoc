@@ -127,6 +127,14 @@ Other extract tasks:
 - [x] Compile uniq usages after merge (`thor run job non_refname_auth__usages_uniq_final`)
 - [x] Create report of individual usages where no existing refname was identified programmatically or manually, and ask client to resolve in existing instance. Unresolved non-refname authority usages still in the data at the time of final migration will be dropped. (`thor run job non_refname_auth__not_matched_client_cleanup`, https://3.basecamp.com/3410311/buckets/46717409/todos/10021612471[Basecamp To-Do])
 
+=== Authority usage fixes
+
+`thor run job authorities__fix_usages`
+
+* [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
+* [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
+* [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
+
 === Preprocess
 
 All tables:
@@ -155,11 +163,6 @@ This layer applies identified fixes to:
 
 * fix_main jobs (`thor jobs tagged fix_main -r`)
 ** [x] AUTHORITY TABLES ONLY: Drop unused authorities **except** for in location and taxon authorities (Implememted by changing the `TagUnusedAuthorityTerms` xform applied in the preprocess layer to tag all rows in locations_common and taxon_common tables as used
-
-* authority_ref/usages.csv - `thor run job authorities__fix_usages`
-** [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
-** [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
-** [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
 ** [ ] Keep only "Art Department", "History Department", and "Science Department"
