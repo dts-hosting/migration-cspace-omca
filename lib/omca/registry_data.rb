@@ -29,12 +29,6 @@ module Omca
         )
       end
 
-      %w[authority_ref].each do |dirname|
-        register_dir_files(
-          dir: File.join(Omca.datadir, dirname), ns: dirname
-        )
-      end
-
       phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
 
       register_skeleton_jobs
