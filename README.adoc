@@ -156,7 +156,7 @@ Worksheet processing (in FCAR process)
 Merge logic
 
 * Collapsing terms (the correction is to a form that exists as a separate record)
-** [ ] update usages to use corrected refname
+** [x] update usages to use corrected refname
 ** [ ] add original (collapsed) form as variant term in termgroup table record the term is being collapsed into, if it is not a variant term already
 
 * Non-collapsing terms

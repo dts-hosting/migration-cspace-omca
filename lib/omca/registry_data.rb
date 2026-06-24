@@ -327,6 +327,27 @@ module Omca
           desc: "FCAR corrections that correct to a form that exists as a "\
             "separate record in the same authority vocabulary"
         }
+        register :collapsing_usage_merge, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_big_auth.csv"),
+          creator: Omca::Jobs::BigAuth::CollapsingUsageMerge,
+          tags: %i[big_auth],
+          desc: "Update usages of terms being collapsed to use refname "\
+            "of term they are being collapsed into"
+        }
+        register :uniq_usages, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_big_auth.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :big_auth__collapsing_usage_merge,
+              destination: :big_auth__uniq_usages
+            }
+          },
+          tags: %i[big_auth],
+          desc: "Re-derive unique usages from big auth usages"
+        }
         register :non_collapsing, {
           path: File.join(Omca.wrkdir, "big_auth_non_collapsing.csv"),
           creator: Omca::Jobs::BigAuth::NonCollapsing,
