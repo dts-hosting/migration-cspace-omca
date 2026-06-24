@@ -145,6 +145,24 @@ These are refname URI values used to populate fields, but where no authority rec
 * [x] Create initial report of uncorrected usages for client cleanup pre-migration (`thor run job unlinked_auth__client_cleanup`)
 * [ ] Create initial report of uncorrected usages for client cleanup post-migration, merging in new record CSIDs and field names as applicable
 
+=== BigAuth
+
+* [x] Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
+
+Worksheet processing (in FCAR process)
+
+* [x] Tag collapsing terms (corrected form matches a form that exists as a separate record)
+
+Merge logic
+
+* Collapsing terms (the correction is to a form that exists as a separate record)
+** [ ] update usages to use corrected refname
+** [ ] add original (collapsed) form as variant term in termgroup table record the term is being collapsed into, if it is not a variant term already
+
+* Non-collapsing terms
+** [ ] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
+** [ ] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
+
 === Preprocess
 
 All tables:
@@ -179,9 +197,6 @@ This layer applies identified fixes to:
 ** [ ] Delete " Department" from the end of values
 
 === FCAR
-
-* [ ] Need to collapse used forms of authority refnames to preferred form, retaining/summing usage of all forms of that term. Prepare worksheet to allow OMCA to adjust the preferred form of any terms used more than 9999{empty}footnote:[Asked if we've identified threshold at which updating becomes a problem here: https://lyrasis.slack.com/archives/C08CUAV2ESX/p1778079849399689] times. Use https://3.basecamp.com/3410311/buckets/46717409/todos/9801121304[Oakland and San Francisco] as examples
-**  Merge should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 
 === Skeleton
 
