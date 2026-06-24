@@ -33,8 +33,9 @@ module Omca
           fingerprint: :matchfingerprint,
           source_fields: %i[index form]
         transform Delete::Fields,
-          fields: %i[form fp_form authority vocab occurrences termid index]
+          fields: %i[form authority vocab occurrences termid index]
         transform Rename::Fields, fieldmap: {
+          fp_form: :form,
           fp_index: :index
         }
         transform do |row|
