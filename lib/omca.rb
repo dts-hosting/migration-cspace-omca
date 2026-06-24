@@ -97,6 +97,16 @@ module Omca
     reader: true,
     default: table_dirs - ["main"]
 
+  # @return [Symbol] job key of finalized authority usages job
+  setting :auth_usages,
+    reader: true,
+    default: :unlinked_auth__usages
+
+  # @return [Symbol] job key of finalized authority uniq usages job
+  setting :auth_uniq_usages,
+    reader: true,
+    default: :unlinked_auth__uniq_usages_final
+
   def connection = @connection
 
   # @param connection_obj [PG::Connection]
