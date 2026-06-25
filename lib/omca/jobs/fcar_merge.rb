@@ -31,29 +31,26 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
-          if respond_to?(:big_auth__non_collapsing) &&
-              big_auth__non_collapsing.key?(rectype) &&
-              table == Omca::Mappers.term_table_for(rectype)
-            transform Omca::Xforms::BigAuthMergeTerm,
-              table: table,
-              tabletype: tabletype,
-              rectype: rectype,
-              mergerows: big_auth__non_collapsing[rectype]
+          if Omca::BigAuthFcar.cleanup_done? &&
+              respond_to?(:big_auth__non_collapsing) &&
+              big_auth__non_collapsing.key?(rectype)
+
+            if table == Omca::Mappers.term_table_for(rectype)
+              transform Omca::Xforms::BigAuthMergeTerm,
+                table: table,
+                tabletype: tabletype,
+                rectype: rectype,
+                mergerows: big_auth__non_collapsing[rectype]
+            end
+
+            if tabletype == "main"
+              transform Omca::Xforms::BigAuthMergeMain,
+                table: table,
+                tabletype: tabletype,
+                rectype: rectype,
+                mergerows: big_auth__non_collapsing[rectype]
+            end
           end
-
-          # if Omca::BigAuthFcar.cleanup_done?
-          #   if big_auth__final.key?(rectype) && tabletype == "main"
-          #     transform Omca::Xforms::BigAuthMergeMain,
-          #       table: table,
-          #       tabletype: tabletype,
-          #       rectype: rectype,
-          #       mergerows: big_auth__final[rectype]
-          #   end
-
-          #   if big_auth__final.key?(rectype) &&
-          #       table == Omca::Mappers.term_table_for(rectype)
-          #   end
-          # end
         end
       end
     end

@@ -202,7 +202,7 @@ This layer applies identified fixes to:
 ==== BigAuth
 
 * Non-collapsing terms
-** [ ] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
+** [x] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 ** [x] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
 
 
@@ -225,8 +225,8 @@ This allows us to:
 Implement for:
 
 * [x] objects
-* [ ] procedures
-* [ ] authorities
+* [x] procedures
+* [ ] authorities - needs to split into separate files per authority vocabulary
 
 === ...and more phases to be fully documented
 
