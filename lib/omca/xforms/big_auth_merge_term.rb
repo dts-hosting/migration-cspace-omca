@@ -3,7 +3,7 @@
 module Omca
   module Xforms
     class BigAuthMergeTerm
-      KEEP_FIELDS = %i[recordcsid authority pos id termname termprefforlang
+      KEEP_FIELDS = %i[recordcsid authority pos termname termprefforlang
         termdisplayname termtype termstatus term_is_used
         shortidentifier]
 
@@ -42,8 +42,6 @@ module Omca
       def do_merge(id, mergedata)
         terms = mergetargets[id]
         mergerow = mergedata.first
-        return handle_collapsed(id, terms) if mergerow[:collapsingterm] == "y"
-
         newform = mergerow[:new_form]
 
         pref = terms.find { |term| term[:pos] == "0" }
@@ -55,10 +53,6 @@ module Omca
           new_preferred(newform, pref, terms)
         end
         terms
-      end
-
-      def handle_collapsed(id, terms)
-        binding.pry
       end
 
       def swap_forms(pref, var)
@@ -73,7 +67,8 @@ module Omca
 
       def new_preferred(newform, pref, terms)
         terms.each { |t| increment_position(t) }
-        terms.unshift(build_new_preferred(newform, pref))
+        res = build_new_preferred(newform, pref)
+        terms.unshift(res)
         unpref_existing(pref)
       end
 
@@ -85,7 +80,6 @@ module Omca
 
       def build_new_preferred(newform, pref)
         np = pref.dup
-        binding.pry if np.nil?
         np[:pos] = "0"
         np[:termdisplayname] = newform
         np[:termname] = newform

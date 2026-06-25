@@ -25,30 +25,35 @@ module Omca
 
       def get_lookups
         base = []
-        base << :big_auth__final if Omca::BigAuthFcar.cleanup_done?
-        base
+        base << :big_auth__non_collapsing if Omca::BigAuthFcar.cleanup_done?
+        base.select { |key| Kiba::Extend::Job.output?(key) }
       end
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
-          if Omca::BigAuthFcar.cleanup_done?
-            if big_auth__final.key?(rectype) && tabletype == "main"
-              transform Omca::Xforms::BigAuthMergeMain,
-                table: table,
-                tabletype: tabletype,
-                rectype: rectype,
-                mergerows: big_auth__final[rectype]
-            end
-
-            if big_auth__final.key?(rectype) &&
-                table == Omca::Mappers.term_table_for(rectype)
-              transform Omca::Xforms::BigAuthMergeTerm,
-                table: table,
-                tabletype: tabletype,
-                rectype: rectype,
-                mergerows: big_auth__final[rectype]
-            end
+          if respond_to?(:big_auth__non_collapsing) &&
+              big_auth__non_collapsing.key?(rectype) &&
+              table == Omca::Mappers.term_table_for(rectype)
+            transform Omca::Xforms::BigAuthMergeTerm,
+              table: table,
+              tabletype: tabletype,
+              rectype: rectype,
+              mergerows: big_auth__non_collapsing[rectype]
           end
+
+          # if Omca::BigAuthFcar.cleanup_done?
+          #   if big_auth__final.key?(rectype) && tabletype == "main"
+          #     transform Omca::Xforms::BigAuthMergeMain,
+          #       table: table,
+          #       tabletype: tabletype,
+          #       rectype: rectype,
+          #       mergerows: big_auth__final[rectype]
+          #   end
+
+          #   if big_auth__final.key?(rectype) &&
+          #       table == Omca::Mappers.term_table_for(rectype)
+          #   end
+          # end
         end
       end
     end

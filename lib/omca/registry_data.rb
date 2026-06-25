@@ -325,7 +325,8 @@ module Omca
           creator: Omca::Jobs::BigAuth::Collapsing,
           tags: %i[big_auth],
           desc: "FCAR corrections that correct to a form that exists as a "\
-            "separate record in the same authority vocabulary"
+            "separate record in the same authority vocabulary",
+          lookup_on: :rectype
         }
         register :collapsing_usage_merge, {
           path: File.join(Omca.datadir, "authority_ref",
@@ -353,7 +354,8 @@ module Omca
           creator: Omca::Jobs::BigAuth::NonCollapsing,
           tags: %i[big_auth],
           desc: "FCAR corrections that do NOT correct to a form that exists "\
-            "as a separate record in the same authority vocabulary"
+            "as a separate record in the same authority vocabulary",
+          lookup_on: :rectype
         }
       end
 

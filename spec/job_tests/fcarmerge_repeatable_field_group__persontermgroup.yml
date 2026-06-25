@@ -1,0 +1,16 @@
+job: fcarmerge_repeatable_field_group__persontermgroup
+testdefs:
+  - testclass: CsvJob::Equal
+    tests:
+      - select_field: id
+        select_value: af4a6045-9013-45e0-a940-c6ffc3d7d62e
+        test_field: pos
+        expected: 1
+      - select_field: id
+        select_value: 9aeffbc9-7cc2-4e9f-8d6c-f600a3186150
+        test_field: pos
+        expected: 0
+      - select_field: id
+        select_value: c167b4bb-b1f0-486f-8beb-138d109aea47
+        test_field: pos
+        expected: 1

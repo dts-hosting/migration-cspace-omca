@@ -127,6 +127,10 @@ end
 
 Omca.loader
 
+Kiba::Extend::JobTest.config.job_tests_dir_path = File.join(
+  Bundler.root, "spec", "job_tests"
+)
+
 Kiba::Extend::ProjectConfig.config.graph_dir = File.join(
   Omca.datadir, "graphs"
 )
