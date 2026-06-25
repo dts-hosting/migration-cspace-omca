@@ -37,11 +37,15 @@ module Omca
       attr_reader :authority, :field, :normalizer, :rows
 
       def process_authority(row)
-        existing_id = row[field]
-        norm = normalizer.call(existing_id)
-        rows[norm] = [] unless rows.key?(norm)
-        rows[norm] << row
-
+        used = row[Omca::Authorities.used_tag_field]
+        if used == "n"
+          rows[row[:id]] = [row]
+        else
+          existing_id = row[field]
+          norm = normalizer.call(existing_id)
+          rows[norm] = [] unless rows.key?(norm)
+          rows[norm] << row
+        end
         nil
       end
 

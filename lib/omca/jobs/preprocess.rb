@@ -37,14 +37,10 @@ module Omca
 
       def main_auth_xforms(rectype)
         Kiba.job_segment do
-          transform Omca::Xforms::TagUnusedAuthorityTerms,
-            rectype: rectype
           transform Omca::Xforms::MergePreferredTerm,
             rectype: rectype
           transform Delete::Fields,
             fields: %i[sas proposed deprecated rev inauthority]
-          transform Omca::Xforms::DisambiguateIngestId,
-            authority: true
         end
       end
 
@@ -56,12 +52,7 @@ module Omca
         end
       end
 
-      def non_main_auth_xforms(rectype)
-        Kiba.job_segment do
-          transform Omca::Xforms::InheritUnusedAuthorityTags,
-            rectype: rectype
-        end
-      end
+      def non_main_auth_xforms(rectype) = nil
 
       def non_main_non_auth_xforms = nil
     end
