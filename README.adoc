@@ -114,6 +114,14 @@ Other extract tasks:
 *** [x] Unique usages with usage counts (`thor run job authorities__uniq_usages`)
 ** [x] Extract any non-refname values in authority-controlled fields (`thor run job non_refname_auth__usages`)
 
+=== Malformed usage fixes
+
+Required to do other fixes/reporting on authority usages
+
+* [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
+* [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
+* [x] Update `non_refname_auth__usages_final` source to `authorities__fix_malformed_usages`
+
 === Reporting/deciding/misc based on extracted data
 
 * [x] Create report of Authority controlled field values that are not refnames (`thor run job non_refname_auth__refname_lookup`)
@@ -123,7 +131,7 @@ Other extract tasks:
 
 - [x] Programmatically match to existing terms to get refnames to use (`thor run job non_refname_auth__refname_lookup`)
 - [x] Create FCAR worksheet for Migration Specialist to provide refnames for ones that did not get programmatically matched, where Migration Specialist could unambibuously identify the correct refname to use and the assignment would not require population of a different field (`thor run job non_refname_auth__worksheet`)
-- [x] Merge programmatically and manually provided usages into `authorities__usages` (`thor run job non_refname_auth__usages_final`)
+- [x] Merge programmatically and manually provided usages into `authorities\__usages` (`thor run job non_refname_auth__usages_final`)
 - [x] Compile uniq usages after merge (`thor run job non_refname_auth__usages_uniq_final`)
 - [x] Create report of individual usages where no existing refname was identified programmatically or manually, and ask client to resolve in existing instance. Unresolved non-refname authority usages still in the data at the time of final migration will be dropped. (`thor run job non_refname_auth__not_matched_client_cleanup`, https://3.basecamp.com/3410311/buckets/46717409/todos/10021612471[Basecamp To-Do])
 
@@ -131,9 +139,8 @@ Other extract tasks:
 
 `thor run job authorities__fix_usages`
 
-* [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
-* [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
 * [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
+* [ ] Object assocplace usages: Change to controlledcontentplace usages
 
 === Unlinked authority refnames
 
@@ -153,42 +160,50 @@ Worksheet processing (in FCAR process)
 
 * [x] Tag collapsing terms (corrected form matches a form that exists as a separate record)
 
-Merge logic - This needs to be done before preprocessing/fixing, which tag used terms and drop unused terms based on the usages file that this updates.
+Merge logic - This needs to be done before authorityprep/fixing, which tag used terms and drop unused terms based on the usages file that this updates.
 
 * Collapsing terms (the correction is to a form that exists as a separate record)
 ** [x] update usages to use corrected refname
-
-* Non-collapsing terms
-** [ ] Move merge from the `fcarmerge` phase to here in case it affects duplicate term disambiguation, which I didn't realize until today needed to *normalize* the authority term values, AND ignore unused terms when checking for duplicates. The merge xforms will probably need to be reworked since none of the convenience stuff merged in during preprocessing is present at this point. NO, that is a pain and I don't have time for this. Instead, move the authority usage and id deduplication out of `preprocess` to a new `authtag` phase, and move this BigAuth merge to its own phase between `preprocess` and `authtag`
-** [ ] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
-** [ ] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
 
 === Preprocess
 
 `thor jobs tagged preprocess -r`
 
-All tables:
+==== all tables
 
 * [x] Delete empty fields
 * [x] Replace `|` with \u{2758}
 * [x] DeURN vocabulary terms
 * [x] Delete timestamps with 00, 16, and 17 hour values from end of fields - Non-structured date values must be imported without timestamps
 
-Per-table category preprocessing:
+==== main - non-authority
 
-* main
-** [x] Disambiguate duplicate `ingestid` values
-** If rectype is an authority
-*** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
-*** *Duplicate `ingestid` disambiguation details for authorities*
+* [ ] Disambiguate duplicate `ingestid` values (**unless authority**)
+
+==== main - authority
+
+* [ ] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
+
+==== repeatable_field_group - authority
+
+* [ ] Merge :shortidentifier in from parent record
+
+=== Authorityprep
+
+==== BigAuth FCAR - Non-collapsing terms merge
+
+* [x] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
+* [x] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
+
+==== Tag unused terms
+
+* [ ] main: Identify unused authority terms and tag them `:term_is_used` = `n`, EXCEPT for location and taxon authorities, where we are migrating unused terms
+* [ ] repeatable_field_group: Merge in `:term_is_used` value from parent record
+
+==== Duplicate `ingestid` disambiguation
+
 **** [x] check for duplicates on normalized-for-CollectionSpace-authority-shortidentifier values
 **** [ ] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
-*** [x] If a concept/associated term is ONLY used in taxon/common name field, mark it unused, as that field is uncontrolled in anthro - this is handled by the `uncontrol and remove usage` implementation in the `authorities__fix_usages` job
-*** [x] Identify unused authority terms and tag them `:term_is_used` = `n`
-* repeatable_field_group
-** If rectype is an authority
-*** [x] Merge in `:term_is_used` value from parent record
-*** [x] Merge :shortidentifier in from parent record
 
 
 === Fix
@@ -203,6 +218,8 @@ This layer applies identified fixes to:
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
 ** [ ] Keep only "Art Department", "History Department", and "Science Department"
 ** [ ] Delete " Department" from the end of values
+
+* [ ] assocplacegroup.assocplace: uncontrol, keeping label from whatever refname is in the field
 
 === FCAR merge
 
