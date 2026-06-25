@@ -12,7 +12,7 @@ module Omca
 
     setting :usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "authority_ref", "usages.csv")
+      default: File.join(Omca.datadir, "reference", "usages.csv")
 
     setting :usages_headers,
       reader: true,
@@ -20,7 +20,7 @@ module Omca
 
     setting :uniq_usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "authority_ref", "uniq_usages.csv")
+      default: File.join(Omca.datadir, "reference", "uniq_usages.csv")
 
     setting :uniq_usages_headers,
       reader: true,
