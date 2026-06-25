@@ -93,6 +93,29 @@ module Omca
             "into source data from authority term tables."
         }
 
+        register :fix_malformed_usages, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_malformed_fixed.csv"),
+          creator: Omca::Jobs::Authorities::FixMalformedUsages,
+          tags: [ns.to_sym],
+          desc: "- Fix malformed concept refnames\n"\
+            "- Drop citation terms whose refnames have no label/form"
+        }
+
+        register :fix_malformed_uniq_usages, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_malformed_fixed.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :authorities__fix_malformed_usages,
+              destination: :authorities__fix_malformed_uniq_usages
+            }
+          },
+          tags: [ns.to_sym],
+          desc: "Re-derive unique usages from fixed malformed usages"
+        }
+
         register :fix_usages, {
           path: File.join(Omca.datadir, "authority_ref", "usages_fixed.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,
