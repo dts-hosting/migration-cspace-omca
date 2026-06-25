@@ -5,13 +5,13 @@ module Omca
     module Skeleton
       module_function
 
-      def job(source:, dest:, table:, rectype:, id_field:)
+      def job(source:, dest:, table:, rectype:, id_field:, auth_subtype: nil)
         Kiba::Extend::Jobs::Job.new(
           files: {
             source: get_source(source, table),
             destination: dest
           },
-          transformer: xforms(rectype, id_field)
+          transformer: xforms(rectype, id_field, auth_subtype)
         )
       end
 
@@ -21,7 +21,7 @@ module Omca
         source
       end
 
-      def xforms(rectype, id_field)
+      def xforms(rectype, id_field, auth_subtype)
         Kiba.job_segment do
           keepfields = Omca::Mappings::Fields.skeleton_fields(
             rectype, "main"
@@ -31,10 +31,14 @@ module Omca
           if Omca::Mappers.authority?(rectype)
             transform FilterRows::FieldEqualTo,
               action: :keep,
+              field: :authority,
+              value: auth_subtype
+            transform FilterRows::FieldEqualTo,
+              action: :keep,
               field: Omca::Authorities.used_tag_field,
               value: "y"
             transform Delete::Fields,
-              fields: Omca::Authorities.used_tag_field
+              fields: [Omca::Authorities.used_tag_field, :authority]
           end
           transform Delete::FieldsExcept,
             fields: keepfields
