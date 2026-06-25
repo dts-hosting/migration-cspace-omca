@@ -43,7 +43,8 @@ module Omca
             rectype: rectype
           transform Delete::Fields,
             fields: %i[sas proposed deprecated rev inauthority]
-          transform Omca::Xforms::DisambiguateIngestId
+          transform Omca::Xforms::DisambiguateIngestId,
+            authority: true
         end
       end
 

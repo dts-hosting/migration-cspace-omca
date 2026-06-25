@@ -3,18 +3,21 @@
 module Omca
   module Xforms
     class DisambiguateIngestId
-      def initialize
+      def initialize(authority: false)
+        @authority = authority
         @field = Omca.ingestid_field
+        @normalizer = Kiba::Extend::Utils::StringNormalizer.new(
+          mode: :cspaceid
+        )
         @rows = {}
       end
 
       def process(row)
-        existing_id = row[field]
-
-        rows[existing_id] = [] unless rows.key?(existing_id)
-        rows[existing_id] << row
-
-        nil
+        if authority
+          process_authority(row)
+        else
+          process_non_authority(row)
+        end
       end
 
       def close
@@ -31,7 +34,24 @@ module Omca
 
       private
 
-      attr_reader :field, :rows
+      attr_reader :authority, :field, :normalizer, :rows
+
+      def process_authority(row)
+        existing_id = row[field]
+        norm = normalizer.call(existing_id)
+        rows[norm] = [] unless rows.key?(norm)
+        rows[norm] << row
+
+        nil
+      end
+
+      def process_non_authority(row)
+        existing_id = row[field]
+        rows[existing_id] = [] unless rows.key?(existing_id)
+        rows[existing_id] << row
+
+        nil
+      end
     end
   end
 end
