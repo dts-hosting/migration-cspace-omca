@@ -11,7 +11,7 @@ module Omca
         @mode = mode
         @target = Omca::Authorities.used_tag_field
         @lookup = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :unlinked_auth__uniq_usages_final, lookup_on: :vocab
+          jobkey: Omca.auth_uniq_usages, lookup_on: :vocab
         )
       end
 
