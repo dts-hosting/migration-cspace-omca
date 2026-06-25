@@ -158,6 +158,11 @@ Merge logic - This needs to be done before preprocessing/fixing, which tag used 
 * Collapsing terms (the correction is to a form that exists as a separate record)
 ** [x] update usages to use corrected refname
 
+* Non-collapsing terms
+** [ ] Move merge from the `fcarmerge` phase to here in case it affects duplicate term disambiguation, which I didn't realize until today needed to *normalize* the authority term values, AND ignore unused terms when checking for duplicates. The merge xforms will probably need to be reworked since none of the convenience stuff merged in during preprocessing is present at this point. NO, that is a pain and I don't have time for this. Instead, move the authority usage and id deduplication out of `preprocess` to a new `authtag` phase, and move this BigAuth merge to its own phase between `preprocess` and `authtag`
+** [ ] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
+** [ ] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
+
 === Preprocess
 
 `thor jobs tagged preprocess -r`
@@ -175,12 +180,16 @@ Per-table category preprocessing:
 ** [x] Disambiguate duplicate `ingestid` values
 ** If rectype is an authority
 *** [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
+*** *Duplicate `ingestid` disambiguation details for authorities*
+**** [x] check for duplicates on normalized-for-CollectionSpace-authority-shortidentifier values
+**** [ ] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
 *** [x] If a concept/associated term is ONLY used in taxon/common name field, mark it unused, as that field is uncontrolled in anthro - this is handled by the `uncontrol and remove usage` implementation in the `authorities__fix_usages` job
 *** [x] Identify unused authority terms and tag them `:term_is_used` = `n`
 * repeatable_field_group
 ** If rectype is an authority
 *** [x] Merge in `:term_is_used` value from parent record
 *** [x] Merge :shortidentifier in from parent record
+
 
 === Fix
 
@@ -199,12 +208,7 @@ This layer applies identified fixes to:
 
 `thor jobs tagged fcarmerge -r`
 
-==== BigAuth
-
-* Non-collapsing terms
-** [x] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
-** [x] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
-
+(nothing here yet)
 
 === Skeleton
 
