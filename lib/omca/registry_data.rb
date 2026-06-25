@@ -382,6 +382,17 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("test_report") do
+        register :commonname_only_concept, {
+          path: File.join(
+            Omca.datadir, "reports", "test_reports",
+            "commonname_only_concept.csv"
+          ),
+          creator: Omca::Jobs::TestReport::CommonnameOnlyConcept,
+          tags: [:test_report, :reports, :concept]
+        }
+      end
+
       Omca.registry.namespace("map_report") do
         register :arguscount, {
           path: File.join(
