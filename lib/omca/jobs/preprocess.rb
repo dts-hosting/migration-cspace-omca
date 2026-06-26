@@ -52,7 +52,12 @@ module Omca
         end
       end
 
-      def non_main_auth_xforms(rectype) = nil
+      def non_main_auth_xforms(rectype)
+        Kiba.job_segment do
+          transform Omca::Xforms::InheritTermid,
+            rectype: rectype
+        end
+      end
 
       def non_main_non_auth_xforms = nil
     end

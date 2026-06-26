@@ -11,7 +11,7 @@ module Omca
       default: nil,
       constructor: ->(default) do
         Kiba.job_segment do
-          transform Delete::EmptyFields, report: true
+          transform Delete::EmptyFields
           transform Omca::Xforms::DeurnVocabTerms
           transform Clean::StripFields,
             fields: :all

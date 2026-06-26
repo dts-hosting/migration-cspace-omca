@@ -1,0 +1,8 @@
+job: non_refname_auth__usages_final
+testdefs:
+  - testclass: CsvJob::Equal
+    tests:
+      - select_field: id
+        select_value: 521d86b6-6dd3-4a7c-8673-93db0f4d36f6
+        test_field: refname
+        expected: urn:cspace:museumca.org:placeauthorities:name(place):item:name(pl175414)'Cliff House, San Francisco'

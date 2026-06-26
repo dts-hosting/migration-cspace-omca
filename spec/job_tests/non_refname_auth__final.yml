@@ -1,0 +1,9 @@
+job: non_refname_auth__final
+testdefs:
+  - testclass: CsvJob::Flex
+    tests:
+      - select_proc: "Proc.new { |data| data.by_col! }"
+        select_desc: "All rows"
+        test_proc: "Proc.new { |selected| selected[:matchtype].all? { |e| e == 'none' } }"
+        test_desc: "have :matchtype = none"
+        expected: true

@@ -28,7 +28,7 @@ module Omca
 
     setting :non_refname_usages_path,
       reader: true,
-      default: File.join(Omca.wrkdir, "usages_non_refname.csv")
+      default: File.join(Omca.datadir, "reference", "usages_non_refname.csv")
 
     setting :non_refname_usages_headers,
       reader: true,
@@ -36,7 +36,8 @@ module Omca
 
     setting :uniq_non_refname_usages_path,
       reader: true,
-      default: File.join(Omca.wrkdir, "uniq_usages_non_refname.csv")
+      default: File.join(Omca.datadir, "reference",
+        "uniq_usages_non_refname.csv")
 
     setting :uniq_non_refname_usages_headers,
       reader: true,

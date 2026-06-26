@@ -120,7 +120,6 @@ Required to do other fixes/reporting on authority usages
 
 * [x] https://3.basecamp.com/3410311/buckets/46717409/todos/9860743606[Fix malformed concept refnames in term usages] - Refname is normal in concepts_common table
 * [x] https://3.basecamp.com/3410311/buckets/46717409/documents/9846420732#__recording_9861241695[Delete straggler citation usages]
-* [x] Update `non_refname_auth__usages_final` source to `authorities__fix_malformed_usages`
 
 === Reporting/deciding/misc based on extracted data
 
@@ -140,7 +139,6 @@ Required to do other fixes/reporting on authority usages
 `thor run job authorities__fix_usages`
 
 * [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
-* [ ] Object assocplace usages: Change to controlledcontentplace usages
 
 === Unlinked authority refnames
 
@@ -178,15 +176,15 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 ==== main - non-authority
 
-* [ ] Disambiguate duplicate `ingestid` values (**unless authority**)
+* [x] Disambiguate duplicate `ingestid` values (**unless authority**)
 
 ==== main - authority
 
-* [ ] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
+* [x] Extract the preferred term to `ingestid` field. Originally I was going to extract this from the `refname` value, but then I remembered that so many odd things are found in the refnames here, so I https://github.com/dts-hosting/migration-cspace-omca/blob/main/lib/omca/xforms/merge_preferred_term.rb[merged in the preferred term from the relevant termgroup table].
 
 ==== repeatable_field_group - authority
 
-* [ ] Merge :shortidentifier in from parent record
+* [x] Merge :shortidentifier in from parent record
 
 === Authorityprep
 
@@ -203,23 +201,19 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 ==== Duplicate `ingestid` disambiguation
 
 **** [x] check for duplicates on normalized-for-CollectionSpace-authority-shortidentifier values
-**** [ ] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
-
+**** [x] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
 
 === Fix
 
 `thor jobs tagged fix -r`
 
-This layer applies identified fixes to:
-
-* fix_main jobs (`thor jobs tagged fix_main -r`)
-** [x] AUTHORITY TABLES ONLY: Drop unused authorities **except** for in location and taxon authorities (Implememted by changing the `TagUnusedAuthorityTerms` xform applied in the preprocess layer to tag all rows in locations_common and taxon_common tables as used
-
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
 ** [ ] Keep only "Art Department", "History Department", and "Science Department"
 ** [ ] Delete " Department" from the end of values
 
-* [ ] assocplacegroup.assocplace: uncontrol, keeping label from whatever refname is in the field
+* Uncontrol, keeping label from whatever refname is in the field
+** [ ] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet
+** [ ] source fields marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
 
 === FCAR merge
 
@@ -248,6 +242,15 @@ Implement for:
 * [x] objects
 * [x] procedures
 * [ ] authorities - needs to split into separate files per authority vocabulary
+
+=== Authority merge
+
+* [ ] Once all used authorities are loaded, *prepare old refname to new refname lookups*
+* [ ] Create new version of usages with new refnames merged in
+
+==== Special handling
+
+* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
 
 === ...and more phases to be fully documented
 
