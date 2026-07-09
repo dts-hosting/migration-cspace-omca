@@ -46,8 +46,8 @@ module Omca
   # If I want to be lazy I can define this to avoid typing out full directory
   #   paths. It also makes a nice example for using a constructor:
   setting :derived_dirs,
-    # preprocess fix fcarmerge
-    default: %w[working],
+    # preprocess fix fcarmerge authority_ref
+    default: %w[working preprocess fix fcarmerge authority_ref],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
   setting :backup_dir,
@@ -58,7 +58,7 @@ module Omca
   Kiba::Extend.config.pre_job_task_directories = derived_dirs
   Kiba::Extend.config.pre_job_task_backup_dir = backup_dir
   Kiba::Extend.config.pre_job_task_action = :recursive_nuke
-  Kiba::Extend.config.pre_job_task_mode = :job
+  Kiba::Extend.config.pre_job_task_mode = :jkob
 
   # ### Re-namespacing Kiba:Extend settings
   setting :registry, default: Kiba::Extend.registry, reader: true

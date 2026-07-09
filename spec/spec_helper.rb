@@ -12,6 +12,7 @@ end.each do |rbfile|
   require rbfile
 end
 
+require_relative "helpers"
 require_relative "../lib/omca"
 
 # A custom rspec matcher to compare expected and given CSVs and provide a usable
@@ -20,7 +21,8 @@ require_relative "../lib/omca"
 require "rspec/custom/matchers/match_csv"
 
 RSpec.configure do |config|
-  config.extend Omca
+  # config.extend Omca
+  config.include Helpers
   config.include Kiba::Extend::Utils::TestHelpers
 
   # Enable flags like --only-failures and --next-failure

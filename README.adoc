@@ -148,7 +148,7 @@ These are refname URI values used to populate fields, but where no authority rec
 * [x] Create FCAR worksheet for Migration Specialist to manually provide correct existing refnames for usages of unlinked auth refnames where the term is used many times
 * [x] Merge programmatically and manually corrected refnames into usages (`thor run job unlinked_auth__usage_merge`)
 * [x] Create initial report of uncorrected usages for client cleanup pre-migration (`thor run job unlinked_auth__client_cleanup`)
-* [ ] Create initial report of uncorrected usages for client cleanup post-migration, merging in new record CSIDs and field names as applicable
+* [ ] FRESH DATA: Create initial report of uncorrected usages for client cleanup post-migration, merging in new record CSIDs and field names as applicable
 
 === BigAuth FCAR
 
@@ -195,8 +195,8 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 ==== Tag unused terms
 
-* [ ] main: Identify unused authority terms and tag them `:term_is_used` = `n`, EXCEPT for location and taxon authorities, where we are migrating unused terms
-* [ ] repeatable_field_group: Merge in `:term_is_used` value from parent record
+* [x] main: Identify unused authority terms and tag them `:term_is_used` = `n`, EXCEPT for location and taxon authorities, where we are migrating unused terms
+* [x] repeatable_field_group: Merge in `:term_is_used` value from parent record
 
 ==== Duplicate `ingestid` disambiguation
 
@@ -241,7 +241,7 @@ Implement for:
 
 * [x] objects
 * [x] procedures
-* [ ] authorities - needs to split into separate files per authority vocabulary
+* [x] authorities - needs to split into separate files per authority vocabulary
 
 === Authority merge
 

@@ -12,13 +12,32 @@ RSpec.describe Omca::Jobs::Authorityprep do
       end
       expect(row[Omca.ingestid_field]).to eq("Oakland, California")
     end
+
+    it "tags unused terms" do
+      val = data[Omca::Authorities.used_tag_field].uniq.sort
+      expect(val).to eq(%w[n y])
+    end
+  end
+
+  describe ":authorityprep_main__taxon_common" do
+    let(:data) { csv_job_output(:authorityprep_main__taxon_common) }
+
+    it "does not tag any terms as unused" do
+      val = data[Omca::Authorities.used_tag_field].uniq
+      expect(val).to eq(["y"])
+    end
   end
 
   describe ":authorityprep_repeatable_field_group__placetermgroup" do
+    let(:jobkey) {:authorityprep_repeatable_field_group__placetermgroup }
+
+    before do
+      clear_output(:authorityprep_main__places_common)
+      clear_output(jobkey)
+    end
+
     let(:data) do
-      csv_job_output(
-        :authorityprep_repeatable_field_group__placetermgroup
-      )
+      csv_job_output(jobkey)
     end
 
     it "swaps forms when pref exists as variant" do
@@ -40,6 +59,14 @@ RSpec.describe Omca::Jobs::Authorityprep do
       expect(demoted[:pos]).to eq("2")
       expect(demoted[:termtype]).to eq("Alternate descriptor")
       expect(demoted[:termprefforlang]).to eq("f")
+    end
+
+    it "inherits unused tag from main term record" do
+      rows = data.select do |row|
+        row[:recordcsid] == "7e4e7696-23af-47fa-a0ef-bea863033815"
+      end
+      val = rows.map { |row| row[Omca::Authorities.used_tag_field] }
+      expect(val.uniq).to eq(["n"])
     end
   end
 

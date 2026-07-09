@@ -29,7 +29,7 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
-          return unless Omca::Mappers.authority?(rectype)
+          next unless Omca::Mappers.authority?(rectype)
 
           if Omca::BigAuthFcar.cleanup_done? &&
               respond_to?(:big_auth__non_collapsing) &&

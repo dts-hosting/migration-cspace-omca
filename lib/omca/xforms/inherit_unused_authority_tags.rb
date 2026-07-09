@@ -8,7 +8,7 @@ module Omca
         @target = Omca::Authorities.used_tag_field
         main_table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
         @lookup = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :"preprocess_main__#{main_table}", lookup_on: :recordcsid
+          jobkey: :"authorityprep_main__#{main_table}", lookup_on: :recordcsid
         )
       end
 
