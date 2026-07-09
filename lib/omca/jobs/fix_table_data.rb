@@ -41,6 +41,21 @@ module Omca
             end
           end
 
+          if table == "citations_common"
+            transform do |row|
+              if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
+                val = row[Omca.ingestid_field]
+                row[:citationnote] = val
+                  row[Omca.ingestid_field] =
+                    "Varjola, Pirjo. The Etholen Collection"
+              end
+
+              row
+            end
+
+            transform Clean::EnsureConsistentFields
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
