@@ -35,15 +35,16 @@ module Omca
       # @return [Array<Hash>] of migrating rows
       def skeleton_fields(rectype, tabletype)
         for_rectype(rectype, side: :target).select do |r|
-          r["mapping_treatment"] == "skeleton" &&
+          r["mapping_treatment"]&.match?("skeleton") &&
             r["db_table_type"] == tabletype
         end
       end
 
       # @return [Array<String>]
       def skeleton_rectypes
-        migrating.select { |row| row["mapping_treatment"] == "skeleton" }
-          .map { |row| row["target_record_type"] }
+        migrating.select do |row|
+          row["mapping_treatment"]&.include?("skeleton")
+        end.map { |row| row["target_record_type"] }
           .uniq
           .sort
       end
@@ -55,9 +56,23 @@ module Omca
           .sort
       end
 
+      def uncontrol_rectypes
+        migrating.select do |row|
+          row["mapping_treatment"]&.include?("uncontrol")
+          end.map { |row| row["target_record_type"] }
+          .uniq
+          .sort
+      end
+
+      def uncontrol_rows_for_rectype(rectype)
+        for_rectype(rectype).select do |row|
+          row["mapping_treatment"]&.include?("uncontrol")
+        end
+      end
+
       def usage_removals
         fields_sheet.select do |row|
-          row["mapping_treatment"] == "uncontrol and remove usage"
+          row["mapping_treatment"]&.include?("uncontrol and remove usage")
         end.map { |r| [r["source_db_table"], r["db_field"]] }
       end
     end

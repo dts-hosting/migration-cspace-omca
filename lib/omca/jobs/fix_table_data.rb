@@ -22,6 +22,25 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
+          if Omca::Mappings::Fields.uncontrol_rectypes.include?(rectype)
+            uncontrol_rows =
+              Omca::Mappings::Fields.uncontrol_rows_for_rectype(rectype)
+            tables = uncontrol_rows.map{ |r| r["source_db_table"] }
+            if tables.include?(table)
+              uncontrol_rows.map{ |r| r["db_field"].to_sym }
+                .each do |field|
+                  transform do |row|
+                    val = row[field]
+                    next row if val.blank?
+                    next row unless val.start_with?("urn:")
+
+                    row[field] = Omca::Refname.deurn(val)
+                    row
+                  end
+                end
+            end
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
