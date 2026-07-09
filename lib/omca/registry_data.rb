@@ -565,7 +565,7 @@ module Omca
           table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
           args = {
-            source: :"preprocess_main__#{table}",
+            source: :"authorityprep_main__#{table}",
             dest: :"#{ns}__#{table}"
           }
 
