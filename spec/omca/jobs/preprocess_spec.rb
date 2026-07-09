@@ -34,9 +34,9 @@ RSpec.describe Omca::Jobs::Preprocess do
   end
 
   describe ":preprocess_repeatable_field_group__orgtermgroup" do
-    let(:data) do
-      csv_job_output(:preprocess_repeatable_field_group__orgtermgroup)
-    end
+    let(:jobkey) { :preprocess_repeatable_field_group__orgtermgroup }
+    before { clear_output(jobkey) }
+    let(:data) { csv_job_output(jobkey) }
 
     it "populates ingestid with preferred form" do
       row = data.find do |row|
