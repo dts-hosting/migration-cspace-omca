@@ -43,8 +43,9 @@ module Omca
         else
           existing_id = row[field]
           norm = normalizer.call(existing_id)
-          rows[norm] = [] unless rows.key?(norm)
-          rows[norm] << row
+          key = "#{row[:authority]} #{norm}"
+          rows[key] = [] unless rows.key?(key)
+          rows[key] << row
         end
         nil
       end

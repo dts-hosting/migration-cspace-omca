@@ -201,6 +201,7 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 ==== Duplicate `ingestid` disambiguation
 
 **** [x] check for duplicates on normalized-for-CollectionSpace-authority-shortidentifier values
+**** [x] check is within the given authority vocabulary
 **** [x] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
 
 === Fix
