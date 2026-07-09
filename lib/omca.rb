@@ -47,7 +47,7 @@ module Omca
   #   paths. It also makes a nice example for using a constructor:
   setting :derived_dirs,
     # preprocess fix fcarmerge authority_ref
-    default: %w[working preprocess fix fcarmerge authority_ref],
+    default: %w[working preprocess fix fcarmerge],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
   setting :backup_dir,
