@@ -69,7 +69,14 @@ module Omca
         register :types_orig, {
           path: Omca::Rels.types_orig_path,
           creator: Omca::Rels::TypesOrig.method(:new),
-          tags: [:rel_info]
+          tags: [:rel_info],
+          desc: Omca::Rels::TypesOrig.desc
+        }
+        register :types_uniq, {
+          path: Omca::Rels.types_uniq_path,
+          creator: Omca::Rels::TypesUniq.method(:new),
+          tags: [:rel_info],
+          desc: Omca::Rels::TypesUniq.desc
         }
       end
 
