@@ -22,6 +22,18 @@ RSpec.describe Omca::Jobs::Preprocess do
     end
   end
 
+  describe ":preprocess_main__groups_common" do
+    let(:data) { csv_job_output(:preprocess_main__groups_common) }
+
+    it "disambiguates duplicate ids AFTER stripping values" do
+      r1 = data.find { |row| row[:recordcsid] == "23d77c8f-bfe5-4aef-a598" }
+      expect(r1[Omca.ingestid_field]).to eq("Emmy Lou Packard (duplicate 1)")
+
+      r2 = data.find { |row| row[:recordcsid] == "c6672644-d088-4d05-9975" }
+      expect(r2[Omca.ingestid_field]).to eq("Emmy Lou Packard (duplicate 2)")
+    end
+  end
+
   describe ":preprocess_main__organizations_common" do
     let(:data) { csv_job_output(:preprocess_main__organizations_common) }
 

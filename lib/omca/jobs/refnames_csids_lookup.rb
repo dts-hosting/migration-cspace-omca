@@ -39,9 +39,11 @@ module Omca
                 rows.select { |row| row[:subtype] == subtype }
               end
 
-            transform Rename::Field,
-              from: :refname,
-              to: :oldrefname
+            transform Rename::Fields, fieldmap: {
+              Omca.ingestid_field => :termdisplayname_preferred,
+              :refname => :oldrefname
+            }
+
           else
             transform Delete::FieldsExcept,
               fields: keepfields
@@ -49,6 +51,9 @@ module Omca
               lookup: send(:"refnames_csids_new__#{rectype}"),
               keycolumn: Omca.ingestid_field,
               fieldmap: fieldmap
+            transform Rename::Field,
+              from: Omca.ingestid_field,
+              to: id_field
           end
 
           transform Rename::Field,
