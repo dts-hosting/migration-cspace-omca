@@ -270,6 +270,18 @@ module Omca
           order by recordcsid
         SQL
       end
+
+      def rel_types
+        <<~SQL
+          select distinct
+            lower(rel.subjectdocumenttype) as subject,
+            lower(rel.objectdocumenttype) as object,
+            lower(rel.relationshiptype) as reltype
+            from relations_common rel
+            inner join misc on misc.id = rel.id and
+              misc.lifecyclestate != 'deleted'
+        SQL
+      end
     end
   end
 end

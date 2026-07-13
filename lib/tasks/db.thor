@@ -142,6 +142,13 @@ class Db < Thor
     )
   end
 
+  desc "rel_types", "Writes undeduplicated relationship type output"
+  def rel_types
+    path = File.join(Omca.datadir, "rels", "info", "types_orig.csv")
+    query = Omca::Db::Queries.rel_types
+    Omca::Db::QueryWriter.call(query: query, path: path)
+  end
+
   desc "tables_and_columns", "writes CSV of tables and columns"
   def tables_and_columns
     path = File.join(Omca.datadir, "db_tables_columns.csv")
