@@ -39,6 +39,7 @@ module Omca
               value: "y"
             transform Delete::Fields,
               fields: [Omca::Authorities.used_tag_field, :authority]
+            transform Delete::EmptyFields
           end
           transform Delete::FieldsExcept,
             fields: keepfields
