@@ -29,10 +29,15 @@ module Omca
           dir: File.join(Omca.datadir, "orig", val), ns: val
         )
       end
+      register_dir_files(
+        dir: File.join(Omca.datadir, "refnames_csids", "new"),
+        ns: "refnames_csids_new"
+      )
 
       phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
 
       register_skeleton_jobs
+      register_refname_csid_lookup_jobs
       register_unused_authority_reports
 
       register_files
@@ -569,6 +574,55 @@ module Omca
       end
     end
     private_class_method :register_skeleton_jobs
+
+    def register_refname_csid_lookup_jobs
+      ns = "refname_csid_lookup"
+      entries = Omca::Mappings::Fields.skeleton_rectypes
+        .map do |rectype|
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+          id_field = Omca::Mappers.id_field_for_table(table)
+
+          args = {
+            source: :"fcarmerge_main__#{table}",
+            dest: :"#{ns}__#{rectype}",
+            rectype: rectype,
+            id_field: id_field
+          }
+
+          if Omca::Mappers.authority?(rectype)
+            auth_cfg = Omca::Mappers.mappers[rectype]
+              .dig(:config, :authority_subtypes)
+            args[:auth_config] = auth_cfg
+            args[:lookup] = [{
+              jobkey: :"refnames_csids_new__#{rectype}",
+              lookup_on: :term
+            }]
+          else
+            args[:lookup] = [{
+              jobkey: :"refnames_csids_new__#{rectype}", lookup_on: :id
+            }]
+          end
+
+          entry = {
+            path: File.join(Omca.datadir, "refnames_csids", "lookup",
+              "#{rectype}.csv"),
+            creator: {
+              callee: Omca::Jobs::RefnamesCsidsLookup,
+              args: args
+            },
+            tags: [ns.to_sym, rectype.to_sym],
+            dest_special_opts: {
+              initial_headers: [id_field]
+            }
+          }
+          [rectype.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_refname_csid_lookup_jobs
 
     def register_unused_authority_reports
       ns = "authority_unused"
