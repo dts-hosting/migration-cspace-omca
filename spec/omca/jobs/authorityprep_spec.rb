@@ -29,7 +29,7 @@ RSpec.describe Omca::Jobs::Authorityprep do
   end
 
   describe ":authorityprep_repeatable_field_group__placetermgroup" do
-    let(:jobkey) {:authorityprep_repeatable_field_group__placetermgroup }
+    let(:jobkey) { :authorityprep_repeatable_field_group__placetermgroup }
 
     before do
       clear_output(:authorityprep_main__places_common)

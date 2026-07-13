@@ -59,7 +59,7 @@ module Omca
       def uncontrol_rectypes
         migrating.select do |row|
           row["mapping_treatment"]&.include?("uncontrol")
-          end.map { |row| row["target_record_type"] }
+        end.map { |row| row["target_record_type"] }
           .uniq
           .sort
       end

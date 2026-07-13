@@ -25,9 +25,9 @@ module Omca
           if Omca::Mappings::Fields.uncontrol_rectypes.include?(rectype)
             uncontrol_rows =
               Omca::Mappings::Fields.uncontrol_rows_for_rectype(rectype)
-            tables = uncontrol_rows.map{ |r| r["source_db_table"] }
+            tables = uncontrol_rows.map { |r| r["source_db_table"] }
             if tables.include?(table)
-              uncontrol_rows.map{ |r| r["db_field"].to_sym }
+              uncontrol_rows.map { |r| r["db_field"].to_sym }
                 .each do |field|
                   transform do |row|
                     val = row[field]
@@ -46,8 +46,8 @@ module Omca
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
                 val = row[Omca.ingestid_field]
                 row[:citationnote] = val
-                  row[Omca.ingestid_field] =
-                    "Varjola, Pirjo. The Etholen Collection"
+                row[Omca.ingestid_field] =
+                  "Varjola, Pirjo. The Etholen Collection"
               end
 
               row
