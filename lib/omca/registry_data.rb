@@ -65,6 +65,14 @@ module Omca
     private_class_method :register_dir_files
 
     def register_files
+      Omca.registry.namespace("rel_info") do
+        register :types_orig, {
+          path: Omca::Rels.types_orig_path,
+          creator: Omca::Rels::TypesOrig.method(:new),
+          tags: [:rel_info]
+        }
+      end
+
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 
