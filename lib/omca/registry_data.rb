@@ -169,6 +169,34 @@ module Omca
           desc: "Citation terms where the refname does not contain a label "\
             "(e.g. used form)"
         }
+
+        register :new_refname_lookup, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "new_refname_lookup.csv"
+          ),
+          creator: Omca::Jobs::Authorities::NewRefnameLookup,
+          tags: [ns.to_sym],
+          desc: "Compile old authority refname-to-new refname lookup",
+          lookup_on: :oldrefname
+        }
+        register :pref_refname_lookup, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "pref_refname_lookup.csv"
+          ),
+          creator: Omca::Jobs::Authorities::PrefRefnameLookup,
+          tags: [ns.to_sym],
+          desc: "Compile old authority usage refname to old pref refname "\
+            "lookup",
+          lookup_on: :auth_id_index
+        }
+        register :uniq_usage_lookup_chk, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "uniq_usage_new_refname_lookup.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UniqUsageLookupCheck,
+          tags: [ns.to_sym],
+          desc: "Verify all usages match a new refname"
+        }
       end
 
       Omca.registry.namespace("non_refname_auth") do
