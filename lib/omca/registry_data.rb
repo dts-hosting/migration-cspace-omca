@@ -86,6 +86,21 @@ module Omca
           tags: [:rel_info],
           desc: Omca::Rels::TypesUniq.desc
         }
+        %w[hier nonhier].each do |reltype|
+          register :"#{reltype}_rels", {
+            path: File.join(Omca.datadir, "rels", "info",
+              "#{reltype}_rels.csv"),
+            creator: {
+              callee: Omca::Jobs::Rels::ByType,
+              args: {
+                dest: :"rel_info__#{reltype}_rels",
+                reltype: reltype
+              }
+            },
+            tags: [:rel_info],
+            desc: "Unique #{reltype} relation types"
+          }
+        end
       end
 
       Omca.registry.namespace("authorities") do
