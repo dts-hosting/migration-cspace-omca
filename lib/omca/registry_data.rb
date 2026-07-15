@@ -37,6 +37,11 @@ module Omca
         ns: "refnames_csids_new"
       )
 
+      register_dir_files(
+        dir: File.join(Omca.datadir, "new_db_exports"),
+        ns: "new_db"
+      )
+
       phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
 
       register_skeleton_jobs
@@ -513,6 +518,21 @@ module Omca
               okforexhibitloanaccession_kmapping]
           }
         }
+      end
+
+      Omca.registry.namespace("medialink") do
+        %w[media restrictedmedia].each do |type|
+          register :"#{type}_blobcsid", {
+            path: File.join(
+              Omca.datadir, "reports", "#{type}_blobcsid.csv"
+            ),
+            creator: {
+              callee: Omca::Jobs::Medialink::Blobcsid,
+              args: {type: type}
+            },
+            tags: [:medialink, type.to_s]
+          }
+        end
       end
     end
     private_class_method :register_files

@@ -297,3 +297,9 @@ Implement for:
 === Reporting
 
 * [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
+
+=== Media migration
+
+* [x] Produce mappings of new db ids for `media_common` and `restrictedmedia_common` and the old `blobcsid` value to be merged into each
+
+Hopefully that's all and Michael can take care of the rest in the database. 🤞
