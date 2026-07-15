@@ -198,7 +198,8 @@ module Omca
           ),
           creator: Omca::Jobs::Authorities::UniqUsageLookupCheck,
           tags: [ns.to_sym],
-          desc: "Verify all usages match a new refname"
+          desc: "Contains usages that do NOT match a new refname. You want "\
+            "the number of output rows to be zero."
         }
       end
 
