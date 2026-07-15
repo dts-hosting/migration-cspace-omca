@@ -246,8 +246,8 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 ** [ ] Delete " Department" from the end of values
 
 * Uncontrol, keeping label from whatever refname is in the field
-** [ ] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet
-** [ ] source fields marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
+** [x] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet
+** [x] source fields marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
 
 === FCAR merge
 
@@ -279,7 +279,7 @@ Implement for:
 
 === Authority merge
 
-* [ ] Once all used authorities are loaded, *prepare old refname to new refname lookups*
+* [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
 * [ ] Create new version of usages with new refnames merged in
 
 ==== Special handling
