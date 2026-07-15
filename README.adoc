@@ -280,7 +280,7 @@ Implement for:
 === Authority merge
 
 * [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
-* [ ] Create new version of usages with new refnames merged in
+* [x] Create new version of usages with new refnames merged in
 
 ==== Special handling
 

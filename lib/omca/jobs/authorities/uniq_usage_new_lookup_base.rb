@@ -3,14 +3,14 @@
 module Omca
   module Jobs
     module Authorities
-      module UniqUsageLookupCheck
+      module UniqUsageNewLookupBase
         module_function
 
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
               source: Omca.auth_uniq_usages,
-              destination: :authorities__uniq_usage_lookup_chk,
+              destination: :authorities__uniq_usage_new_lookup_base,
               lookup: %i[
                 authorities__pref_refname_lookup
                 authorities__new_refname_lookup
@@ -37,9 +37,6 @@ module Omca
               lookup: authorities__new_refname_lookup,
               keycolumn: :prefrefname,
               fieldmap: {newrefname: :newrefname}
-            transform FilterRows::FieldPopulated,
-              action: :reject,
-              field: :newrefname
           end
         end
       end

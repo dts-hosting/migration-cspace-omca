@@ -205,14 +205,41 @@ module Omca
             "lookup",
           lookup_on: :auth_id_index
         }
-        register :uniq_usage_lookup_chk, {
+        register :uniq_usage_new_lookup_base, {
           path: File.join(
-            Omca.datadir, "authority_ref", "uniq_usage_new_refname_lookup.csv"
+            Omca.datadir, "authority_ref",
+            "uniq_usage_new_refname_lookup_base.csv"
           ),
-          creator: Omca::Jobs::Authorities::UniqUsageLookupCheck,
+          creator: Omca::Jobs::Authorities::UniqUsageNewLookupBase,
+          tags: [ns.to_sym],
+          desc: "Merge new refnames into uniq_usages"
+        }
+        register :uniq_usage_new_lookup_check, {
+          path: File.join(
+            Omca.datadir, "reports", "uniq_usage_new_refname_lookup_check.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UniqUsageNewLookupCheck,
           tags: [ns.to_sym],
           desc: "Contains usages that do NOT match a new refname. You want "\
             "the number of output rows to be zero."
+        }
+        register :uniq_usage_new_lookup, {
+          path: File.join(
+            Omca.datadir, "authority_ref",
+            "uniq_usage_new_refname_lookup.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UniqUsageNewLookup,
+          tags: [ns.to_sym],
+          desc: "Pare down to just oldrefname and newrefname columns",
+          lookup_on: :oldrefname
+        }
+        register :usages_new_refname, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "usages_new_refname.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UsagesNewRefname,
+          tags: [ns.to_sym],
+          desc: "Update usages with the new target refnames of used terms"
         }
       end
 
