@@ -100,12 +100,14 @@ module Omca
     reader: true,
     default: table_dirs - ["main"]
 
-  # @return [Symbol] job key of finalized authority usages job
+  # @return [Symbol] job key of finalized authority usages job for source
+  #   usages
   setting :auth_usages,
     reader: true,
     default: :big_auth__collapsing_usage_merge
 
-  # @return [Symbol] job key of finalized authority uniq usages job
+  # @return [Symbol] job key of finalized authority uniq usages job for source
+  #   usages
   setting :auth_uniq_usages,
     reader: true,
     default: :big_auth__uniq_usages
