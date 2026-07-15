@@ -115,6 +115,18 @@ module Omca
         end
       end
 
+      Omca.registry.namespace("source_rels") do
+        if File.exist?(Omca::Rels.types_modified_path)
+          Omca::Rels::SourceJobRegistrar.call
+            .group_by { |entry| entry[:ns] }
+            .each do |ns, jobs|
+              Omca.registry.namespace(ns) do
+                jobs.each { |job| register job[:key], job[:entry] }
+              end
+            end
+        end
+      end
+
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 

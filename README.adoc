@@ -286,12 +286,27 @@ Implement for:
 * [x] split into hier and non-hier: `rel_info__hier_rels` and `rel_info__nonhier_rels`
 * [x] develop recordtype -> document type mapping
 
-* [ ] authority hierarchy
+* authority hierarchy
 ** need to get authority type vs subtype
-* [ ] object hierarchy
+** [x] extract source data
+** [ ] fix
+*** delete rels where either term is not migrated
+** [ ] merge in new csids
+** [ ] prepare load files
+
+* object hierarchy
 ** include relationshipmetatype in query
-* [ ] nonhierarchical
+** [x] extract source data
+** [ ] merge in new csids
+** [ ] prepare load files
+
+* nonhierarchical - based on existing database
 ** `predicate` and `predicatedisplayname` values are present. We do not have a way to ingest these.
+** [x] extract source data
+** [ ] fix
+*** Deduplicate if subject and object are the same
+** [ ] merge in new csids
+** [ ] prepare load files
 
 === Authority merge
 

@@ -282,6 +282,45 @@ module Omca
               misc.lifecyclestate != 'deleted'
         SQL
       end
+
+      def nonhier_rel_data(subject, object)
+        <<~SQL
+          select rel.subjectcsid, rel.objectcsid
+          from relations_common rel
+          inner join misc on misc.id = rel.id and
+            misc.lifecyclestate != 'deleted'
+          where lower(rel.relationshiptype) = 'affects' and
+            lower(rel.subjectdocumenttype) = '#{subject}' and
+            lower(rel.objectdocumenttype) = '#{object}'
+        SQL
+      end
+
+      def auth_hier_rel_data(rectype)
+        <<~SQL
+          select
+            rel.subjectcsid as narrower,
+            rel.objectcsid as broader
+          from relations_common rel
+          inner join misc on misc.id = rel.id and
+            misc.lifecyclestate != 'deleted'
+          where lower(rel.relationshiptype) = 'hasbroader' and
+            lower(rel.subjectdocumenttype) LIKE '#{rectype}%'
+        SQL
+      end
+
+      def obj_hier_rel_data
+        <<~SQL
+          select
+            rel.subjectcsid as narrower,
+            rel.objectcsid as broader,
+            rel.relationshipmetatype
+          from relations_common rel
+          inner join misc on misc.id = rel.id and
+            misc.lifecyclestate != 'deleted'
+          where lower(rel.relationshiptype) = 'hasbroader' and
+            lower(rel.subjectdocumenttype) = 'collectionobject'
+        SQL
+      end
     end
   end
 end
