@@ -27,7 +27,9 @@ module Omca
     def register
       Dir.children(File.join(Omca.datadir, "orig")).each do |val|
         register_dir_files(
-          dir: File.join(Omca.datadir, "orig", val), ns: val
+          dir: File.join(Omca.datadir, "orig", val),
+          ns: val,
+          added_tags: %i[orig]
         )
       end
       register_dir_files(
@@ -51,7 +53,7 @@ module Omca
       Omca.registry.finalize
     end
 
-    def register_dir_files(dir:, ns:)
+    def register_dir_files(dir:, ns:, added_tags: [])
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
 
       Omca.registry.namespace(ns) do
@@ -63,7 +65,7 @@ module Omca
           register key, {
             path: File.join(dir, csvfile),
             supplied: true,
-            tags: [key, ns.to_sym, :orig]
+            tags: [key, ns.to_sym] + added_tags
           }
         end
       end
