@@ -284,7 +284,7 @@ Implement for:
 * [x] insert any migration-generated relations
 * [x] map to recordtypes
 * [x] split into hier and non-hier: `rel_info__hier_rels` and `rel_info__nonhier_rels`
-* [ ] develop recordtype -> document type mapping
+* [x] develop recordtype -> document type mapping
 
 * [ ] authority hierarchy
 ** need to get authority type vs subtype
