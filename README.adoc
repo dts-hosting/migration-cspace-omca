@@ -24,6 +24,39 @@ Unlike most of our migration repositories, this one is publicly viewable. This i
 
 toc::[]
 
+== Summaries
+
+=== Authority prep/processing
+
+We have to make a distinction between:
+
+* Established authority records/terms, many of which may not be used anywhere
+* The usages of terms in record fields
+
+Because of the https://collectionspace.atlassian.net/wiki/spaces/CUD/pages/3566862447/CSV+Importer+Known+Limitations#Repeatable-fields-populated-by-multiple-authorities---order-of-terms-from-different-authorities[multi-authority-controlled field ingest limitation/bug], we will be ingesting REFNAMES instead of authority strings.
+
+The main prep work for authorities is:
+
+* Fix problems with usages (see below)
+* Remove usages from fields that are uncontrolled in target instance; remap usages to expected fields in target system where necessary
+* Identify non-used terms (which we do not load, except for locations and taxon)
+* Load skeleton authority terms in target instance
+* Retrieve CSIDs and refnames for terms in target instance
+* Prepare lookup between source and target refnames
+* Update usages with target refnames
+* Merge target refname usages into the tables/fields where they are used
+
+Problems with usages that are addressed:
+
+* `nuke_bom` phase - Removal of BOM from values in all original tables
+* non-refname usages extracted, auto-matched or FCAR matched to `nuke_bom`-ed refnames via term match - values in authority controlled fields that are not the expected refname URNs
+* `authorities__usages`- Extract all refname URN usages
+* `authorities__fix_malformed_usages` - bad concept refnames fixed; citations with no form dropped
+* `non_refname_auth__usages_final` - adds fixed non-refname uses to `authorities__fix_malformed_usages`
+* `authorities__fix_usages` - delete usages in fields that are uncontrolled in target CollectionSpace
+* extract, auto-match or FCAR match unlinked refname usages - refnames that do not match an established term
+* BigAuth FCAR - Altering the preferred form of terms with too many usages to update the term in-system
+
 == Migration stages
 
 === Extract

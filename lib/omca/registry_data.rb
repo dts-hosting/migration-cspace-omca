@@ -159,9 +159,7 @@ module Omca
           path: File.join(Omca.datadir, "authority_ref", "usages_fixed.csv"),
           creator: Omca::Jobs::Authorities::FixUsages,
           tags: [ns.to_sym],
-          desc: "- Fix malformed concept refnames\n"\
-            "- Drop citation terms whose refnames have no label/form\n"\
-            "- Drop field usages tagged in mappings for usage removal"
+          desc: "- Drop field usages tagged in mappings for usage removal"
         }
 
         register :fix_uniq_usages, {
