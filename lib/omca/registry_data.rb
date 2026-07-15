@@ -91,6 +91,13 @@ module Omca
           tags: [:rel_info],
           desc: Omca::Rels::TypesUniq.desc
         }
+        register :types_modified, {
+          path: Omca::Rels.types_modified_path,
+          creator: Omca::Jobs::Rels::TypesModified,
+          tags: [:rel_info],
+          desc: "Distinguish source/target record types; Fix remapped "\
+            "record types; Add relations that are created new in migration"
+        }
         %w[hier nonhier].each do |reltype|
           register :"#{reltype}_rels", {
             path: File.join(Omca.datadir, "rels", "info",

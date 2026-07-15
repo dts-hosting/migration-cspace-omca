@@ -277,6 +277,22 @@ Implement for:
 * [x] procedures
 * [x] authorities - needs to split into separate files per authority vocabulary
 
+=== Relations (not really a phase since nothing else depends on it)
+
+* [x] identify existing relationship types - `rel_info__types_uniq`
+* [x] apply any recordtype remappings
+* [x] insert any migration-generated relations
+* [x] map to recordtypes
+* [x] split into hier and non-hier: `rel_info__hier_rels` and `rel_info__nonhier_rels`
+* [ ] develop recordtype -> document type mapping
+
+* [ ] authority hierarchy
+** need to get authority type vs subtype
+* [ ] object hierarchy
+** include relationshipmetatype in query
+* [ ] nonhierarchical
+** `predicate` and `predicatedisplayname` values are present. We do not have a way to ingest these.
+
 === Authority merge
 
 * [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*

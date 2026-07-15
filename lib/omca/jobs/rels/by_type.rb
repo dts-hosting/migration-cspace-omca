@@ -9,7 +9,7 @@ module Omca
         def job(dest:, reltype:)
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :rel_info__types_uniq,
+              source: :rel_info__types_modified,
               destination: dest
             },
             transformer: xforms(reltype)
