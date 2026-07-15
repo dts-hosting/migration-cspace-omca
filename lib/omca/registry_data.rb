@@ -8,6 +8,7 @@ module Omca
     def phase_config
       {
         "orig" => :skip,
+        "nuke_bom" => Omca::Jobs::NukeBom.method(:new),
         "preprocess" => Omca::Jobs::Preprocess,
         "authorityprep" => Omca::Jobs::Authorityprep,
         "fix" => Omca::Jobs::FixTableData,

@@ -43,7 +43,7 @@ module Omca
       end
 
       def extract_from_file(tabledata, fields, csv)
-        filepath = File.join(Omca.datadir, "orig", tabledata[0],
+        filepath = File.join(Omca.datadir, "nuke_bom", tabledata[0],
           "#{tabledata[1]}.csv")
         puts "Extracting from #{filepath}"
         base = {

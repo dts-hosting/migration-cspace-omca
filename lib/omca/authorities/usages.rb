@@ -23,7 +23,7 @@ module Omca
       private
 
       def extract_from_files(dir, csv)
-        dirpath = File.join(Omca.datadir, "orig", dir)
+        dirpath = File.join(Omca.datadir, "nuke_bom", dir)
         puts "Extracting from #{dirpath}"
         Dir.children(dirpath).each do |filename|
           extract_from_file(dir, filename, csv)
@@ -31,7 +31,7 @@ module Omca
       end
 
       def extract_from_file(dir, filename, csv)
-        filepath = File.join(Omca.datadir, "orig", dir, filename)
+        filepath = File.join(Omca.datadir, "nuke_bom", dir, filename)
         puts "Extracting from #{filepath}"
         base = {
           "tabletype" => dir,
