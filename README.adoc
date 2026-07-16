@@ -301,7 +301,7 @@ Implement for:
 * object hierarchy
 ** include relationshipmetatype in query
 ** [x] extract source data
-** [ ] merge in new csids
+** [x] merge in new csids
 ** [ ] prepare load files
 
 * nonhierarchical - based on existing database
