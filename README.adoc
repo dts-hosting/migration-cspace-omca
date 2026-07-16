@@ -294,7 +294,7 @@ Implement for:
 ** need to get authority type vs subtype
 ** [x] extract source data
 ** [x] fix / merge in new csids
-** [ ] prepare load files
+** [x] prepare load files
 
 * object hierarchy
 ** include relationshipmetatype in query
