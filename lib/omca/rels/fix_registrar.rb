@@ -72,15 +72,21 @@ module Omca
       end
 
       def hier_entry(row, base)
-        obj_hier_entry(row, base) if row[:source0] == "collectionobject"
+        return obj_hier_entry(row, base) if row[:source0] == "collectionobject"
 
-        # base.merge({
-        #   creator: {
-        #     callee: Omca::Rels::AuthhierSource.method(:new),
-        #     args: {rectype: row[:source0], path: base[:path]}
-        #   },
-        #   desc: "Source authority hierarchy relations for #{row[:source0]}"
-        # })
+        source = "rels_source_#{row[:reltype]}__"\
+          "#{row[:source0]}_#{row[:source1]}"
+        base.merge({
+          creator: {
+            callee: Omca::Jobs::Rels::AuthhierFix,
+            args: {
+              source: source.to_sym,
+              dest: :"#{namespace(row)}__#{key(row)}",
+              rectype: row[:target0]
+            }
+          },
+          desc: "Fix authority hierarchy relations for #{row[:source0]}"
+        })
       end
 
       def obj_hier_entry(row, base)

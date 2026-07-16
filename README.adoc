@@ -293,9 +293,7 @@ Implement for:
 * authority hierarchy
 ** need to get authority type vs subtype
 ** [x] extract source data
-** [ ] fix
-*** delete rels where either term is not migrated
-** [ ] merge in new csids
+** [x] fix / merge in new csids
 ** [ ] prepare load files
 
 * object hierarchy
