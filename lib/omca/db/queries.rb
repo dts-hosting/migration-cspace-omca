@@ -289,6 +289,12 @@ module Omca
           from relations_common rel
           inner join misc on misc.id = rel.id and
             misc.lifecyclestate != 'deleted'
+          inner join hierarchy hiersub on hiersub.name = rel.subjectcsid
+          inner join misc miscsub on miscsub.id = hiersub.id and
+            miscsub.lifecyclestate != 'deleted'
+          inner join hierarchy hierobj on hierobj.name = rel.objectcsid
+          inner join misc miscobj on miscobj.id = hierobj.id and
+            miscobj.lifecyclestate != 'deleted'
           where lower(rel.relationshiptype) = 'affects' and
             lower(rel.subjectdocumenttype) = '#{subject}' and
             lower(rel.objectdocumenttype) = '#{object}'

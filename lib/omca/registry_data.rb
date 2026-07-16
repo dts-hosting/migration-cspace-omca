@@ -124,6 +124,14 @@ module Omca
                 jobs.each { |job| register job[:key], job[:entry] }
               end
             end
+
+          Omca::Rels::FixRegistrar.call
+            .group_by { |entry| entry[:ns] }
+            .each do |ns, jobs|
+              Omca.registry.namespace(ns) do
+                jobs.each { |job| register job[:key], job[:entry] }
+              end
+            end
         end
       end
 
@@ -549,7 +557,7 @@ module Omca
               callee: Omca::Jobs::Medialink::Blobcsid,
               args: {type: type}
             },
-            tags: [:medialink, type.to_s]
+            tags: [:medialink, type.to_sym]
           }
         end
       end

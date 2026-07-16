@@ -39,6 +39,10 @@ module Omca
               fields: %i[target0 target1],
               find: /objectexit/,
               replace: "exit"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: %i[target0 target1],
+              find: /valuationcontrol/,
+              replace: "valuation"
             transform Omca::Xforms::AddMigReltypes
             transform CombineValues::FullRecord
             transform Deduplicate::Table,
