@@ -132,6 +132,14 @@ module Omca
                 jobs.each { |job| register job[:key], job[:entry] }
               end
             end
+
+          Omca::Rels::IngestRegistrar.call
+            .group_by { |entry| entry[:ns] }
+            .each do |ns, jobs|
+              Omca.registry.namespace(ns) do
+                jobs.each { |job| register job[:key], job[:entry] }
+              end
+            end
         end
       end
 

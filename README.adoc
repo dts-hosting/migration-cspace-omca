@@ -313,7 +313,7 @@ Implement for:
 ** [x] Implement check report
 *** 1 collectionobject/media relation with unlinked media is expected here and will be dropped during ingest prep
 *** 14 unlinked acquisition/valuation relation with unlinked acquisition (deleted records?)
-** [ ] ingest prep
+** [x] ingest prep
 *** Delete csid fields
 *** Delete any rows without subject and object
 
