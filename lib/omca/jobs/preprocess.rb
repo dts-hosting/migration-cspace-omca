@@ -30,6 +30,8 @@ module Omca
           main_non_auth_xforms(rectype)
         elsif Omca::Mappers.authority?(rectype)
           non_main_auth_xforms(rectype)
+        elsif tabletype == "structured_dates"
+          structured_date_xforms
         else
           non_main_non_auth_xforms
         end
@@ -56,6 +58,14 @@ module Omca
         Kiba.job_segment do
           transform Omca::Xforms::InheritTermid,
             rectype: rectype
+        end
+      end
+
+      def structured_date_xforms
+        Kiba.job_segment do
+          transform FilterRows::AnyFieldsPopulated,
+            action: :keep,
+            fields: Omca::StructuredDate.data_fields
         end
       end
 

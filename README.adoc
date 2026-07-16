@@ -219,6 +219,10 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 * [x] Merge :shortidentifier in from parent record
 
+==== structured_dates
+
+* [x] Delete rows where all `Omca::StructuredDate.data_fields` are empty. This takes us from 926990 to 692823 top-level structured dates, and from 133037 to 315 nested structured dates.
+
 === Authorityprep
 
 ==== BigAuth FCAR - Non-collapsing terms merge
