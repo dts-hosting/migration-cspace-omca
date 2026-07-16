@@ -54,8 +54,7 @@ module Omca
       end
 
       def nonhier_entry(row, base)
-        source = "rels_fix_#{row[:reltype]}__"\
-          "#{row[:target0]}_#{row[:target1]}".to_sym
+        source = :"rels_fix_#{row[:reltype]}__#{row[:target0]}_#{row[:target1]}"
 
         base.merge({
           creator: {
@@ -72,6 +71,8 @@ module Omca
       end
 
       def hier_entry(row, base)
+        obj_hier_entry(row, base) if row[:target0] == "collectionobject"
+
         # base.merge({
         #   creator: {
         #     callee: Omca::Rels::AuthhierSource.method(:new),
@@ -79,6 +80,13 @@ module Omca
         #   },
         #   desc: "Source authority hierarchy relations for #{row[:source0]}"
         # })
+      end
+
+      def obj_hier_entry(row, base)
+        base.merge({
+          creator: Omca::Jobs::Rels::ObjhierIngest,
+          desc: "Prep object hierarchy relations for ingest"
+        })
       end
     end
   end

@@ -302,7 +302,7 @@ Implement for:
 ** include relationshipmetatype in query
 ** [x] extract source data
 ** [x] merge in new csids
-** [ ] prepare load files
+** [x] prepare load files
 
 * nonhierarchical - based on existing database
 ** `predicate` and `predicatedisplayname` values are present. We do not have a way to ingest these.
