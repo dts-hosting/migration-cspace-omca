@@ -285,7 +285,7 @@ module Omca
 
       def nonhier_rel_data(subject, object)
         <<~SQL
-          select rel.subjectcsid, rel.objectcsid
+          select distinct rel.subjectcsid, rel.objectcsid
           from relations_common rel
           inner join misc on misc.id = rel.id and
             misc.lifecyclestate != 'deleted'
