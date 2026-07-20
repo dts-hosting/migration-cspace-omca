@@ -47,6 +47,7 @@ module Omca
       register_skeleton_jobs
       register_refname_csid_lookup_jobs
       register_unused_authority_reports
+      register_authority_merge_splits
 
       register_files
 
@@ -738,6 +739,54 @@ module Omca
       end
     end
     private_class_method :register_refname_csid_lookup_jobs
+
+    def register_authority_merge_splits
+      path_base = File.join(Omca.datadir, "usages_split")
+      type_base = File.join(path_base, "by_table_type")
+      table_base = File.join(path_base, "by_table")
+
+      tt_entries = Omca::Mappings::Db.migrating_tables
+        .map { |hash| hash["table_type"] }
+        .uniq
+        .reject { |tt| tt == "structured dates" }
+        .map do |tt|
+          type = tt.tr(" ", "_")
+          entry = {
+            path: File.join(type_base, "#{type}.csv"),
+            creator: {
+              callee: Omca::Jobs::UsageSplit::ByTableType,
+              args: {type: type}
+            },
+            tags: [:usages_by_table_type, type.to_sym]
+          }
+          [type, entry]
+        end
+
+      Omca.registry.namespace("usages_by_table_type") do
+        tt_entries.each { |entry| register entry[0], entry[1] }
+      end
+
+      entries = Omca::Mappings::Db.migrating_tables
+        .reject { |r| r["table_type"] == "structured dates" }
+        .map do |hash|
+          type = hash["table_type"].tr(" ", "_")
+          table = hash["table_name"]
+          entry = {
+            path: File.join(table_base, type, "#{table}.csv"),
+            creator: {
+              callee: Omca::Jobs::UsageSplit::ByTable,
+              args: {type: type, table: table}
+            },
+            tags: [:usages_by_table, type.to_sym, table.to_sym]
+          }
+          [table, entry]
+        end
+
+      Omca.registry.namespace("usages_by_table") do
+        entries.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_authority_merge_splits
 
     def register_unused_authority_reports
       ns = "authority_unused"

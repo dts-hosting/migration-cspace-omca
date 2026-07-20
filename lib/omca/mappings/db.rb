@@ -9,6 +9,10 @@ module Omca
                               Omca::Mappings.worksheet
                                 .sheet("db_tables").parse(headers: true)
 
+      def migrating_tables = db_tables_sheet.select do |r|
+        r["migrating"] == "y"
+      end
+
       # @param table [String]
       def rectype_for_table(table) = val_from_table_row(
         table, "rectype"
