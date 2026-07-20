@@ -29,6 +29,10 @@ module Omca
             transform FilterRows::AllFieldsPopulated,
               action: :keep,
               fields: contentfields
+            transform CombineValues::FullRecord
+            transform Deduplicate::Table,
+              field: :index,
+              delete_field: true
           end
         end
       end
