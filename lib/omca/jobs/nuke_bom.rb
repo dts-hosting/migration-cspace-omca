@@ -20,6 +20,10 @@ module Omca
         puts "Wrote to #{destpath}"
       end
 
+      def outrows
+        `csvstat --count #{destpath}`
+      end
+
       private
 
       attr_reader :source, :destination, :sourcepath, :destpath
