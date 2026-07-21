@@ -45,4 +45,50 @@ RSpec.describe Omca::Jobs::FixTableData do
         expect(row3[:item]).to eq("Art")
       end
     end
+
+  describe ":fix_addtl_fields__collectionobjects_omca" do
+    let(:jobkey) do
+      :fix_addtl_fields__collectionobjects_omca
+    end
+    before(:context) do
+      jobkey = :fix_addtl_fields__collectionobjects_omca
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+    let(:path) { Omca.registry.resolve(jobkey).path }
+
+    it "deletes `f` values in art, history, science fields" do
+      val1 = xan_seach_csid_return_field(
+        "83db0761-12b0-49b0-900b-a2af91a4e336", "art", path
+      )
+      expect(val1).to eq('""')
+
+      val2 = xan_seach_csid_return_field(
+        "ce547ecb-231e-408f-9648-1994a7defd16", "history", path
+      )
+      expect(val2).to eq('""')
+
+      val3 = xan_seach_csid_return_field(
+        "2522146f-56f0-43e0-9470-9c2d166758d6", "science", path
+      )
+      expect(val3).to eq('""')
+    end
+
+    it "replaces `t` values in art, history, science fields" do
+      val1 = xan_seach_csid_return_field(
+        "aa1642d5-3de7-4188-aa51-91b5e865284a", "art", path
+      )
+      expect(val1).to eq("Art")
+
+      val2 = xan_seach_csid_return_field(
+        "7d7c0b51-69da-4058-a885-4e68ad0882bc", "history", path
+      )
+      expect(val2).to eq("History")
+
+      val3 = xan_seach_csid_return_field(
+        "11877f8c-3f95-4ba6-9da2-4d047af9fb3f", "science", path
+      )
+      expect(val3).to eq("Science")
+    end
+  end
 end

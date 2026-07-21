@@ -74,6 +74,19 @@ module Omca
               replace: ""
           end
 
+          if table == "collectionobjects_omca"
+            fields = %i[art history science]
+            transform Delete::FieldValueMatchingRegexp,
+              fields: fields,
+              match: /^f$/
+            fields.each do |field|
+              transform Clean::RegexpFindReplaceFieldVals,
+                fields: field,
+                find: /^t$/,
+                replace: field.to_s.capitalize
+            end
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
