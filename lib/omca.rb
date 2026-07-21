@@ -48,8 +48,9 @@ module Omca
   setting :derived_dirs,
     # orig
     # reference authority_ref
-    # preprocess authorityprep fix fcarmerge
-    default: %w[working authorityprep fix fcarmerge],
+    # preprocess authorityprep fix fcarmerge authmerge build
+    default: %w[working nuke_bom preprocess authorityprep fix fcarmerge
+      authmerge],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
   setting :backup_dir,
