@@ -73,6 +73,7 @@ module Omca
         <<~SQL
           select
           phier.name as recordcsid,
+          lower(regexp_replace(phier.primarytype, 'Tenant.*', '')) as rectype,
           hier.pos,
           tbl.*
           from #{table} tbl
@@ -92,6 +93,7 @@ module Omca
         <<~SQL
           select
           phier.name as recordcsid,
+          lower(regexp_replace(phier.primarytype, 'Tenant.*', '')) as rectype,
           auth.shortidentifier as authority,
           hier.pos,
           tbl.*
@@ -113,6 +115,7 @@ module Omca
           rechier.name as recordcsid,
           rechier.id as recordid,
           ghier.id as groupid,
+          lower(ghier.primarytype) as grouptable,
           tbl.*
           from #{table} tbl
           inner join hierarchy ghier on tbl.id = ghier.id
@@ -126,8 +129,11 @@ module Omca
 
       def subgroup_table(table)
         <<~SQL
-          SELECT phier.name as recordcsid,
+          SELECT
+          phier.name as recordcsid,
+          lower(regexp_replace(phier.primarytype, 'Tenant.*', '')) as rectype,
           ghier.id as groupid,
+          lower(ghier.primarytype) as grouptable,
           sghier.pos,
           tbl.*
           FROM #{table} tbl
