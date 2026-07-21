@@ -66,6 +66,7 @@ module Omca
   # ### Re-namespacing Kiba:Extend settings
   setting :registry, default: Kiba::Extend.registry, reader: true
   setting :delim, default: Kiba::Extend.delim, reader: true
+  setting :sgdelim, default: Kiba::Extend.sgdelim, reader: true
 
   setting :mappings_path,
     reader: true,

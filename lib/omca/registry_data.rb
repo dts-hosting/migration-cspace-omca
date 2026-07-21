@@ -13,7 +13,8 @@ module Omca
         "authorityprep" => Omca::Jobs::Authorityprep,
         "fix" => Omca::Jobs::FixTableData,
         "fcarmerge" => Omca::Jobs::FcarMerge,
-        "authmerge" => Omca::Jobs::AuthorityMerge
+        "authmerge" => Omca::Jobs::AuthorityMerge,
+        "build" => Omca::Jobs::Build
       }
     end
 
