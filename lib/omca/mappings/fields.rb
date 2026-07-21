@@ -75,6 +75,12 @@ module Omca
           row["mapping_treatment"]&.include?("uncontrol and remove usage")
         end.map { |r| [r["source_db_table"], r["db_field"]] }
       end
+
+      def opt_list_controlled_target_rows
+        migrating.select do |row|
+          row["target_field_source"]&.start_with?("option list:")
+        end
+      end
     end
   end
 end
