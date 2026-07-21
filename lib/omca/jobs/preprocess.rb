@@ -18,12 +18,12 @@ module Omca
           },
           transformer: [
             Omca::Preprocess.common_xforms,
-            get_xforms(rectype, tabletype)
+            get_xforms(table, rectype, tabletype)
           ].compact
         )
       end
 
-      def get_xforms(rectype, tabletype)
+      def get_xforms(table, rectype, tabletype)
         if tabletype == "main" && Omca::Mappers.authority?(rectype)
           main_auth_xforms(rectype)
         elsif tabletype == "main"
@@ -33,7 +33,7 @@ module Omca
         elsif tabletype == "structured_dates"
           structured_date_xforms
         else
-          non_main_non_auth_xforms
+          non_main_non_auth_xforms(table)
         end
       end
 
@@ -69,7 +69,16 @@ module Omca
         end
       end
 
-      def non_main_non_auth_xforms = nil
+      def non_main_non_auth_xforms(table)
+        Kiba.job_segment do
+          if table == "measuredpartgroup"
+            transform FilterRows::FieldEqualTo,
+              action: :reject,
+              field: :rectype,
+              value: "blob"
+          end
+        end
+      end
     end
   end
 end
