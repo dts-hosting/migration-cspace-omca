@@ -246,8 +246,8 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 `thor jobs tagged fix -r`
 
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
-** [ ] Keep only "Art Department", "History Department", and "Science Department"
-** [ ] Delete " Department" from the end of values
+** [x] Keep only "Art Department", "History Department", and "Science Department"
+** [x] Delete " Department" from the end of values
 
 * Uncontrol, keeping label from whatever refname is in the field
 ** [x] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet

@@ -56,6 +56,24 @@ module Omca
             transform Clean::EnsureConsistentFields
           end
 
+          if table == "collectionobjects_common_responsibledepartments"
+            transform Delete::FieldValueConditional,
+              fields: :item,
+              lambda: ->(val, row) do
+                ["CIA", "Education Department",
+                  "Professional Services Department"].any? do |str|
+                  val == str
+                end
+              end
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :item
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :item,
+              find: / Department/,
+              replace: ""
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
