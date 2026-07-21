@@ -147,6 +147,10 @@ Other extract tasks:
 *** [x] Unique usages with usage counts (`thor run job authorities__uniq_usages`)
 ** [x] Extract any non-refname values in authority-controlled fields (`thor run job non_refname_auth__usages`)
 
+* Option Lists
+** [x] Extract all values used in source fields that map to target fields controlled by option lists
+** [ ] Configure Lyrasis hosted UI config with option list customizations
+
 === Malformed usage fixes
 
 Required to do other fixes/reporting on authority usages
@@ -252,6 +256,9 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 * Uncontrol, keeping label from whatever refname is in the field
 ** [x] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet
 ** [x] source fields marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
+
+* Option list value tweaks
+** [x] downcase and adjust relevant values in fix phase (when values are re-extracted, list should be clean)
 
 === FCAR merge
 

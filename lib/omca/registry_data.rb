@@ -134,6 +134,18 @@ module Omca
         end
       end
 
+      Omca.registry.namespace("optlist") do
+        ns = "optlist"
+
+        register :usages, {
+          path: File.join(Omca.datadir, "optlist", "usages.csv"),
+          creator: Omca::Jobs::OptList::Usages.method(:new),
+          tags: [ns.to_sym],
+          desc: "Extract unique values used in source fields mapping to "\
+            "target fields controlled by option lists"
+        }
+      end
+
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 

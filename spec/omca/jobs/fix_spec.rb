@@ -91,4 +91,59 @@ RSpec.describe Omca::Jobs::FixTableData do
       expect(val3).to eq("Science")
     end
   end
+
+  describe ":fix_main__places_common" do
+    let(:jobkey) { :fix_main__places_common }
+    before(:context) do
+      jobkey = :fix_main__places_common
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+    let(:path) { Omca.registry.resolve(jobkey).path }
+
+    it "downcases placetype values" do
+      val1 = xan_seach_csid_return_field(
+        "b50aaacf-dfc9-47ab-bb7e-95e5f96d0399", "placetype", path
+      )
+      expect(val1).to eq("water body")
+    end
+  end
+
+  describe ":fix_main__conditionchecks_common" do
+    let(:jobkey) { :fix_main__conditionchecks_common }
+    before(:context) do
+      jobkey = :fix_main__conditionchecks_common
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+    let(:path) { Omca.registry.resolve(jobkey).path }
+
+    it "fixes `refName` in :conditioncheckreason" do
+      val1 = xan_seach_csid_return_field(
+        "9627099e-d862-40e7-b9f5-176cebd56a23", "conditioncheckreason", path
+      )
+      expect(val1).to eq("appraisal")
+    end
+  end
+
+  describe ":fix_repeatable_field__"\
+    "conditionchecks_omca_omcaconditioncheckmethods" do
+    let(:jobkey) do
+      :fix_repeatable_field__conditionchecks_omca_omcaconditioncheckmethods
+    end
+    before(:context) do
+      jobkey =
+        :fix_repeatable_field__conditionchecks_omca_omcaconditioncheckmethods
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+    let(:path) { Omca.registry.resolve(jobkey).path }
+
+    it "recapitalizes LED" do
+      val1 = xan_seach_csid_return_field(
+        "a659dc12-4782-4c27-8f97", "item", path
+      ).split("\n")[1]
+      expect(val1).to eq("handheld LED illumination")
+    end
+  end
 end

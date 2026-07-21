@@ -87,6 +87,58 @@ module Omca
             end
           end
 
+          if table == "conditionchecks_common"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :conditioncheckreason,
+              find: /Appraisal'<\/refName>/,
+              replace: "Appraisal"
+          end
+
+          downcase_opt_list_fields = [
+            "acquisitions_common.acquisitionmethod",
+            "addressgroupomca.addresstypeomca",
+            "collectionobjects_common.recordstatus",
+            "concepttermgroup.historicalstatus",
+            "concepttermgroup.termtype",
+            "conditionchecks_common.conditioncheckreason",
+            "conditionchecks_omca_omcaconditioncheckmethods.item",
+            "hazardgroup.hazard",
+            "intakes_common.entryreason",
+            "loctermgroup.termstatus",
+            "loctermgroup.termtype",
+            "media_common_typelist.item",
+            "movements_common.currentlocationfitness",
+            "movements_common.reasonformove",
+            "orgtermgroup.termtype",
+            "persontermgroup.termtype",
+            "places_common.placetype",
+            "placetermgroup.historicalstatus",
+            "placetermgroup.termtype",
+            "restrictedmedia_common_typelist.item",
+            "taxon_common.taxonrank",
+            "taxontermgroup.termtype",
+            "titlegroup.titletype",
+            "valuationcontrols_common.valuetype"
+          ].map do |val|
+            parts = val.split(".")
+            [parts[0], parts[1].to_sym]
+          end.group_by { |e| e[0] }
+            .transform_values do |v|
+              v.flatten.select { |val| val.is_a?(Symbol) }
+            end
+
+          if downcase_opt_list_fields.key?(table)
+            transform Clean::DowncaseFieldValues,
+              fields: downcase_opt_list_fields[table]
+          end
+
+          if table == "conditionchecks_omca_omcaconditioncheckmethods"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :item,
+              find: /handheld led illumination/,
+              replace: "handheld LED illumination"
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
