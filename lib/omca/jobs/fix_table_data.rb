@@ -87,6 +87,13 @@ module Omca
             end
           end
 
+          if table == "dimensionsubgroup"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :dimension,
+              find: /^running-time$/,
+              replace: "running time"
+          end
+
           if table == "conditionchecks_common"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :conditioncheckreason,
