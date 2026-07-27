@@ -11,8 +11,20 @@ module Helpers
     FileUtils.rm(path)
   end
 
-  def xan_seach_csid_return_field(csid, field, path)
+  # @param csid [String] CSID value to search for
+  # @param field [String] column from which to return value(s)
+  # @param path [String] to CSV in which to search
+  def xan_search_csid_return_field(csid, field, path)
     cmd = "xan search -s recordcsid -e #{csid} #{path} | "\
+      "xan select #{field} | xan behead"
+    `#{cmd}`.chomp
+  end
+
+  # @param id [String] ID value to search for
+  # @param field [String] column from which to return value(s)
+  # @param path [String] to CSV in which to search
+  def xan_search_id_return_field(id, field, path)
+    cmd = "xan search -s id -e #{id} #{path} | "\
       "xan select #{field} | xan behead"
     `#{cmd}`.chomp
   end

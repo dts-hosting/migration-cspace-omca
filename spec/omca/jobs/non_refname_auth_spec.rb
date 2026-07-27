@@ -26,4 +26,24 @@ RSpec.describe Omca::Jobs::NonRefnameAuth do
       )
     end
   end
+
+  describe ":non_refname_auth__usages_final", :slow do
+    before(:context) do
+      jobkey = :non_refname_auth__usages_final
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+
+    let(:jobkey) { :non_refname_auth__usages_final }
+    let(:path) { Omca.registry.resolve(jobkey).path }
+
+    it "merges collapsing authority values" do
+      val1 = xan_search_id_return_field(
+        "521d86b6-6dd3-4a7c-8673-93db0f4d36f6", "refname", path
+      )
+      expect(val1).to eq("urn:cspace:museumca.org:placeauthorities:"\
+                         "name(place):item:name(pl175414)"\
+                         "'Cliff House, San Francisco'")
+    end
+  end
 end
