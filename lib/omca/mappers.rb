@@ -90,8 +90,8 @@ module Omca
       @rectypes_by_authority_type ||=
         authorities.values
           .map do |m|
-            [m[:config][:authority_type],
-              m[:config][:recordtype]]
+          [m[:config][:authority_type],
+            m[:config][:recordtype]]
         end
           .to_h
     end

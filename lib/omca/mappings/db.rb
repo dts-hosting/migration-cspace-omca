@@ -62,8 +62,8 @@ module Omca
         @addtl_fields_tables ||=
           db_tables_sheet.select { |row| row["table_type"] == "addtl_fields" }
             .map do |r|
-              [r["table_name"],
-                main_tables_by_rectype[r["rectype"]]]
+            [r["table_name"],
+              main_tables_by_rectype[r["rectype"]]]
           end
       end
 
