@@ -8,8 +8,10 @@ module Omca
       def self.run = new.run
 
       def initialize
-        @src_path = Omca::Rels.types_orig_path
-        @out_path = Omca::Rels.types_uniq_path
+        @source = :rel_info__types_orig
+        @dest = :rel_info__types_uniq
+        @src_path = Omca.registry.resolve(source).path
+        @out_path = Omca.registry.resolve(dest).path
         @deduper = Set.new
       end
 

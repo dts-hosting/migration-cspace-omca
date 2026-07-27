@@ -7,12 +7,17 @@ module Omca
 
       def self.run = new.run
 
+      def source = :omca_source_db
+
+      def destination = :rel_info__types_orig
+
+      def dest_path = Omca.registry.resolve(destination).path
       def run
         Omca::Db::QueryWriter.call(
           query: Omca::Db::Queries.rel_types,
-          path: Omca::Rels.types_orig_path
+          path: dest_path
         )
-        puts "Wrote results to #{Omca::Rels.types_orig_path}"
+        puts "Wrote #{outrows} rows to #{dest_path}"
       end
     end
   end

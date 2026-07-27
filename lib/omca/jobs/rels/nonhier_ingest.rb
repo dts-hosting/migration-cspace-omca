@@ -7,15 +7,16 @@ module Omca
         module_function
 
         def job(source:, dest:)
+          files = {
+            source: source,
+            destination: dest
+          }
           unless Kiba::Extend::Job.output?(source)
-            return Kiba::Extend::Jobs::NullJob.new(source)
+            return Kiba::Extend::Jobs::NullJob.new(files: files)
           end
 
           Kiba::Extend::Jobs::Job.new(
-            files: {
-              source: source,
-              destination: dest
-            },
+            files: files,
             transformer: xforms
           )
         end
