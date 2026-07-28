@@ -24,6 +24,28 @@ Unlike most of our migration repositories, this one is publicly viewable. This i
 
 toc::[]
 
+== Setup
+
+* collectionspace_migration_tools must be set up with `~/.config/collectionspace_migration_tools/system_config.yml`
+** We use the `cspace_config_untangler_dir` setting from that config file to locate the necessary JSON record mappers for this project.
+This project needs those mappers to extract target system information as found in `./lib/omca/mappers.rb`
+
+* The client's database dump must restored into a PostgreSQL database running locally.
+This application is currently connecting to the local db with the `CREDS` found in `./lib/omca/db/connection.rb`
+** The db dump was not prepared in a way that `pgrestore` can deal with, so it has to be restored using psql.
+** The restore/import process will throw some errors/warnings because we are not loading the 2 other databases that an actual running CollectionSpace instance requires, including the one that defines users, roles, and permissions. However, the data content that we care about loads fine.
+
+* The base directory for the project must be: `~/data/omca/mig`
+
+* A local copy of https://lyrasis.sharepoint.com/:x:/r/sites/DataMigrations/Shared%20Documents/General/Projects/OMCA%20Oakland%20Museum%20of%20California/OMCA%20project/OMCA_mappings.xlsx?d=w91cc5133712f4ae4969f4a37da187947&csf=1&web=1&e=TOyALS[OMCA_mappings.xlsx] must be downloaded to `~/data/omca/mig/OMCA_mappings.xlsx`
+** While it is possible to shortcut the SharePoint folder into your OneDrive, such that is looks like it is on your computer, this puts it in a weird directory-or-something managed by Microsoft, which does not permit access from scripts/apps running on your machine.
+KMS has not yet had the time/pain tolerance to try to figure out Microsoft API crap for file access.
+
+* Non-derived data directories from https://lyrasis.sharepoint.com/:f:/r/sites/DataMigrations/Shared%20Documents/General/Projects/OMCA%20Oakland%20Museum%20of%20California/OMCA%20client%20data?csf=1&web=1&e=bbW44s[OMCA client data] must be put into place in the project:
+** `worksheets` -> `~/data/omca/mig/to_client`
+** `supplied_files` -> `~/data/omca/mig/supplied`
+** `old to new CSID refname lookups.zip` -> unzip and the files go in `~/data/omca/mig/refnames_csids/new`
+
 == Tests
 
 To skip the tests that take a really, really long time:
