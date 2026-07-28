@@ -24,6 +24,22 @@ Unlike most of our migration repositories, this one is publicly viewable. This i
 
 toc::[]
 
+== Tests
+
+To skip the tests that take a really, really long time:
+
+[source,bash]
+----
+rspec --tag ~slow
+----
+
+To run all tests:
+
+[source,bash]
+----
+rspec --tag ~slow
+----
+
 == Summaries
 
 === Authority prep/processing
