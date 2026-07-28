@@ -81,6 +81,12 @@ module Omca
           row["target_field_source"]&.start_with?("option list:")
         end
       end
+
+      def vocab_controlled_target_rows
+        migrating.select do |row|
+          row["target_field_source"]&.start_with?("vocabulary: ")
+        end
+      end
     end
   end
 end
