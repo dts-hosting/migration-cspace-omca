@@ -28,10 +28,6 @@ module Omca
       reader: true,
       default: %w[refname usagect authority vocab termid form]
 
-    setting :non_refname_usages_path,
-      reader: true,
-      default: File.join(Omca.datadir, "reference", "usages_non_refname.csv")
-
     setting :non_refname_usages_headers,
       reader: true,
       default: %w[tabletype table id recordcsid field value]

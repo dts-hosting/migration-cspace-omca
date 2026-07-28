@@ -3,23 +3,28 @@
 module Omca
   module Authorities
     class NonRefnameUsages
+      include Omca::DynamicCsvJobable
+
       def self.desc = "Get non-refname values used in authority controlled "\
         "fields "
 
-      def self.run = new.run
+      def source = :nuke_bom_authority_field_tables
+
+      def destination = :non_refname_auth__usages
 
       def initialize
+        @phase_dir = "nuke_bom"
         @authfields = {}
       end
 
-      def run
+      def job_code
         unless File.exist?(Omca::Authorities.usages_path)
           Omca::Authorities::Usages.run
         end
 
         get_auth_fields
         csv = CSV.open(
-          Omca::Authorities.non_refname_usages_path,
+          destination_path,
           "w",
           headers: Omca::Authorities.non_refname_usages_headers,
           write_headers: true
@@ -32,7 +37,7 @@ module Omca
 
       private
 
-      attr_reader :authfields
+      attr_reader :phase_dir, :authfields
 
       def get_auth_fields
         CSV.foreach(Omca::Authorities.usages_path, headers: true) do |row|
@@ -43,7 +48,7 @@ module Omca
       end
 
       def extract_from_file(tabledata, fields, csv)
-        filepath = File.join(Omca.datadir, "nuke_bom", tabledata[0],
+        filepath = File.join(Omca.datadir, phase_dir, tabledata[0],
           "#{tabledata[1]}.csv")
         puts "Extracting from #{filepath}"
         base = {

@@ -290,7 +290,7 @@ module Omca
         ns = "non_refname_auth"
 
         register :usages, {
-          path: Omca::Authorities.non_refname_usages_path,
+          path: File.join(Omca.datadir, "reference", "usages_non_refname.csv"),
           creator: Omca::Authorities::NonRefnameUsages.method(:new),
           tags: [ns.to_sym],
           desc: -> { Omca::Authorities::NonRefnameUsages.desc }
@@ -580,6 +580,11 @@ module Omca
       Omca.registry.register :nuke_bom_dir_files, {
         dynamic_source: true,
         desc: "All tables after nuke_bom phase"
+      }
+      Omca.registry.register :nuke_bom_authority_field_tables, {
+        dynamic_source: true,
+        desc: "Nuke-bomed source tables for fields containing authority "\
+          "term refnames"
       }
       Omca.registry.register :fcarmerge_optlist_field_tables, {
         dynamic_source: true,
