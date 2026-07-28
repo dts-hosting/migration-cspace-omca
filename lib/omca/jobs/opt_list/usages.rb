@@ -4,29 +4,29 @@ module Omca
   module Jobs
     module OptList
       class Usages
+        include Omca::DynamicCsvJobable
+
         def initialize
           @holder = Set.new
         end
 
-        def path = Omca.registry.resolve(:optlist__usages).path
+        def source = :fcarmerge_optlist_field_tables
 
-        def run
+        def destination = :optlist__usages
+
+        def job_code
           Omca::OptList.source_fields_to_opt_list
             .each { |table, fields| extract_from(table, fields) }
 
           CSV.open(
-            path,
+            destination_path,
             "w",
             headers: %i[optionlist value],
             write_headers: true
           ) do |csv|
             holder.each { |row| csv << row }
           end
-
-          puts "Wrote #{holder.length} optlist usages to #{path}"
         end
-
-        def outrows = holder.length
 
         private
 

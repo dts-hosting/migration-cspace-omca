@@ -581,6 +581,11 @@ module Omca
         dynamic_source: true,
         desc: "All tables after nuke_bom phase"
       }
+      Omca.registry.register :fcarmerge_optlist_field_tables, {
+        dynamic_source: true,
+        desc: "Fcarmerged source tables for field values mapping into "\
+          "option list controlled fields in target instance"
+      }
     end
     private_class_method :register_files
 
