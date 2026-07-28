@@ -8,16 +8,18 @@ module Omca
 
         def job(type:, table:)
           source = :"usages_by_table_type__#{type}"
+          destination = :"usages_by_table__#{table}"
+          files = {
+            source: source,
+            destination: destination
+          }
 
           unless Kiba::Extend::Job.output?(source)
-            return Kiba::Extend::Jobs::NullJob.new
+            return Kiba::Extend::Jobs::NullJob.new(files: files)
           end
 
           Kiba::Extend::Jobs::Job.new(
-            files: {
-              source: source,
-              destination: :"usages_by_table__#{table}"
-            },
+            files: files,
             transformer: xforms(table)
           )
         end
