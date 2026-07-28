@@ -3,21 +3,19 @@
 module Omca
   module Rels
     class TypesOrig
-      def self.desc = "Undeduplicated rel type info from DB"
+      include Omca::DynamicCsvJobable
 
-      def self.run = new.run
+      def self.desc = "Undeduplicated rel type info from DB"
 
       def source = :omca_source_db
 
       def destination = :rel_info__types_orig
 
-      def dest_path = Omca.registry.resolve(destination).path
-      def run
+      def job_code
         Omca::Db::QueryWriter.call(
           query: Omca::Db::Queries.rel_types,
-          path: dest_path
+          path: destination_path
         )
-        puts "Wrote #{outrows} rows to #{dest_path}"
       end
     end
   end

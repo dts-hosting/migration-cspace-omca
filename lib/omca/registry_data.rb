@@ -572,6 +572,11 @@ module Omca
           }
         end
       end
+
+      Omca.registry.register :omca_source_db, {
+        dynamic_source: true,
+        desc: "Queries on OMCA's source database"
+      }
       Omca.registry.register :nuke_bom_dir_files, {
         dynamic_source: true,
         desc: "All tables after nuke_bom phase"
