@@ -322,6 +322,10 @@ Implement for:
 *** Delete csid fields
 *** Delete any rows without subject and object
 
+* nonhierarchical object/object relationships
+** [ ] ingest prep
+*** delete rows where subject and object are the same
+
 === Authority merge
 
 * [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
