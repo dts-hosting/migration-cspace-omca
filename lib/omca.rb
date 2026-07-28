@@ -49,19 +49,18 @@ module Omca
     # orig
     # reference authority_ref
     # preprocess authorityprep fix fcarmerge authmerge build
-    default: %w[working nuke_bom preprocess authorityprep fix fcarmerge
-      authmerge],
+    default: %w[],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
   setting :backup_dir,
     default: "backup",
     reader: true,
     constructor: proc { |value| File.join(datadir, value) }
-  Kiba::Extend.config.pre_job_task_run = true
+  Kiba::Extend.config.pre_job_task_run = false
   Kiba::Extend.config.pre_job_task_directories = derived_dirs
   Kiba::Extend.config.pre_job_task_backup_dir = backup_dir
   Kiba::Extend.config.pre_job_task_action = :recursive_nuke
-  Kiba::Extend.config.pre_job_task_mode = :jkob
+  Kiba::Extend.config.pre_job_task_mode = :job
 
   # ### Re-namespacing Kiba:Extend settings
   setting :registry, default: Kiba::Extend.registry, reader: true
