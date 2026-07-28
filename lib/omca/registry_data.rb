@@ -146,6 +146,18 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("vocab") do
+        ns = "vocab"
+
+        register :usages, {
+          path: File.join(Omca.datadir, "vocab", "usages.csv"),
+          creator: Omca::Jobs::Vocab::Usages.method(:new),
+          tags: [ns.to_sym],
+          desc: "Extract unique values used in source fields mapping to "\
+            "target fields controlled by vocabularies"
+        }
+      end
+
       Omca.registry.namespace("authorities") do
         ns = "authorities"
 
@@ -590,6 +602,11 @@ module Omca
         dynamic_source: true,
         desc: "Fcarmerged source tables for field values mapping into "\
           "option list controlled fields in target instance"
+      }
+      Omca.registry.register :fcarmerge_vocab_field_tables, {
+        dynamic_source: true,
+        desc: "Fcarmerged source tables for field values mapping into "\
+          "vocabulary controlled fields in target instance"
       }
     end
     private_class_method :register_files

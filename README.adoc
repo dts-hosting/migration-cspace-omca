@@ -153,7 +153,7 @@ structured_dates:: Combined data from `dategroup` and `structureddategroup` tabl
 Other extract tasks:
 
 * Vocabularies (Term Lists)
-** [x] Extract all vocabulary terms used (`thor vt extract_all`)
+** [x] Extract all vocabulary terms used (`thor run job vocab__usages`)
 ** [ ] Flag vocabularies that do not exist in anthro
 ** [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
 
