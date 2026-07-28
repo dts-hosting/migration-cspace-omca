@@ -72,12 +72,25 @@ module Omca
     reader: true,
     default: File.join(datadir, "OMCA_mappings.xlsx")
 
-  setting :mappers_dir,
-    reader: true,
-    default: File.expand_path(
-      File.join("~", "code", "cs", "untangler", "data", "mappers",
+  def cmt_system_config_path
+    path = File.expand_path(File.join(
+      "~", ".config", "collectionspace_migration_tools", "system_config.yml"
+    ))
+    return path if File.exist?(path)
+
+    fail("collectionspace_migration_tools system_config.yml must be set up "\
+         "before using this tool. We get the untangler mappers location "\
+         "from that file.")
+  end
+
+  def mappers_dir
+    cmt_config = YAML.load_file(cmt_system_config_path)
+    untangler_dir = cmt_config["cspace_config_untangler_dir"]
+    File.expand_path(
+      File.join(untangler_dir, "data", "mappers",
         "community_profiles", "release_8_3", "anthro")
     )
+  end
 
   # @return [Symbol] field containing migrating human-readable record ids
   setting :ingestid_field,
