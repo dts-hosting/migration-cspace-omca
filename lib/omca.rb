@@ -138,6 +138,10 @@ Kiba::Extend::ProjectConfig.config.graph_dir = File.join(
   Omca.datadir, "graphs"
 )
 
+Kiba::Extend::ProjectConfig.config.mermaid_config_path = File.join(
+  Bundler.root, "mmd_config.json"
+)
+
 # The following line is necessary if you wish to use
 # `Kiba::Extend::Mixins::IterativeCleanup` in your project.
 Kiba::Extend.config.config_namespaces = [Omca]
