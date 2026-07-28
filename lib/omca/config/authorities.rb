@@ -10,13 +10,15 @@ module Omca
       reader: true,
       default: :term_is_used
 
+    # @todo Extract to registry?
     setting :usages_path,
       reader: true,
       default: File.join(Omca.datadir, "reference", "usages.csv")
 
     setting :usages_headers,
       reader: true,
-      default: %w[tabletype table id field authority vocab termid form refname]
+      default: %w[tabletype table id field pos authority vocab termid form
+        refname]
 
     setting :uniq_usages_path,
       reader: true,

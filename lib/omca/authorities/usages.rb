@@ -3,28 +3,47 @@
 module Omca
   module Authorities
     class Usages
+      include Omca::DynamicCsvJobable
+
       def self.desc = "Write all authority refname usages, with table, row "\
-        "id, and field"
+        "id, pos, and field"
 
-      def self.run = new.run
+      def source = :nuke_bom_dir_files
 
-      def run
+      # Uncomment this and comment out the above definition if you want VERY
+      #   LARGE job graphs
+      # def source = sources.map { |src| src.key.to_sym }
+
+      def destination = :authorities__usages
+
+      def job_code
+        ensure_sources unless source.is_a?(Array)
+
         csv = CSV.open(
-          Omca::Authorities.usages_path,
+          destination_path,
           "w",
           headers: Omca::Authorities.usages_headers,
           write_headers: true
         )
         Omca.orig_dirs.each { |dir| extract_from_files(dir, csv) }
         csv.close
-        puts "Wrote all authority usages to #{Omca::Authorities.usages_path}"
+        puts "Wrote all authority usages to #{destination_path}"
       end
 
       private
 
+      def ensure_sources
+        sources.each do |src|
+          unless File.exist?(src.path)
+            Kiba::Extend::Command::Run.job(src.key.to_sym)
+          end
+        end
+      end
+
+      def sources = Kiba::Extend::Command::Jobs::TaggedOr.call(:nuke_bom)
+
       def extract_from_files(dir, csv)
         dirpath = File.join(Omca.datadir, "nuke_bom", dir)
-        puts "Extracting from #{dirpath}"
         Dir.children(dirpath).each do |filename|
           extract_from_file(dir, filename, csv)
         end
@@ -44,6 +63,7 @@ module Omca
 
       def extract_from_row(base, row, csv)
         base["id"] = row["id"]
+        base["pos"] = row["pos"]
         row.each { |field, val| extract_from_field(base.dup, field, val, csv) }
       end
 

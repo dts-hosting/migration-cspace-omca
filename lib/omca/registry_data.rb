@@ -572,6 +572,10 @@ module Omca
           }
         end
       end
+      Omca.registry.register :nuke_bom_dir_files, {
+        dynamic_source: true,
+        desc: "All tables after nuke_bom phase"
+      }
     end
     private_class_method :register_files
 
