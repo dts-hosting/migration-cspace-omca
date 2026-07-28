@@ -3,36 +3,29 @@
 module Omca
   module Rels
     class TypesUniq
+      include Omca::DynamicCsvJobable
+
       def self.desc = "Deduplicated rel types"
 
-      def self.run = new.run
+      def source = :rel_info__types_orig
+
+      def destination = :rel_info__types_uniq
 
       def initialize
-        @source = :rel_info__types_orig
-        @dest = :rel_info__types_uniq
-        @src_path = Omca.registry.resolve(source).path
-        @out_path = Omca.registry.resolve(dest).path
         @deduper = Set.new
       end
 
-      def run
-        ensure_source
+      def job_code
         deduplicate
         write
       end
 
       private
 
-      attr_reader :src_path, :out_path, :deduper
-
-      def ensure_source
-        return if File.exist?(src_path)
-
-        Kiba::Extend::Command::Run.job(:rel_info__types_orig)
-      end
+      attr_reader :deduper
 
       def deduplicate
-        CSV.parse(File.read(src_path), **Kiba::Extend.csvopts)
+        CSV.parse(File.read(source_path), **Kiba::Extend.csvopts)
           .each do |row|
             ends = [row[:subject], row[:object]].sort
               .join(" <-> ")
@@ -48,13 +41,12 @@ module Omca
 
       def write
         CSV.open(
-          out_path, "w",
+          destination_path, "w",
           headers: %i[rectypes reltype],
           write_headers: true
         ) do |csv|
           deduper.each { |row| csv << row }
         end
-        puts "Wrote to #{out_path}"
       end
     end
   end
