@@ -61,3 +61,7 @@ To run all tests:
 ----
 rspec --tag ~slow
 ----
+
+== More documentation
+
+See the files in the `doc` directory.
