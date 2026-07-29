@@ -1,0 +1,148 @@
+:toc:
+:toc-placement!:
+:toclevels: 4
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= Production migration plan
+
+toc::[]
+
+As this is a Very Large migration project, we are:
+
+* Developing the migration transformations and loading the results for review/approval in the staging site
+* System administrator will transfer the approved data from staging to a production site.
+
+The reason for this is:
+
+* It takes FOREVER to load all this data -- longer than the client wants to be in system use/data freeze downtime
+* Re-ingesting all this in production will also create unnecessary data processing costs (and load) on the production server(s?)
+
+That means we cannot rely on the thing that is usually nice about a kiba-extend project: the ability to just run it again on a new data set and load the results.
+
+Once we get the final data, we'll need to produce deltas to load, instead of reloading everything.
+
+This is once again a new and exciting problem.
+
+Plan so far:
+
+== Before putting fresh database in place and extracting CSVs from it
+
+* Make sure all ingest jobs are run and the results are in place
+* MOVE all ingest results to a separate location TBD (for later comparison to new ingest results)
+* Move `optlist/usages.csv` and `vocab/usages.csv` to TDB location
+* Clear out all derived folders
+* Leave `to_client`, `supplied` in place
+* Still deciding what to do with `refnames_csids/new` files.
+They might be useful for identifying new records, but there's probably a more efficient way to do that.
+* Clear out `orig` directory (or copy it to TBD place if you paranoid 😅)
+
+== Extract new "orig" files from fresh DB
+
+`thor db extract_all`
+
+== Check for new tables used
+
+* OMCA_mappings.xlsx > db_tables indicates tables in the initial data set considered empty.
+Note that this does not literally mean tables with no data rows, since CollectionSpace's "soft delete" functionality will leave rows in db tables for records that the client believes to be deleted.
+The `data_rows` column is the count of rows returned by the query for each table that omits soft deleted records.
+* Upon receipt of production data, we'll need to
+** [ ] check that no new tables need to be added to/handled in the migration process
+** [ ] identify any previously non-empty tables that are now empty.
+These must be marked as not migrating in the `db_tables` tab of mappings sheet, or else further processing in the project will hit "source not found" errors
+
+== Check for new fields used
+
+* `thor project:empty_field_report -t orig` was run on the initial data provided.
+This produced a 2-column (table, field) report listing all fields in tables that were not completely empty, where the FIELD is completely empty.
+This file is in SharePoint OMCA project folder > OMCA client data > delta_checks
+* [ ] Run `thor project:empty_field_report -t orig` on fresh data
+* [ ] Identify any newly populated fields and how they need to be handled.
+We don't care about newly empty fields at this point as those will be picked up/handled in a later step.
+
+== Preprocess phase
+
+* [ ] Add a config setting controlling the disambiguation of duplicate human-readable record ids.
+Initial phase adds the disambiguation phrase to the end of ALL duplicates.
+For final phase, since it is a PITA to bulk update the human-readable record ids (not yet supported by tooling), add only to the not-first values
+
+== Generate new FCAR worksheets for all authority-related FCAR processes
+
+If there are no rows marked "to_review", nothing else to do.
+
+If there are rows "to_review", can we manually fix them in the worksheets?
+If yes, do so and register the completed supplied worksheets.
+If no, get rid of the new worksheet.
+
+* [ ] *Well, probably look more closely at the implication of each before deciding*
+
+== Skeleton and relations deltas
+
+
+`thor jobs tagged skeleton -r`
+
+Focus here is on identifying entirely new records, now-deleted records, and relations between records.
+
+* [ ] Identify new skeleton records
+* [ ] Load new skeleton records with `--action create`
+* [ ] Re-pull new CSIDs/refnames from new instance
+
+`thor run job rel_info__types_modified`
+
+* Generate new rels ingest files:
+
+`thor jobs tagged rels_ingest -r`
+
+* [ ] Identify deleted relations
+* [ ] Load deleted relations with `--action delete`
+* [ ] Identify deleted skeleton records
+* [ ] Load deleted skeleton records with `--action delete`
+* [ ] Identify new relations
+* [ ] Load new relations with `--action create`
+
+The reason for the odd order is:
+
+* You are prevented from deleting a record that is the broader record in a hierarchical relationship; the relationship must be deleted first.
+* If we delete records involved in non-hierarchical relations, the relations are automatically deleted.
+Then we will get ingest errors if we attempt to load deletes of relations that no longer exist.
+I believe will will also get mapping errors, since we'd no longer be able to look up the CSIDs of the deleted records to load.
+It would be a pain to sort out what relations are deleted because involved records were deleted vs. those where the still-present records have been "un-related"
+
+== Option list deltas
+
+`thor run job optlist__usages`
+
+* [ ] Identify new/deleted values
+* [ ] Make any config changes in dts-hosting/docker-cspace repo
+
+== Vocab term deltas
+
+`thor run job vocab__usages`
+
+* [ ] Identify any new/deleted terms
+* [ ] Add/delete in CollectionSpace in the most expedient way, depending on how many there are
+
+== Build deltas
+
+[NOTE]
+====
+Still hazy since the development of the build phase isn't finished yet
+====
+
+Generally:
+
+* Generate the build ingest files for each target record type
+* Diff with initial build ingest files to identify:
+** New records -> Load as new
+** Records where values have changed -> Load as update
+*** Due to CollectionSpace's sparse updates, fields previously populated, but now empty will need to be populated with 💣 to actually clear the fields
+
+== Structured date deltas
+
+TODO
