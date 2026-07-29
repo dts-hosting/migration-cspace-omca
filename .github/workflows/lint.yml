@@ -6,14 +6,14 @@
 #   anything that can break tests to main!; and (2) I want to be able
 #   to push documentation-only changes to main without waiting for
 #   tests to run
-name: Run rspec, then rubocop
+name: Run rubocop
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  test-and-lint:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,7 +28,5 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
         # runs 'bundle install' and caches installed gems automatically
         bundler-cache: true
-    - name: Run tests
-      run: bundle exec rspec
     - name: Run rubocop
       run: bundle exec rubocop
