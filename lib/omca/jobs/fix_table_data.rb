@@ -85,6 +85,13 @@ module Omca
                 find: /^t$/,
                 replace: field.to_s.capitalize
             end
+
+            transform Replace::FieldValueWithStaticMapping,
+              source: :donotpublishonweb,
+              mapping: {
+                "t" => "None",
+                "f" => "OMCA Browser"
+              }
           end
 
           if table == "dimensionsubgroup"
@@ -168,6 +175,15 @@ module Omca
               row
             end
 
+          end
+
+          if %w[media_omca restrictedmedia_omca].include?(table)
+            transform Replace::FieldValueWithStaticMapping,
+              source: :approveforpublic,
+              mapping: {
+                "t" => "OMCA Browser",
+                "f" => "None"
+              }
           end
         end
       end
