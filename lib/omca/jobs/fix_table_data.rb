@@ -94,6 +94,12 @@ module Omca
               }
           end
 
+          if table == "collectionobjects_omca_photos"
+            transform Merge::ConstantValueConditional,
+              fieldmap: {type: "photography note"},
+              condition: ->(row) { !row[:item].blank? }
+          end
+
           if table == "dimensionsubgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :dimension,
