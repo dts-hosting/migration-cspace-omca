@@ -156,6 +156,12 @@ module Omca
           desc: "Extract unique values used in source fields mapping to "\
             "target fields controlled by vocabularies"
         }
+        register :in_target, {
+          path: File.join(Omca.datadir, "supplied", "hosted_vocab_terms.csv"),
+          supplied: true,
+          tags: [ns.to_sym],
+          desc: "Result of `thor vt write` command on hosted omca site"
+        }
       end
 
       Omca.registry.namespace("authorities") do
