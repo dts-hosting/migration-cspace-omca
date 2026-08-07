@@ -211,6 +211,7 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 ==== main - non-authority
 
 * [x] Disambiguate duplicate `ingestid` values (**unless authority**)
+* [ ] **movements_common** - provide unique values for null `movementReferenceNumber`s
 
 ==== main - authority
 
