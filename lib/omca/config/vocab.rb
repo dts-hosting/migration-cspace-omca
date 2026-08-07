@@ -11,7 +11,9 @@ module Omca
     #   for customizing the terms in target instance term lists/vocabularies
     def source_fields_to_vocab
       result = {}
-      Omca::Mappings::Fields.vocab_controlled_target_rows.each do |row|
+      Omca::Mappings::Fields.vocab_controlled_target_rows
+        .reject { |row| row["mapping_treatment"]&.include?("supply value") }
+        .each do |row|
         tt = row["db_table_type"]
         table = row["source_db_table"]
         field = row["db_field"]
