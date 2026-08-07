@@ -34,7 +34,7 @@ module Omca
     # @param refname [String]
     # @return [Boolean]
     def vocabulary_term?(refname)
-      true if refname["urn:cspace:museumca.org:vocabularies:name"]
+      true if refname.match?(/urn:cspace:[a-z.]+:vocabularies:name/)
     end
   end
 end
