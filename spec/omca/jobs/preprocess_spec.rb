@@ -11,6 +11,19 @@ RSpec.describe Omca::Jobs::Preprocess do
     end
   end
 
+  describe ":preprocess_main__movements_common" do
+    let(:jobkey) { :preprocess_main__movements_common }
+
+    it "provides auto-incrementing value" do
+      Kiba::Extend::Command::Run.job(jobkey)
+      path = Omca.registry.resolve(jobkey).path
+      val = xan_search_csid_return_field(
+        "90e57014-a174-4a14-92bb", "movementreferencenumber", path
+      )
+      expect(val).to eq("LOC.ProvInMig.4")
+    end
+  end
+
   describe ":preprocess_main__collectionobjects_common" do
     let(:data) { csv_job_output(:preprocess_main__collectionobjects_common) }
 

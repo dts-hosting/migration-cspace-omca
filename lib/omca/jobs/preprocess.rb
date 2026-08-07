@@ -48,6 +48,11 @@ module Omca
 
       def main_non_auth_xforms(rectype)
         Kiba.job_segment do
+          if rectype == "movement"
+            transform Omca::Xforms::AddMissingRecordId,
+              idfield: :movementreferencenumber,
+              prefix: "LOC.ProvInMig."
+          end
           transform Omca::Xforms::IngestId,
             rectype: rectype
           transform Omca::Xforms::DisambiguateIngestId
