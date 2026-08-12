@@ -304,6 +304,30 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("auth_merge_prep") do
+        ns = "auth_merge_prep"
+
+        if Omca::Authmerge.merge_ready?
+          Omca::Authmerge.field_list.each do |tablefield|
+            table = tablefield[0]
+            field = tablefield[1]
+
+            register :"#{table}_#{field}", {
+              path: File.join(Omca.datadir, "authority_ref", "merge_prep",
+                "#{table}_#{field}.csv"),
+              creator: {
+                callee: Omca::Jobs::AuthMergePrep.method(:new),
+                args: {table: table, field: field}
+              },
+              tags: [ns.to_sym, table.to_sym, field.to_sym],
+              desc: "Extract mergeable authority usages for "\
+                "#{table}.#{field}",
+              lookup_on: :id
+            }
+          end
+        end
+      end
+
       Omca.registry.namespace("non_refname_auth") do
         ns = "non_refname_auth"
 
