@@ -711,12 +711,18 @@ module Omca
           table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
           id_field = Omca::Mappers.id_field_for_table(table)
 
+          source_phase = if rectype == "movement"
+            "authmerge"
+          else
+            "fcarmerge"
+          end
           args = {
-            source: :"fcarmerge_main__#{table}",
+            source: :"#{source_phase}_main__#{table}",
             dest: :"#{ns}__#{rectype}",
             table: table,
             rectype: rectype,
-            id_field: id_field
+            id_field: id_field,
+            source_phase: source_phase
           }
 
           entry = {

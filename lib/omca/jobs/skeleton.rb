@@ -5,13 +5,15 @@ module Omca
     module Skeleton
       module_function
 
-      def job(source:, dest:, table:, rectype:, id_field:, auth_subtype: nil)
+      def job(source:, dest:, table:, rectype:, id_field:, source_phase:,
+        auth_subtype: nil)
         Kiba::Extend::Jobs::Job.new(
           files: {
             source: get_source(source, table),
-            destination: dest
+            destination: dest,
+            lookup: get_lookups(rectype, source_phase)
           },
-          transformer: xforms(rectype, id_field, auth_subtype)
+          transformer: xforms(rectype, id_field, auth_subtype, source_phase)
         )
       end
 
@@ -21,7 +23,25 @@ module Omca
         source
       end
 
-      def xforms(rectype, id_field, auth_subtype)
+      def get_lookups(rectype, source_phase)
+        base = []
+        Omca::Mappings::Fields.skeleton_fields(rectype, "repeatable_field")
+          .each do |cfg|
+            base << Omca::Dependencies.jobkey_for(
+              source_phase, cfg["source_db_table"]
+            )
+          end
+        Omca::Mappings::Fields.skeleton_fields(rectype, "addtl_fields")
+          .each do |cfg|
+            base << Omca::Dependencies.jobkey_for(
+              source_phase, cfg["source_db_table"]
+            )
+          end
+        base.select { |jobkey| Kiba::Extend::Job.output?(jobkey) }
+          .map { |jobkey| {jobkey: jobkey, lookup_on: :recordcsid} }
+      end
+
+      def xforms(rectype, id_field, auth_subtype, source_phase)
         Kiba.job_segment do
           keepfields = Omca::Mappings::Fields.skeleton_fields(
             rectype, "main"
@@ -50,9 +70,13 @@ module Omca
 
           Omca::Mappings::Fields.skeleton_fields(
             rectype, "repeatable_field"
-          ).each do |row|
+          ).each do |cfg|
+            lkup_meth = Omca::Dependencies.jobkey_for(
+              source_phase, cfg["source_db_table"]
+            )
             transform Omca::Xforms::MergeRepeatableField,
-              config: row
+              config: cfg,
+              lookup: send(lkup_meth)
           end
 
           Omca::Mappings::Fields.skeleton_fields(
