@@ -338,6 +338,10 @@ Implement for:
 
 * [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
 
+=== Full record
+
+* [ ] Append `refname` to authority-controlled field headers
+
 === ...and more phases to be fully documented
 
 * merge of non-custom, non-authority values from other tables into main tables/rectypes
