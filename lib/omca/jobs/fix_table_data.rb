@@ -150,6 +150,15 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :currentlocation
+            transform do |row|
+              val = row[:locationdate]
+              next row if val.blank?
+              next row if val.match?(/^\d{4}-\d{2}-\d{2}$/)
+
+              row[:locationdate] = val.sub(/^(\d{4}-\d{2}-\d{2}).*/, '\1')
+
+              row
+            end
           end
 
           if tabletype == "main" && rectype == "group"
