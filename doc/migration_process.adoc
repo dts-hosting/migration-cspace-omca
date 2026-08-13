@@ -249,6 +249,7 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 * main/movements_common
 ** [x] Drop records with no `currentlocation`
+** [x] Delete irregular timestamp values from `locationdate` (regular/expected timestamps were removed from all fields in preprocess phase)
 
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
 ** [x] Keep only "Art Department", "History Department", and "Science Department"
