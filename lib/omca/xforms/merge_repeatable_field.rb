@@ -3,11 +3,9 @@
 module Omca
   module Xforms
     class MergeRepeatableField
-      include MergeLookupable
-
-      def initialize(config:)
+      def initialize(config:, lookup:)
         @config = config
-        @lookup = get_lookup(config["source_db_table"])
+        @lookup = lookup
         @target = config["target_field"].to_sym
       end
 
