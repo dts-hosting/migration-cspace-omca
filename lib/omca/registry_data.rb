@@ -568,6 +568,16 @@ module Omca
           creator: Omca::Jobs::TestReport::CommonnameOnlyConcept,
           tags: [:test_report, :reports, :concept]
         }
+        register :nuxeo_error_objs, {
+          path: File.join(
+            Omca.datadir, "reports", "test_reports",
+            "nuxeo_error_objs.csv"
+          ),
+          creator: Omca::Jobs::TestReport::NuxeoErrorObjs,
+          tags: %i[test_report reports collectionobject group],
+          desc: "Ids and other info about the objects in the 'Nuxeo "\
+            "Error' group"
+        }
       end
 
       Omca.registry.namespace("map_report") do
