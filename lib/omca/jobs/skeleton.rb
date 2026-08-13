@@ -85,6 +85,14 @@ module Omca
             transform Omca::Xforms::MergeAddtlField,
               config: row
           end
+
+          if rectype == "movement"
+            transform Rename::Fields, fieldmap: {
+              movementcontact: :movementcontactrefname,
+              currentlocation: :currentlocationrefname,
+              inventorycontact: :inventorycontactrefname
+            }
+          end
         end
       end
     end
