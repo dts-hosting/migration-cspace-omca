@@ -247,6 +247,9 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 `thor jobs tagged fix -r`
 
+* main/movements_common
+** [x] Drop records with no `currentlocation`
+
 * repeatable_field/collectionobjects_common_responsibledepartments.csv
 ** [x] Keep only "Art Department", "History Department", and "Science Department"
 ** [x] Delete " Department" from the end of values

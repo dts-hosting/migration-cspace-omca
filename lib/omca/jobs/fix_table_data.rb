@@ -146,6 +146,12 @@ module Omca
               replace: "handheld LED illumination"
           end
 
+          if table == "movements_common"
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :currentlocation
+          end
+
           if tabletype == "main" && rectype == "group"
             transform do |row|
               val = row[Omca.ingestid_field]
