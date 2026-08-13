@@ -11,29 +11,32 @@ module Omca
       # @param tabletype [String]
       # @param rectype [String]
       def job(source:, dest:, table:, tabletype:, rectype:)
+        by_table = Omca::Authmerge.by_table
+        lkups = get_lookup(by_table, table)
+
         Kiba::Extend::Jobs::Job.new(
           files: {
             source: source,
             destination: dest,
-            lookup: get_lookup(table)
+            lookup: lkups
           },
-          transformer: xforms(table)
+          transformer: xforms(table, by_table, lkups)
         )
       end
 
-      def get_lookup(table)
-        key = :"usages_by_table__#{table}"
-        return [] unless Kiba::Extend::Job.output?(key, mode: :agnostic)
+      def get_lookup(by_table, table)
+        return [] unless by_table.key?(table)
 
-        [{jobkey: key, lookup_on: :id}]
+        by_table[table].map { |field| :"auth_merge_prep__#{table}_#{field}" }
       end
 
-      def xforms(table)
+      def xforms(table, by_table, lkups)
         Kiba.job_segment do
-          lkup = :"usages_by_table__#{table}"
-          if respond_to?(lkup)
-            transform Omca::Xforms::AuthorityMerge,
-              lookup: send(lkup)
+          if by_table.key?(table)
+            lkups.each do |lkup|
+              transform Omca::Xforms::AuthorityMerge,
+                lookup: send(lkup)
+            end
           end
         end
       end
