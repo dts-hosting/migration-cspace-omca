@@ -56,6 +56,18 @@ module Omca
             transform Clean::EnsureConsistentFields
           end
 
+          if table == "collectionobjects_anthropology_nagpraapplicabilitylist"
+            transform Replace::FieldValueWithStaticMapping,
+              source: :item,
+              mapping: {
+                "nonNagpra" => "not subject to NAGPRA",
+                "afo" => "associated funerary object (AFO)",
+                "unaffiliatedCuiHsr" => "unaffiliated human skeletal "\
+                  "remains (HSR) (=CUI)",
+                "ufo" => "unassociated funerary object (UFO)"
+              }
+          end
+
           if table == "collectionobjects_common_responsibledepartments"
             transform Delete::FieldValueConditional,
               fields: :item,
