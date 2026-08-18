@@ -333,6 +333,7 @@ Implement for:
 * [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
 * [x] Create new version of usages with new refnames merged in
 * [x] Split new usages into mergeable files for each authority-controlled field
+* [x] Merge new authority refnames into fields
 
 ==== Special handling
 
