@@ -83,8 +83,13 @@ module Omca
       end
 
       def vocab_controlled_target_rows
-        migrating.select do |row|
+        rows = migrating.select do |row|
           row["target_field_source"]&.start_with?("vocabulary: ")
+        end
+        return rows unless Omca.db_iteration == 0
+
+        rows.reject do |row|
+          row["mapping_treatment"]&.include?("skip initially")
         end
       end
     end
