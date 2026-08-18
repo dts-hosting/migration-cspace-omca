@@ -117,6 +117,17 @@ module Omca
                 find: /^t$/,
                 replace: field.to_s.capitalize
             end
+
+            {"No Copyright - United States (Public Domain)" =>
+               "no copyright - United States (public domain)",
+             "Copyright OMCA" => "copyright OMCA",
+             "Assumed Protected by Copyright" =>
+               "assumed protected by copyright"}.each do |f, r|
+              transform Clean::RegexpFindReplaceFieldVals,
+                fields: :ipaudit,
+                find: Regexp.new(f),
+                replace: r
+            end
           end
 
           if table == "conditionchecks_common"
