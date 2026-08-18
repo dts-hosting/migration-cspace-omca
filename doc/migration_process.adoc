@@ -135,8 +135,6 @@ Other extract tasks:
 
 * Vocabularies (Term Lists)
 ** [x] Extract all vocabulary terms used (`thor run job vocab__usages`)
-** [ ] Flag vocabularies that do not exist in anthro
-** [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
 
 * Authorities
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor run job authorities__usages` => >1GB CSV file)
@@ -243,6 +241,7 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 **** [x] check is within the given authority vocabulary
 **** [x] omit unused terms from duplicate check - there are categories of terms we are retaining though they are unused, so make sure we've done that re-tagging (removing the unused tag) prior to doing this duplicate check.
 
+[#fixphase]
 === Fix
 
 `thor jobs tagged fix -r`
@@ -261,6 +260,9 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 * Option list value tweaks
 ** [x] downcase and adjust relevant values in fix phase (when values are re-extracted, list should be clean)
+
+* Vocabulary term fixes
+** [x] Adjust case/form of used values to be consistent with other terms in target instance vocabs
 
 === FCAR merge
 
@@ -360,3 +362,16 @@ Implement for:
 * [x] Produce mappings of new db ids for `media_common` and `restrictedmedia_common` and the old `blobcsid` value to be merged into each
 
 Hopefully that's all and Michael can take care of the rest in the database. 🤞
+
+=== Vocabulary terms
+
+* [x] Diff terms used against default terms in instance
+* [x] Review diffed terms for (a) whether the term set should be added to existing terms or replace them; and (b) whether form of terms needs to be modified for consistency (See <<fixphase>>)
+* Delete existing terms in the following vocabularies:
+** [ ] loanoutstatus
+** [ ] locationtype
+** [ ] nagprainvolvedrole
+** [ ] objexitmethod
+** [ ] publishto
+** [ ] taxonqualifier
+* [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
