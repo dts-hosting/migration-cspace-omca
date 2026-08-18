@@ -140,6 +140,11 @@ module Omca
               replace: "running time"
           end
 
+          if table == "exitstatusgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :exitstatus
+          end
+
           if table == "groups_common"
             transform do |row|
               val = row[Omca.ingestid_field]
