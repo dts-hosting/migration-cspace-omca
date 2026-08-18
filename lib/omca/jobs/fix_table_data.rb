@@ -187,6 +187,11 @@ module Omca
               row
             end
           end
+
+          if table == "objectexit_common_exitmethods"
+            transform Clean::DowncaseFieldValues,
+              fields: :item
+          end
         end
       end
     end
