@@ -149,6 +149,11 @@ module Omca
               fields: :contactrole
           end
 
+          if table == "determinationhistorygroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :dhqualifier
+          end
+
           if table == "dimensionsubgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :dimension,
