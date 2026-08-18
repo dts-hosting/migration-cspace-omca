@@ -128,6 +128,11 @@ module Omca
               replace: "handheld LED illumination"
           end
 
+          if table == "contactgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :contactrole
+          end
+
           if table == "dimensionsubgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :dimension,
