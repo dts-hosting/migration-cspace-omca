@@ -22,6 +22,7 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
+          # Dynamically uncontrol specified fields
           if Omca::Mappings::Fields.uncontrol_rectypes.include?(rectype)
             uncontrol_rows =
               Omca::Mappings::Fields.uncontrol_rows_for_rectype(rectype)
@@ -41,6 +42,8 @@ module Omca
             end
           end
 
+          # Dynamically downcase field values mapping into option
+          #   list-controlled fields
           downcase_opt_list_fields = [
             "acquisitions_common.acquisitionmethod",
             "addressgroupomca.addresstypeomca",
@@ -78,6 +81,8 @@ module Omca
             transform Clean::DowncaseFieldValues,
               fields: downcase_opt_list_fields[table]
           end
+
+          # Table-specific fixes, ordered by table name
 
           if table == "citations_common"
             transform do |row|
