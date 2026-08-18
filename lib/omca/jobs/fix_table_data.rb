@@ -56,6 +56,11 @@ module Omca
             transform Clean::EnsureConsistentFields
           end
 
+          if table == "citationtermgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :termtype
+          end
+
           if table == "collectionobjects_anthropology_nagpraapplicabilitylist"
             transform Replace::FieldValueWithStaticMapping,
               source: :item,
