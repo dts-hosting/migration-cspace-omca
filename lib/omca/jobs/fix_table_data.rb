@@ -51,6 +51,11 @@ module Omca
 
           # Table-specific fixes, ordered by table name
 
+          if table == "acquisitioncontactgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :contactrole
+          end
+
           if table == "citations_common"
             transform do |row|
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
