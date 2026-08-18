@@ -155,11 +155,31 @@ module Omca
           desc: "Extract unique values used in source fields mapping to "\
             "target fields controlled by vocabularies"
         }
+        register :usages_prep, {
+          path: File.join(Omca.wrkdir, "vocab_usages_prep.csv"),
+          creator: Omca::Jobs::Vocab::UsagesPrep,
+          tags: [ns.to_sym],
+          desc: "Add normalized matchpoint to vocab__usages",
+          lookup_on: :matchpoint
+        }
         register :in_target, {
           path: File.join(Omca.datadir, "supplied", "hosted_vocab_terms.csv"),
           supplied: true,
           tags: [ns.to_sym],
           desc: "Result of `thor vt write` command on hosted omca site"
+        }
+        register :in_target_prep, {
+          path: File.join(Omca.wrkdir, "vocab_in_target_prep.csv"),
+          creator: Omca::Jobs::Vocab::InTargetPrep,
+          tags: [ns.to_sym],
+          desc: "Add normalized matchpoint to vocab__in_target",
+          lookup_on: :matchpoint
+        }
+        register :diff, {
+          path: File.join(Omca.wrkdir, "vocab_diff.csv"),
+          creator: Omca::Jobs::Vocab::Diff,
+          tags: [ns.to_sym],
+          desc: "Identify vocab terms that need to be added"
         }
       end
 
