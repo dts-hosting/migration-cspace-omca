@@ -150,8 +150,8 @@ module Omca
           if table == "conditionchecks_common"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :conditioncheckreason,
-              find: /Appraisal'<\/refName>/,
-              replace: "Appraisal"
+              find: /appraisal'<\/refname>/,
+              replace: "appraisal"
           end
 
           if table == "conditionchecks_omca_omcaconditioncheckmethods"
