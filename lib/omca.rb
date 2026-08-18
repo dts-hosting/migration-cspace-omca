@@ -91,6 +91,13 @@ module Omca
     )
   end
 
+  # 0 => 2026-04-15
+  # 1 => 2026-08-15
+  # @return [0 1]
+  setting :db_iteration,
+    reader: true,
+    default: 0
+
   # @return [Symbol] field containing migrating human-readable record ids
   setting :ingestid_field,
     reader: true,
