@@ -368,10 +368,10 @@ Hopefully that's all and Michael can take care of the rest in the database. 🤞
 * [x] Diff terms used against default terms in instance
 * [x] Review diffed terms for (a) whether the term set should be added to existing terms or replace them; and (b) whether form of terms needs to be modified for consistency (See <<fixphase>>)
 * Delete existing terms in the following vocabularies:
-** [ ] loanoutstatus
-** [ ] locationtype
-** [ ] nagprainvolvedrole
-** [ ] objexitmethod
-** [ ] publishto
-** [ ] taxonqualifier
+** [x] loanoutstatus
+** [x] locationtype
+** [x] nagprainvolvedrole
+** [x] objexitmethod
+** [x] publishto
+** [x] taxonqualifier
 * [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
