@@ -196,6 +196,16 @@ module Omca
             end
           end
 
+          # applies to both media_omca and restrictedmedia_omca tables
+          if table.match?(/media_omca/)
+            transform Replace::FieldValueWithStaticMapping,
+              source: :approveforpublic,
+              mapping: {
+                "t" => "OMCA Browser",
+                "f" => "None"
+              }
+          end
+
           if table == "movements_common"
             transform FilterRows::FieldPopulated,
               action: :keep,
