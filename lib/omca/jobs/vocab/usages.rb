@@ -43,12 +43,12 @@ module Omca
         end
 
         def extract_vals(field_info, table_path)
-          optlist = field_info[0]
+          termlist = field_info[0]
           field = field_info[1]
 
           result = `#{cmd(field, table_path)}`.chomp
             .split("\n")
-            .map { |val| [optlist, val] }
+            .map { |val| [termlist, val] }
 
           result.each { |res| holder << res }
         end
