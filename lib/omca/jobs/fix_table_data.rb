@@ -56,6 +56,17 @@ module Omca
               fields: :contactrole
           end
 
+          if table == "acquisitions_omca"
+            transform Replace::FieldValueWithStaticMapping,
+              source: :anonymous,
+              mapping: {
+                "t" => "urn:cspace:omca.staging.collectionspace.org:"\
+                  "personauthorities:name(person):item:"\
+                  "name(Anonymous430877234)'Anonymous'",
+                "f" => nil
+              }
+          end
+
           if table == "citations_common"
             transform do |row|
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
