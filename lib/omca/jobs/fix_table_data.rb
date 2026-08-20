@@ -118,6 +118,13 @@ module Omca
                 replace: field.to_s.capitalize
             end
 
+            transform Replace::FieldValueWithStaticMapping,
+              source: :donotpublishonweb,
+              mapping: {
+                "t" => "None",
+                "f" => "OMCA Browser"
+              }
+
             {"No Copyright - United States (Public Domain)" =>
                "no copyright - United States (public domain)",
              "Copyright OMCA" => "copyright OMCA",
