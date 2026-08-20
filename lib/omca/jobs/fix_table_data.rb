@@ -88,6 +88,13 @@ module Omca
               }
           end
 
+          if table == "collectionobjects_anthropology_nagprainventorynamelist"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :item,
+              find: /^notOnAnInventory$/,
+              replace: "not on an inventory"
+          end
+
           if table == "collectionobjects_common_responsibledepartments"
             transform Delete::FieldValueConditional,
               fields: :item,
