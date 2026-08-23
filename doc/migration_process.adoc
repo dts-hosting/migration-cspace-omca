@@ -161,7 +161,7 @@ Required to do other fixes/reporting on authority usages
 === Non-refname authority usages
 
 - [x] Programmatically match to existing terms to get refnames to use (`thor run job non_refname_auth__refname_lookup`)
-- [x] Create FCAR worksheet for Migration Specialist to provide refnames for ones that did not get programmatically matched, where Migration Specialist could unambibuously identify the correct refname to use and the assignment would not require population of a different field (`thor run job non_refname_auth__worksheet`)
+- [x] Create FCAR worksheet for Migration Specialist to provide refnames for ones that did not get programmatically matched, where Migration Specialist could unambiguously identify the correct refname to use and the assignment would not require population of a different field (`thor run job non_refname_auth__worksheet`)
 - [x] Merge programmatically and manually provided usages into `authorities\__usages` (`thor run job non_refname_auth__usages_final`)
 - [x] Compile uniq usages after merge (`thor run job non_refname_auth__usages_uniq_final`)
 - [x] Create report of individual usages where no existing refname was identified programmatically or manually, and ask client to resolve in existing instance. Unresolved non-refname authority usages still in the data at the time of final migration will be dropped. (`thor run job non_refname_auth__not_matched_client_cleanup`, https://3.basecamp.com/3410311/buckets/46717409/todos/10021612471[Basecamp To-Do])
@@ -283,7 +283,7 @@ This allows us to:
 
 * Have all necessary records in place for populating fields with authorities
 * Show some progress
-* Implement uri/csid lookups between migrating and migrated data
+* Implement URI/CSID lookups between migrating and migrated data
 * Load relationships when we are ready
 
 Implement for:
@@ -304,13 +304,13 @@ Implement for:
 * authority hierarchy
 ** need to get authority type vs subtype
 ** [x] extract source data
-** [x] fix / merge in new csids
+** [x] fix / merge in new CSIDs
 ** [x] prepare load files
 
 * object hierarchy
 ** include relationshipmetatype in query
 ** [x] extract source data
-** [x] merge in new csids
+** [x] merge in new CSIDs
 ** [x] prepare load files
 
 * nonhierarchical - based on existing database
@@ -323,7 +323,7 @@ Implement for:
 *** 1 collectionobject/media relation with unlinked media is expected here and will be dropped during ingest prep
 *** 14 unlinked acquisition/valuation relation with unlinked acquisition (deleted records?)
 ** [x] ingest prep
-*** Delete csid fields
+*** Delete CSID fields
 *** Delete any rows without subject and object
 
 * nonhierarchical object/object relationships
