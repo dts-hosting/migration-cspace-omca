@@ -15,16 +15,34 @@ module Omca
           files: {
             source: source,
             destination: dest,
-            lookup: get_lookups
+            lookup: get_lookups(table, rectype)
           },
           transformer: xforms(table, tabletype, rectype)
         )
       end
 
-      def get_lookups
+      def get_lookups(table, rectype)
         base = []
+
+        if table == "concepts_common"
+          base << {
+            jobkey: :auth_vocab_remap__ethculture_uniq_usages,
+            lookup_on: :termid
+          }
+        end
+
+        if rectype == "concept" && table != "concepts_common"
+          base << {
+            jobkey: :authorityprep_main__concepts_common,
+            lookup_on: :authority
+          }
+        end
+
         base << :big_auth__non_collapsing if Omca::BigAuthFcar.cleanup_done?
-        base.select { |key| Kiba::Extend::Job.output?(key) }
+        base.select do |key|
+          checkkey = key.is_a?(Symbol) ? key : key[:jobkey]
+          Kiba::Extend::Job.output?(checkkey)
+        end
       end
 
       def xforms(table, tabletype, rectype)
@@ -50,6 +68,15 @@ module Omca
                 rectype: rectype,
                 mergerows: big_auth__non_collapsing[rectype]
             end
+          end
+
+          if table == "concepts_common"
+            transform Omca::Xforms::RemapEthcultureMain,
+              lookup: auth_vocab_remap__ethculture_uniq_usages
+          end
+          if rectype == "concept" && table != "concepts_common"
+            transform Omca::Xforms::RemapEthcultureTerm,
+              lookup: authorityprep_main__concepts_common
           end
 
           if tabletype == "main"
