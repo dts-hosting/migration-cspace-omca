@@ -292,7 +292,30 @@ Implement for:
 * [x] procedures
 * [x] authorities - needs to split into separate files per authority vocabulary
 
-=== Relations (not really a phase since nothing else depends on it)
+=== Authority merge
+
+* [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
+* [x] Create new version of usages with new refnames merged in
+* [x] Split new usages into mergeable files for each authority-controlled field
+* [x] Merge new authority refnames into fields
+
+==== Special handling
+
+* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
+
+=== Full record
+
+* [ ] Append `refname` to authority-controlled field headers
+
+=== ...and more phases to be fully documented
+
+* merge of non-custom, non-authority values from other tables into main tables/rectypes
+* handling/merge of otherwise non-custom freetext, authority, or vocabulary controlled fields that become optionlists in anthro (and any other vocabulary source-only changes)
+* merge of non-custom authority controlled fields
+* reshaping/remapping custom fields
+* Media file ingest
+
+== Relations (not really a phase since nothing else depends on it)
 
 * [x] identify existing relationship types - `rel_info__types_uniq`
 * [x] apply any recordtype remappings
@@ -330,40 +353,17 @@ Implement for:
 ** [ ] ingest prep
 *** delete rows where subject and object are the same
 
-=== Authority merge
-
-* [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
-* [x] Create new version of usages with new refnames merged in
-* [x] Split new usages into mergeable files for each authority-controlled field
-* [x] Merge new authority refnames into fields
-
-==== Special handling
-
-* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
-
-=== Full record
-
-* [ ] Append `refname` to authority-controlled field headers
-
-=== ...and more phases to be fully documented
-
-* merge of non-custom, non-authority values from other tables into main tables/rectypes
-* handling/merge of otherwise non-custom freetext, authority, or vocabulary controlled fields that become optionlists in anthro (and any other vocabulary source-only changes)
-* merge of non-custom authority controlled fields
-* reshaping/remapping custom fields
-* Media file ingest
-
-=== Reporting
+== Reporting
 
 * [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
 
-=== Media migration
+== Media migration
 
 * [x] Produce mappings of new db ids for `media_common` and `restrictedmedia_common` and the old `blobcsid` value to be merged into each
 
 Hopefully that's all and Michael can take care of the rest in the database. 🤞
 
-=== Vocabulary terms
+== Vocabulary terms
 
 * [x] Diff terms used against default terms in instance
 * [x] Review diffed terms for (a) whether the term set should be added to existing terms or replace them; and (b) whether form of terms needs to be modified for consistency (See <<fixphase>>)
