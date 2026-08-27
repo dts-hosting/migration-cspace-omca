@@ -29,6 +29,7 @@ The main prep work for authorities is:
 
 * Fix problems with usages (see below)
 * Remove usages from fields that are uncontrolled in target instance; remap usages to expected fields in target system where necessary
+* Remap authorities as needed
 * Identify non-used terms (which we do not load, except for locations and taxon)
 * Load skeleton authority terms in target instance
 * Retrieve CSIDs and refnames for terms in target instance
@@ -46,6 +47,11 @@ Problems with usages that are addressed:
 * `authorities__fix_usages` - delete usages in fields that are uncontrolled in target CollectionSpace
 * extract, auto-match or FCAR match unlinked refname usages - refnames that do not match an established term
 * BigAuth FCAR - Altering the preferred form of terms with too many usages to update the term in-system
+
+Remapping authorities:
+
+* Changing the authority record type or vocabulary of existing authority usages
+* Generating new authority terms from values not currently authority controlled
 
 == Steps outside the kiba-extend dependency-handling process
 
@@ -195,6 +201,29 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 * Collapsing terms (the correction is to a form that exists as a separate record)
 ** [x] update usages to use corrected refname
 
+[#authvocabremap]
+=== AuthVocabRemap
+
+Usages manipulation to change the authority and/or authority vocabulary in which a used term will be created in target instance.
+
+`thor run job auth_vocab_remap__usages`
+
+`thor run job auth_vocab_remap__uniq_usages`
+
+Database table manipulation must also be done in the <<authorityprep>> stage.
+
+Remappings:
+
+* [x] concept/concept (eg Associated) terms used in `collectionobjects_common.assocCulturalContext` remapped to concept/ethculture (eg Cultural Group)
+
+What this involves:
+
+* New version of usages file with:
+** `vocab` changed to new vocab
+** name of new vocab appended to end of `termid`
+** updating `index` to have new `vocab` and `termid` values
+** update `refname` to reflect new `vocab` and `termid` values
+
 === Preprocess
 
 `thor jobs tagged preprocess -r`
@@ -223,12 +252,39 @@ Merge logic - This needs to be done before authorityprep/fixing, which tag used 
 
 * [x] Delete rows where all `Omca::StructuredDate.data_fields` are empty. This takes us from 926990 to 692823 top-level structured dates, and from 133037 to 315 nested structured dates.
 
+[#authorityprep]
 === Authorityprep
 
 ==== BigAuth FCAR - Non-collapsing terms merge
 
 * [x] merge into main table should leave existing refname and shortidentifier the same, but change `ingestid` of relevant authorities.
 * [x] merge into termtable must account for the corrected form potentially existing as a variant, and setting term group fields appropriately
+
+==== Database table changes for authority vocab remappings
+
+See also <<authvocabremap>>.
+
+This involves making needed updates to any database tables for the recordtypes affected by authority remappings.
+The tables affected are the main tables for authority record types and any sub-tables of those.
+
+Remappings:
+
+* [x] concept/concept (eg Associated) terms used in `collectionobjects_common.assocCulturalContext` remapped to concept/ethculture (eg Cultural Group)
+
+What this involves:
+
+* Main table for authority terms
+** For each term affected by a remapping:
+*** Insert a NEW row which starts off as a copy of the old/unremapped term
+*** New row is updated: (1) `authority` populated with new vocab; (2) `shortidentifier` and `recordcsid` get vocab name appended; (3) `refname` is updated with the new refname created in <<authvocabremap>>.
+
+We do not modify the original row, because the remapping may only affect SOME usages of the term.
+
+What we are doing here is creating database table rows that will match the changes we already made to usages.
+
+* Subtables of main authority table
+** Again, adding a NEW row that starts off as a copy of the old/unremapped term
+** New row is updated: (1) `authority` populated with new vocab; and (2) `shortidentifier` and `recordcsid` get vocab name appended
 
 ==== Tag unused terms
 
