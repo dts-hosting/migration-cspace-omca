@@ -358,6 +358,7 @@ Implement for:
 ==== Special handling
 
 * [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
+* [x] Delete now-unused concept/associated terms that got remapped to concept/ethculture
 
 === Full record
 
