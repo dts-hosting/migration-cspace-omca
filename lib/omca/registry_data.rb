@@ -579,6 +579,28 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("auth_vocab_remap") do
+        register :usages, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_auth_vocab_remap.csv"),
+          creator: Omca::Jobs::AuthVocabRemap::Usages,
+          tags: %i[auth_vocab_remap],
+          desc: Omca::Jobs::AuthVocabRemap::Usages.desc
+        }
+        register :uniq_usages, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_auth_vocab_remap.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :auth_vocab_remap__usages,
+              destination: :auth_vocab_remap__uniq_usages
+            }
+          },
+          tags: %i[auth_vocab_remap]
+        }
+      end
+
       Omca.registry.namespace("test_report") do
         register :commonname_only_concept, {
           path: File.join(
