@@ -12,19 +12,27 @@ module Omca
     def source_fields_to_vocab
       result = {}
       Omca::Mappings::Fields.vocab_controlled_target_rows
-        .reject { |row| row["mapping_treatment"]&.include?("supply value") }
-        .each do |row|
-        tt = row["db_table_type"]
-        table = row["source_db_table"]
-        field = row["db_field"]
-        vocab = row["target_field_source"].delete_prefix("vocabulary: ")
+        .reject do |row|
+          row["mapping_treatment"]&.match?(/supply value|special merge/)
+        end.each do |row|
+          tt = row["db_table_type"]
+          table = row["source_db_table"]
+          field = row["db_field"]
+          vocab = row["target_field_source"].delete_prefix("vocabulary: ")
 
-        table_info = [tt, table]
-        result[table_info] = [] unless result.key?(table_info)
+          table_info = [tt, table]
+          result[table_info] = [] unless result.key?(table_info)
 
-        result[table_info] << [vocab, field]
-      end
+          result[table_info] << [vocab, field]
+        end
       result
+    end
+
+    def terms_added_in_remapping
+      Omca::Mappings::Fields.vocab_controlled_target_rows
+        .select do |row|
+          row["mapping_treatment"]&.match?(/supply value|special merge/)
+        end
     end
   end
 end
