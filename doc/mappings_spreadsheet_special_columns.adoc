@@ -1,0 +1,27 @@
+:toc:
+:toc-placement!:
+:toclevels: 4
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= Mappings spreadsheet special columns
+
+toc::[]
+
+* map to authority
+* multisource target
+* refname merged in
+* reparse
+* skeleton
+* skip initially
+* special merge
+* supply value
+* uncontrol
+* uncontrol and remove usage
+* unstructure date
