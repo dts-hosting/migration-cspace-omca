@@ -764,6 +764,7 @@ module Omca
           else
             "fcarmerge"
           end
+
           args = {
             source: :"#{source_phase}_main__#{table}",
             dest: :"#{ns}__#{rectype}",
@@ -800,14 +801,17 @@ module Omca
             .map { |subtype| subtype.merge(base) }
         end.flatten
         .map do |subtype|
-          type_subtype = "#{subtype[:rectype]}_#{subtype[:name].downcase}"
+          type_subtype = "#{subtype[:rectype]}_"\
+            "#{subtype[:name].downcase}".tr(" ", "_")
+
           args = {
             source: :"fcarmerge_main__#{subtype[:table]}",
             dest: :"#{ns}__#{type_subtype}",
             table: subtype[:table],
             rectype: subtype[:rectype],
             id_field: :termdisplayname,
-            auth_subtype: subtype[:subtype]
+            auth_subtype: subtype[:subtype],
+            source_phase: "fcarmerge"
           }
 
           entry = {
