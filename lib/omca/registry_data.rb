@@ -599,6 +599,12 @@ module Omca
           },
           tags: %i[auth_vocab_remap]
         }
+        register :ethculture_uniq_usages, {
+          path: File.join(Omca.wrkdir, "ethculture_uniq_usages.csv"),
+          creator: Omca::Jobs::AuthVocabRemap::EthcultureUniqUsages,
+          tags: %i[auth_vocab_remap],
+          desc: Omca::Jobs::AuthVocabRemap::EthcultureUniqUsages.desc
+        }
       end
 
       Omca.registry.namespace("test_report") do
