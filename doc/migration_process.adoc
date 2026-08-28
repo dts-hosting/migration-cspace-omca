@@ -224,6 +224,20 @@ What this involves:
 ** updating `index` to have new `vocab` and `termid` values
 ** update `refname` to reflect new `vocab` and `termid` values
 
+[#authgen]
+=== Authority Generation
+
+Generation of new authority terms from values not previously authority controlled.
+
+This involves:
+
+* Generation of faux usages CSV that can be merged with real usages (streamlining <<authoritymerge>>
+* Generation of skeleton authority terms to load
+
+Needing this treatment:
+
+* [x] `collectionobjects_common.collection` -> work/local (for remapping of field values to `collectionobjects_common.namedCollection`)
+
 === Preprocess
 
 `thor jobs tagged preprocess -r`
@@ -348,6 +362,7 @@ Implement for:
 * [x] procedures
 * [x] authorities - needs to split into separate files per authority vocabulary
 
+[#authoritymerge]
 === Authority merge
 
 * [x] Once all used authorities are loaded, *prepare old refname to new refname lookups*
