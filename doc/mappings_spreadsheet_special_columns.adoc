@@ -14,7 +14,7 @@ endif::[]
 
 toc::[]
 
-* map to authority
+== Old mapping_treatment values
 * multisource target
 * refname merged in
 * reparse
@@ -22,6 +22,17 @@ toc::[]
 * skip initially
 * special merge
 * supply value
-* uncontrol
-* uncontrol and remove usage
 * unstructure date
+
+* map to authority
+** moved to authority_treatment as `vocabulary to authority`
+* uncontrol
+** moved to authority_treatment as `uncontrol and keep usage`
+* uncontrol and remove usage
+** moved to authority_treatment
+
+== authority_treatment values
+
+* vocabulary to authority
+* uncontrol and keep usage
+* uncontrol and remove usage

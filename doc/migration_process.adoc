@@ -176,7 +176,7 @@ Required to do other fixes/reporting on authority usages
 
 `thor run job authorities__fix_usages`
 
-* [x] Remove usages for authority fields migrating to uncontrolled fields (marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
+* [x] Remove usages for authority fields migrating to uncontrolled fields (marked `authority_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 
 === Unlinked authority refnames
 
@@ -326,8 +326,8 @@ What we are doing here is creating database table rows that will match the chang
 ** [x] Delete " Department" from the end of values
 
 * Uncontrol, keeping label from whatever refname is in the field
-** [x] source fields marked `mapping_treatment` = `uncontrol` in mappings tab of spreadsheet
-** [x] source fields marked `mapping_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
+** [x] source fields marked `authority_treatment` = `uncontrol` in mappings tab of spreadsheet
+** [x] source fields marked `authority_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet
 
 * Option list value tweaks
 ** [x] downcase and adjust relevant values in fix phase (when values are re-extracted, list should be clean)
