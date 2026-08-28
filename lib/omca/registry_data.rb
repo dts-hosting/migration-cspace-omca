@@ -262,7 +262,7 @@ module Omca
           creator: {
             callee: Omca::Jobs::Authorities::UniqUsages,
             args: {
-              source: :authorities__fix_usages,
+              source: :authorities__fixed_with_remapped,
               destination: :authorities__fix_uniq_usages
             }
           },

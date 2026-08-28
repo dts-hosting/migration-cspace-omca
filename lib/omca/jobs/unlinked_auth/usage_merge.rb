@@ -9,7 +9,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__fix_usages,
+              source: :authorities__fixed_with_remapped,
               destination: :unlinked_auth__usages,
               lookup: [{
                 jobkey: :unlinked_auth__for_merge,
