@@ -560,7 +560,10 @@ module Omca
           creator: Omca::Jobs::BigAuth::CollapsingUsageMerge,
           tags: %i[big_auth],
           desc: "Update usages of terms being collapsed to use refname "\
-            "of term they are being collapsed into"
+            "of term they are being collapsed into",
+          dest_special_opts: {
+            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+          }
         }
         register :uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
