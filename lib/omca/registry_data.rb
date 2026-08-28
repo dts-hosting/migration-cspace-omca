@@ -12,7 +12,7 @@ module Omca
         "preprocess" => Omca::Jobs::Preprocess,
         "authorityprep" => Omca::Jobs::Authorityprep,
         "fix" => Omca::Jobs::FixTableData,
-        "fcarmerge" => Omca::Jobs::FcarMerge,
+        "remap" => Omca::Jobs::Remap,
         "authmerge" => Omca::Jobs::AuthorityMerge,
         "build" => Omca::Jobs::Build
       }
