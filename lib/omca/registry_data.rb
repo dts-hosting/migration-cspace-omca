@@ -681,6 +681,12 @@ module Omca
           tags: [ns.to_sym],
           desc: Omca::Jobs::Works::OrigUsages.desc
         }
+        register :skeleton, {
+          path: File.join(Omca.datadir, "skeleton", "works_local.csv"),
+          creator: Omca::Jobs::Works::Skeleton,
+          tags: [ns.to_sym, :skeleton],
+          desc: Omca::Jobs::Works::Skeleton.desc
+        }
       end
 
       Omca.registry.register :omca_source_db, {
