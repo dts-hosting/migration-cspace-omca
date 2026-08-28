@@ -58,7 +58,7 @@ module Omca
 
       def uncontrol_rectypes
         migrating.select do |row|
-          row["mapping_treatment"]&.include?("uncontrol")
+          row["authority_treatment"]&.include?("uncontrol")
         end.map { |row| row["target_record_type"] }
           .uniq
           .sort
@@ -66,13 +66,13 @@ module Omca
 
       def uncontrol_rows_for_rectype(rectype)
         for_rectype(rectype).select do |row|
-          row["mapping_treatment"]&.include?("uncontrol")
+          row["authority_treatment"]&.include?("uncontrol")
         end
       end
 
       def usage_removals
         fields_sheet.select do |row|
-          row["mapping_treatment"]&.include?("uncontrol and remove usage")
+          row["authority_treatment"]&.include?("uncontrol and remove usage")
         end.map { |r| [r["source_db_table"], r["db_field"]] }
       end
 
