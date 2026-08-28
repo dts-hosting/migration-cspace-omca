@@ -335,7 +335,12 @@ What we are doing here is creating database table rows that will match the chang
 * Vocabulary term fixes
 ** [x] Adjust case/form of used values to be consistent with other terms in target instance vocabs
 
+[#newtable]
+=== NewTable
 
+Jobs to create new tables into which data can be remapped.
+
+* [x] collectionobjects_common_controlledcontentplaces
 
 === Remap
 

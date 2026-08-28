@@ -628,6 +628,18 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("new_table") do
+        ns = "new_table"
+
+        register :controlledcontentplaces, {
+          path: File.join(Omca.datadir, "fix", "repeatable_field",
+            "collectionobjects_common_controlledcontentplaces.csv"),
+          creator: Omca::Jobs::NewTable::Controlledcontentplaces,
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::NewTable::Controlledcontentplaces.desc
+        }
+      end
+
       Omca.registry.namespace("test_report") do
         register :commonname_only_concept, {
           path: File.join(
