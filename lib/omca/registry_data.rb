@@ -421,7 +421,7 @@ module Omca
         register :usages_final, {
           path: File.join(Omca.datadir, "authority_ref",
             "usages_non_refname_merged.csv"),
-          creator: Omca::Jobs::NonRefnameAuth::UsagesFinal,
+          creator: Omca::Jobs::NonRefnameAuth::UsagesFinal.method(:new),
           tags: [ns.to_sym],
           desc: "Adds result of non_refname_auth__usage_merge to "\
             "authorities__usages"
