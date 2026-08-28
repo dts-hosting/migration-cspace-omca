@@ -231,11 +231,12 @@ Generation of new authority terms from values not previously authority controlle
 
 This involves:
 
-* Generation of faux usages CSV that can be merged with real usages (streamlining <<authoritymerge>>
+* Generation of faux usages CSV that can be merged with real usages (streamlining <<authoritymerge>>)
 * Generation of skeleton authority terms to load
 
 Needing this treatment:
 
+* [x] `acquisitions_common.acquisitionFundingSource` -> org/local, if does not already exist
 * [x] `collectionobjects_common.collection` -> work/local (for remapping of field values to `collectionobjects_common.namedCollection`)
 
 === Preprocess

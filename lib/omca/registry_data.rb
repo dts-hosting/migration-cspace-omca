@@ -719,6 +719,13 @@ module Omca
           tags: [ns.to_sym],
           desc: Omca::Jobs::Orgs::OrigUsagesAcqfundsource.desc
         }
+        register :skeleton_acqfundsource, {
+          path: File.join(Omca.datadir, "skeleton",
+            "org_local_acqfundsource.csv"),
+          creator: Omca::Jobs::Orgs::SkeletonAcqfundsource,
+          tags: [ns.to_sym, :skeleton],
+          desc: Omca::Jobs::Orgs::SkeletonAcqfundsource.desc
+        }
       end
 
       Omca.registry.register :omca_source_db, {
