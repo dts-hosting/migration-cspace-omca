@@ -39,6 +39,8 @@ module Omca
               ].join(" ")
               row
             end
+
+            transform Delete::Fields, fields: :index
           end
         end
       end
