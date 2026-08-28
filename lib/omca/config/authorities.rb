@@ -30,7 +30,7 @@ module Omca
 
     setting :non_refname_usages_headers,
       reader: true,
-      default: %w[tabletype table id recordcsid field value]
+      default: %w[tabletype table id recordcsid field pos value]
 
     setting :uniq_non_refname_usages_path,
       reader: true,
