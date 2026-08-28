@@ -242,6 +242,20 @@ module Omca
           desc: "- Drop field usages tagged in mappings for usage removal"
         }
 
+        register :fixed_sans_remapped, {
+          path: File.join(Omca.wrkdir, "auth_usages_fixed_sans_remapped.csv"),
+          creator: Omca::Jobs::Authorities::FixedSansRemapped.method(:new),
+          tags: [ns.to_sym, :usages, :remap, :assocplace],
+          desc: Omca::Jobs::Authorities::FixedSansRemapped.desc
+        }
+
+        register :fixed_with_remapped, {
+          path: File.join(Omca.wrkdir, "auth_usages_fixed_with_remapped.csv"),
+          creator: Omca::Jobs::Authorities::FixedWithRemapped.method(:new),
+          tags: [ns.to_sym, :usages, :remap, :assocplace],
+          desc: Omca::Jobs::Authorities::FixedWithRemapped.desc
+        }
+
         register :fix_uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
             "uniq_usages_fixed.csv"),
@@ -703,6 +717,26 @@ module Omca
             tags: [:medialink, type.to_sym]
           }
         end
+      end
+
+      Omca.registry.namespace("assocplace") do
+        ns = "assocplace"
+
+        register :usages, {
+          path: File.join(Omca.wrkdir, "assocplace_usages.csv"),
+          creator: Omca::Jobs::Assocplace::Usages.method(:new),
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Assocplace::Usages.desc
+        }
+        register :remapped, {
+          path: File.join(Omca.wrkdir, "assocplace_remapped.csv"),
+          creator: Omca::Jobs::Assocplace::Remapped,
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Assocplace::Remapped.desc,
+          dest_special_opts: {
+            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+          }
+        }
       end
 
       Omca.registry.namespace("works") do

@@ -178,6 +178,12 @@ Required to do other fixes/reporting on authority usages
 
 * [x] Remove usages for authority fields migrating to uncontrolled fields (marked `authority_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 
+==== Series of jobs to remap authority usages to new fields
+
+Does not include changing the authority or authority vocabulary of terms, or generating new terms.
+
+* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
+
 === Unlinked authority refnames
 
 These are refname URI values used to populate fields, but where no authority record with the `shortidentifier` encoded in the refname can be found in the authority vocabulary encoded in the refname.
@@ -381,7 +387,6 @@ Implement for:
 
 ==== Special handling
 
-* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
 * [x] Delete now-unused concept/associated terms that got remapped to concept/ethculture
 
 === Full record
