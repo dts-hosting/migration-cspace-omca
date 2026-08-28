@@ -413,7 +413,10 @@ module Omca
           tags: [ns.to_sym],
           desc: "Individual usages with provided refnames merged in, "\
             "formatted for use as an additional source to create "\
-            "non_refname_auth__usages_final"
+            "non_refname_auth__usages_final",
+          dest_special_opts: {
+            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+          }
         }
         register :usages_final, {
           path: File.join(Omca.datadir, "authority_ref",
