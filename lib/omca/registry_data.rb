@@ -594,7 +594,10 @@ module Omca
             "usages_auth_vocab_remap.csv"),
           creator: Omca::Jobs::AuthVocabRemap::Usages,
           tags: %i[auth_vocab_remap],
-          desc: Omca::Jobs::AuthVocabRemap::Usages.desc
+          desc: Omca::Jobs::AuthVocabRemap::Usages.desc,
+          dest_special_opts: {
+            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+          }
         }
         register :uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
