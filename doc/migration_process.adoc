@@ -335,11 +335,14 @@ What we are doing here is creating database table rows that will match the chang
 * Vocabulary term fixes
 ** [x] Adjust case/form of used values to be consistent with other terms in target instance vocabs
 
-=== FCAR merge
 
-`thor jobs tagged fcarmerge -r`
 
-(nothing here yet)
+=== Remap
+
+Jobs moving data to new places.
+This may include to newly created tables (see <<newtable>>), or to different places in tables that already existed.
+
+`thor jobs tagged remap -r`
 
 === Skeleton
 

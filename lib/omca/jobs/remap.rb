@@ -2,7 +2,7 @@
 
 module Omca
   module Jobs
-    module FcarMerge
+    module Remap
       module_function
 
       # @param source [Array<Symbol>]
