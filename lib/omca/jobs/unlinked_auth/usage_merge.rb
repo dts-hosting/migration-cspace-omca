@@ -54,6 +54,8 @@ module Omca
               Omca::Refname.add_parsed_detail(row, corr, sym: true)
               row
             end
+
+            transform Delete::Fields, fields: :index
           end
         end
       end

@@ -509,7 +509,10 @@ module Omca
             "usages_unlinked_auth.csv"),
           creator: Omca::Jobs::UnlinkedAuth::UsageMerge,
           tags: [ns.to_sym],
-          desc: "Updates usages_fixed with unlinked auth fixes"
+          desc: "Updates usages_fixed with unlinked auth fixes",
+          dest_special_opts: {
+            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+          }
         }
         register :uniq_usages_final, {
           path: File.join(Omca.datadir, "authority_ref",
