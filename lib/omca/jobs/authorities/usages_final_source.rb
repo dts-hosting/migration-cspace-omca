@@ -8,7 +8,8 @@ module Omca
 
         def source = [
           Omca.auth_usages,
-          :works__orig_usages
+          :works__orig_usages,
+          :orgs__orig_usages_acqfundsource
         ]
 
         def destination = :authorities__usages_final_source

@@ -710,6 +710,17 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("orgs") do
+        ns = "orgs"
+
+        register :orig_usages_acqfundsource, {
+          path: File.join(Omca.wrkdir, "orgs_orig_usages_acqfundsource.csv"),
+          creator: Omca::Jobs::Orgs::OrigUsagesAcqfundsource.method(:new),
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Orgs::OrigUsagesAcqfundsource.desc
+        }
+      end
+
       Omca.registry.register :omca_source_db, {
         dynamic_source: true,
         desc: "Queries on OMCA's source database"
