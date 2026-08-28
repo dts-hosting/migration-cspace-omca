@@ -9,7 +9,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: Omca.auth_usages,
+              source: :authorities__usages_final_source,
               destination: :authorities__usages_new_refname,
               lookup: :authorities__uniq_usage_new_lookup
             },

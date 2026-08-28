@@ -321,6 +321,15 @@ module Omca
           tags: [ns.to_sym],
           desc: "Update usages with the new target refnames of used terms"
         }
+        register :usages_final_source, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "usages_final_source.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UsagesFinalSource.method(:new),
+          tags: [ns.to_sym],
+          desc: "Combines :#{Omca.auth_usages} with any \"faux\" usage files "\
+            "generated as part of authority remapping and/or generation"
+        }
       end
 
       Omca.registry.namespace("auth_merge_prep") do
