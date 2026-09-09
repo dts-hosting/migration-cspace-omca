@@ -98,6 +98,17 @@ module Omca
     reader: true,
     default: 0
 
+  # @return [nil, Integer] corresponding to db_iteration for which skeleton
+  #   authorities have been loaded in new instance, and refnames from the
+  #   new instance put in place as a data source
+  setting :new_auth_refnames_in_place_for,
+    reader: true,
+    default: 0
+
+  def ready_for_authority_merge?
+    db_iteration == new_auth_refnames_in_place_for
+  end
+
   # @return [Symbol] field containing migrating human-readable record ids
   setting :ingestid_field,
     reader: true,
