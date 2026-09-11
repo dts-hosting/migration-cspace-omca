@@ -36,3 +36,4 @@ toc::[]
 * vocabulary to authority
 * uncontrol and keep usage
 * uncontrol and remove usage
+* remap to new authority vocabulary
