@@ -80,6 +80,10 @@ module Omca
             transform Delete::Fields,
               fields: :sortableconservationnumber
 
+          elsif table == "loansout_omca"
+            transform Delete::Fields,
+              fields: %i[loanoutcourierinfo sortableloanoutnumber]
+
           elsif table == "measuredpartgroup"
             transform FilterRows::FieldEqualTo,
               action: :reject,
