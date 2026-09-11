@@ -13,6 +13,14 @@ module Omca
     setting :new_tables,
       reader: true,
       default: {
+        "main" => {
+          "consultations_common" => {
+            source: [
+              :"#{previous}_repeatable_field_group__viewercontributiongroup"
+            ],
+            rectype: "consultation"
+          }
+        },
         "repeatable_field_group" => {
           "partiesinvolvedgroup" => {
             source: ["acquisitioncontactgroup", "viewercontributiongroup"],
