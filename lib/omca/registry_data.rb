@@ -900,7 +900,10 @@ module Omca
           table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
           id_field = Omca::Mappers.id_field_for_table(table)
 
-          source_phase = if rectype == "movement"
+          source_phase = case rectype
+          when "consultation"
+            "remap"
+          when "movement"
             "authmerge"
           else
             "fcarmerge"
