@@ -45,6 +45,8 @@ module Omca
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
           case table
+          when "acquisitioncontactgroup"
+            transform Omca::Xforms::Remap::DropAllRows
           when "acquisitions_common"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
               lookup: acquisitions_omca
@@ -54,6 +56,16 @@ module Omca
           when "acquisitions_omca"
             transform Delete::Fields,
               fields: %i[accessiondescription anonymous]
+          when "partiesinvolvedgroup"
+            transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                row[:involvedparty].blank? && row[:involvedrole].blank?
+              end
+          when "viewercontributiongroup"
+            transform Delete::Fields,
+              fields: %i[viewername viewerrole]
           end
         end
       end
