@@ -6,7 +6,14 @@ module Omca
 
     def usages_key = :authorities__usages_new_refname
 
-    def usages_path = Omca.registry.resolve(usages_key)[:path]
+    def usages_path
+      entry = Omca.registry.resolve(usages_key)
+      if entry.respond_to?(:path)
+        entry.path
+      else
+        entry[:path]
+      end
+    end
 
     def merge_prep_ready? = Omca.ready_for_authority_merge? &&
       File.exist?(usages_path)
