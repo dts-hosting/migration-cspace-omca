@@ -271,6 +271,11 @@ Needing this treatment:
 
 * [x] Merge :shortidentifier in from parent record
 
+==== non-main - non-authority
+
+* addtl_fields
+** [x] delete `conservation_omca.sortableConservationNumber`
+
 ==== structured_dates
 
 * [x] Delete rows where all `Omca::StructuredDate.data_fields` are empty. This takes us from 926990 to 692823 top-level structured dates, and from 133037 to 315 nested structured dates.
