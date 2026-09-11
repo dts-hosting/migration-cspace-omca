@@ -15,20 +15,37 @@ module Omca
           files: {
             source: source,
             destination: dest,
-            lookup: get_lookups
+            lookup: get_lookups(table)
           },
           transformer: xforms(table, tabletype, rectype)
         )
       end
 
-      def get_lookups
+      def get_lookups(table)
         base = []
-        base.select { |key| Kiba::Extend::Job.output?(key) }
+        prev = Omca::RegistryData.previous_phase("remap")
+        case table
+        when "acquisitions_common"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__acquisitions_omca",
+            lookup_on: :recordcsid,
+            name: :acquisitions_omca
+          }
+        end
+
+        base
       end
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
-          # placeholder
+          case table
+          when "acquisitions_common"
+            transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
+              lookup: acquisitions_omca
+          when "acquisitions_omca"
+            transform Delete::Fields,
+              fields: %i[accessiondescription]
+          end
         end
       end
     end
