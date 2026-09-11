@@ -9,18 +9,12 @@ module Omca
         auth_subtype: nil)
         Kiba::Extend::Jobs::Job.new(
           files: {
-            source: get_source(source, table),
+            source: source,
             destination: dest,
             lookup: get_lookups(rectype, source_phase)
           },
           transformer: xforms(rectype, id_field, auth_subtype, source_phase)
         )
-      end
-
-      def get_source(source, table)
-        Omca::Dependencies.ensure_fix(table)
-
-        source
       end
 
       def get_lookups(rectype, source_phase)
@@ -61,6 +55,7 @@ module Omca
               fields: [Omca::Authorities.used_tag_field, :authority]
             transform Delete::EmptyFields
           end
+
           transform Delete::FieldsExcept,
             fields: keepfields
 
