@@ -275,6 +275,8 @@ Needing this treatment:
 
 * addtl_fields
 ** [x] delete `conservation_omca.sortableConservationNumber`
+** [x] delete `loansout_omca.loanoutcourierinfo`
+** [x] delete `loansout_omca.sortableloanoutnumber`
 
 ==== structured_dates
 
