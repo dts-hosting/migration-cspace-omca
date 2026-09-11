@@ -37,6 +37,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :acquisitions_omca
           }
+        when "consultations_common"
+          base << {
+            jobkey: :"#{prev}_main__collectionobjects_common",
+            lookup_on: :recordcsid,
+            name: :collectionobjects_common
+          }
         end
 
         base
@@ -63,6 +69,9 @@ module Omca
               lambda: ->(row) do
                 row[:involvedparty].blank? && row[:involvedrole].blank?
               end
+          when "consultations_common"
+            transform Omca::Xforms::Remap::BuildConsultationCommon,
+              lookup: collectionobjects_common
           when "viewercontributiongroup"
             transform Delete::Fields,
               fields: %i[viewername viewerrole]
