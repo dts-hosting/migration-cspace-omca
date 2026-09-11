@@ -80,6 +80,14 @@ module Omca
             transform Delete::Fields,
               fields: :sortableconservationnumber
 
+          elsif table == "loanoutfeesgroup"
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                row[:loanoutfeesdatepaid].blank? &&
+                  row[:loanoutfeesamount].blank?
+              end
+
           elsif table == "loansout_omca"
             transform Delete::Fields,
               fields: %i[loanoutcourierinfo sortableloanoutnumber]

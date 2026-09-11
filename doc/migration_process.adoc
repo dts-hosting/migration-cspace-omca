@@ -277,6 +277,8 @@ Needing this treatment:
 ** [x] delete `conservation_omca.sortableConservationNumber`
 ** [x] delete `loansout_omca.loanoutcourierinfo`
 ** [x] delete `loansout_omca.sortableloanoutnumber`
+* repeatable_field_group
+** [x] loanoutfeesgroup - drop rows where `loanoutfeesdatepaid` and `loanoutfeesamount` are empty - the currency field is a default value and rows with only currency are useless.
 
 ==== structured_dates
 
