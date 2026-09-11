@@ -31,6 +31,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :acquisitions_omca
           }
+        when "acquisitions_common_acquisitionsources"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__acquisitions_omca",
+            lookup_on: :recordcsid,
+            name: :acquisitions_omca
+          }
         end
 
         base
@@ -42,9 +48,12 @@ module Omca
           when "acquisitions_common"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
               lookup: acquisitions_omca
+          when "acquisitions_common_acquisitionsources"
+            transform Omca::Xforms::Remap::AcquisitionsOmcaAnonymous,
+              lookup: acquisitions_omca
           when "acquisitions_omca"
             transform Delete::Fields,
-              fields: %i[accessiondescription]
+              fields: %i[accessiondescription anonymous]
           end
         end
       end
