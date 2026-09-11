@@ -810,12 +810,12 @@ module Omca
     def register_phase_dir_jobs(phase, callee, dir)
       ns = "#{phase}_#{dir}"
 
+      prev_phase = previous_phase(phase)
       orig_dir_path = File.join(Omca.datadir, "orig", dir)
       entries = Dir.children(orig_dir_path).reject { |f| f.end_with?("#") }
         .map do |tablefilename|
           table = tablefilename.delete_suffix(".csv")
           rectype = Omca::Mappings::Db.rectype_for_table(table)
-          prev_phase = previous_phase(phase)
           srckey = if prev_phase == "orig"
             :"#{dir}__#{table}"
           else
@@ -844,11 +844,52 @@ module Omca
 
           [table.to_sym, entry]
         end
+
+      if phase == "remap"
+        register_new_table_remappings(entries, callee, dir, prev_phase, ns)
+      end
+
       Omca.registry.namespace(ns) do
         entries.each { |entry| register entry[0], entry[1] }
       end
     end
     private_class_method :register_phase_dir_jobs
+
+    def register_new_table_remappings(entries, callee, dir, prev_phase, ns)
+      config = Omca::Remap.new_tables[dir]
+      return entries if config.blank?
+
+      config.each do |table, detail|
+        source = detail[:source].map do |src|
+          convert_remap_source(src, dir, prev_phase)
+        end
+
+        args = {
+          source: source,
+          dest: :"remap_#{dir}__#{table}",
+          table: table,
+          rectype: detail[:rectype],
+          tabletype: dir
+        }
+        tags = [:remap, :"remap_#{dir}", table.to_sym]
+        entries << [
+          table.to_sym,
+          {
+            path: File.join(Omca.datadir, "remap", dir, "#{table}.csv"),
+            creator: {callee: callee, args: args},
+            tags: tags
+          }
+        ]
+      end
+    end
+    private_class_method :register_new_table_remappings
+
+    def convert_remap_source(source, dir, prev_phase)
+      return source if source["_"]
+
+      :"#{prev_phase}_#{dir}__#{source}"
+    end
+    private_class_method :convert_remap_source
 
     def register_skeleton_jobs
       ns = "skeleton"
