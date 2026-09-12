@@ -35,8 +35,8 @@ module Omca
       # @return [Array<Hash>] of migrating rows
       def skeleton_fields(rectype, tabletype)
         for_rectype(rectype, side: :target).select do |r|
-          r["mapping_treatment"]&.match?("skeleton") &&
-            r["db_table_type"] == tabletype
+          r["mapping_treatment"]&.include?("skeleton") &&
+            r["target_db_table_type"] == tabletype
         end
       end
 

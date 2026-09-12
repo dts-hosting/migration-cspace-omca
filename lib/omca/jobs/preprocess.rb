@@ -76,7 +76,23 @@ module Omca
 
       def non_main_non_auth_xforms(table)
         Kiba.job_segment do
-          if table == "measuredpartgroup"
+          if table == "conservation_omca"
+            transform Delete::Fields,
+              fields: :sortableconservationnumber
+
+          elsif table == "loanoutfeesgroup"
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                row[:loanoutfeesdatepaid].blank? &&
+                  row[:loanoutfeesamount].blank?
+              end
+
+          elsif table == "loansout_omca"
+            transform Delete::Fields,
+              fields: %i[loanoutcourierinfo sortableloanoutnumber]
+
+          elsif table == "measuredpartgroup"
             transform FilterRows::FieldEqualTo,
               action: :reject,
               field: :rectype,
