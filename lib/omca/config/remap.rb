@@ -27,6 +27,12 @@ module Omca
               :"#{previous}_repeatable_field_group__viewercontributiongroup"
             ],
             rectype: "consultation"
+          },
+          "consultations_common_notes" => {
+            source: [
+              :"#{previous}_repeatable_field_group__viewercontributiongroup"
+            ],
+            rectype: "consultation"
           }
         },
         "repeatable_field_group" => {

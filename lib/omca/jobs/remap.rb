@@ -43,6 +43,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :collectionobjects_common
           }
+        when "consultations_common_notes"
+          base << {
+            jobkey: :"#{prev}_repeatable_in_group__viewerreferences",
+            lookup_on: :groupid,
+            name: :viewerreferences
+          }
         end
 
         base
@@ -77,9 +83,16 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :item
+          when "consultations_common_notes"
+            transform Omca::Xforms::Remap::BuildConsultationNotes,
+              lookup: viewerreferences
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :item
           when "viewercontributiongroup"
-            transform Delete::Fields,
-              fields: %i[viewername viewerrole]
+            transform Omca::Xforms::Remap::DropAllRows
+          when "viewerreferences"
+            transform Omca::Xforms::Remap::DropAllRows
           end
         end
       end
