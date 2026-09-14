@@ -27,7 +27,7 @@ module Omca
       def add_nonhier_object_consultation
         rows << {
           reltype: "nonhier",
-          source0: nil,
+          source0: "collectionobject_consultation",
           source1: nil,
           target0: "collectionobject",
           target1: "consultation"
