@@ -10,7 +10,7 @@ module Omca
           @holder = Set.new
         end
 
-        def source = :fcarmerge_vocab_field_tables
+        def source = :remap_vocab_field_tables
 
         def destination = :vocab__usages
 
@@ -33,7 +33,7 @@ module Omca
         attr_reader :holder
 
         def extract_from(table, fields)
-          table_key = :"fcarmerge_#{table[0]}__#{table[1]}"
+          table_key = :"remap_#{table[0]}__#{table[1]}"
           table_path = Omca.registry.resolve(table_key).path
           unless File.exist?(table_path)
             Kiba::Extend::Command::Run.job(table_key)

@@ -2,15 +2,15 @@
 
 require "spec_helper"
 
-RSpec.describe Omca::Jobs::FcarMerge do
-  describe ":fcarmerge_repeatable_field_group__persontermgroup" do
+RSpec.describe Omca::Jobs::AuthorityMerge do
+  describe ":authmerge_repeatable_field_group__persontermgroup" do
     before(:context) do
-      jobkey = :fcarmerge_repeatable_field_group__persontermgroup
+      jobkey = :authmerge_repeatable_field_group__persontermgroup
       clear_output(jobkey)
       csv_job_output(jobkey)
     end
 
-    let(:jobkey) { :fcarmerge_repeatable_field_group__persontermgroup }
+    let(:jobkey) { :authmerge_repeatable_field_group__persontermgroup }
     let(:path) { Omca.registry.resolve(jobkey).path }
 
     it "merges collapsing authority values" do

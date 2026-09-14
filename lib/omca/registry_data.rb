@@ -785,14 +785,14 @@ module Omca
         desc: "Nuke-bomed source tables for fields containing authority "\
           "term refnames"
       }
-      Omca.registry.register :fcarmerge_optlist_field_tables, {
+      Omca.registry.register :remap_optlist_field_tables, {
         dynamic_source: true,
-        desc: "Fcarmerged source tables for field values mapping into "\
+        desc: "Remapped source tables for field values mapping into "\
           "option list controlled fields in target instance"
       }
-      Omca.registry.register :fcarmerge_vocab_field_tables, {
+      Omca.registry.register :remapped_vocab_field_tables, {
         dynamic_source: true,
-        desc: "Fcarmerged source tables for field values mapping into "\
+        desc: "Remapped source tables for field values mapping into "\
           "vocabulary controlled fields in target instance"
       }
     end
