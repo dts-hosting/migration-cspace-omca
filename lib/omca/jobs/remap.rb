@@ -72,6 +72,11 @@ module Omca
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
+          when "consultations_common_consultationoutcomes"
+            transform Omca::Xforms::Remap::BuildConsultationOutcomes
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :item
           when "viewercontributiongroup"
             transform Delete::Fields,
               fields: %i[viewername viewerrole]
