@@ -20,7 +20,7 @@ RSpec.describe Omca::Jobs::Preprocess do
       val = xan_search_csid_return_field(
         "90e57014-a174-4a14-92bb", "movementreferencenumber", path
       )
-      expect(val).to eq("LOC.ProvInMig.4")
+      expect(val.first).to eq("LOC.ProvInMig.4")
     end
   end
 

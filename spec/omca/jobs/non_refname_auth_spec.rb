@@ -13,17 +13,24 @@ RSpec.describe Omca::Jobs::NonRefnameAuth do
   end
 
   describe ":non_refname_auth__usage_merge" do
-    let(:data) { csv_job_output(:non_refname_auth__usage_merge) }
+    before(:context) do
+      jobkey = :non_refname_auth__usage_merge
+      clear_output(jobkey)
+      csv_job_output(jobkey)
+    end
+
+    let(:jobkey) { :non_refname_auth__usage_merge }
+    let(:path) { Omca.registry.resolve(jobkey).path }
 
     it "merges provided valid refname usages" do
-      row = data.find do |row|
-        row[:id] == "bc18fb74-23d1-4386-9652-5dd49076dec0" &&
-          row[:field] == "objectproductionorganization"
-      end
-      expect(row[:refname]).to eq(
-        "urn:cspace:museumca.org:orgauthorities:name(organization):"\
-          "item:name(StoneSteccati1461709280846)'Stone & Steccati'"
-      )
+      id = "bc18fb74-23d1-4386-9652-5dd49076dec0"
+      field = "objectproductionorganization"
+      filter = "'(id eq \"#{id}\") && (field eq \"#{field}\")'"
+      result = xan_filter(filter, path)
+
+      refname = "urn:cspace:museumca.org:orgauthorities:name(organization):"\
+        "item:name(StoneSteccati1461709280846)'Stone & Steccati'"
+      expect(result.first).to include(refname)
     end
   end
 
@@ -41,7 +48,7 @@ RSpec.describe Omca::Jobs::NonRefnameAuth do
       val1 = xan_search_id_return_field(
         "521d86b6-6dd3-4a7c-8673-93db0f4d36f6", "refname", path
       )
-      expect(val1).to eq("urn:cspace:museumca.org:placeauthorities:"\
+      expect(val1.first).to eq("urn:cspace:museumca.org:placeauthorities:"\
                          "name(place):item:name(pl175414)"\
                          "'Cliff House, San Francisco'")
     end
