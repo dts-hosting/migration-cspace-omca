@@ -56,6 +56,21 @@ RSpec.describe Omca::Jobs::FixTableData do
       end
     end
 
+  describe ":fix_repeatable_field__loansout_omca_loanoutinsuranceinsurers" do
+    let(:jobkey) do
+      :fix_repeatable_field__loansout_omca_loanoutinsuranceinsurers
+    end
+
+    before(:context) do
+      jobkey = :fix_repeatable_field__loansout_omca_loanoutinsuranceinsurers
+      clear_output(jobkey)
+    end
+
+    it "drops all output" do
+      expect(Kiba::Extend::Job.output?(jobkey)).to be false
+    end
+  end
+
   describe ":fix_addtl_fields__collectionobjects_omca" do
     let(:jobkey) do
       :fix_addtl_fields__collectionobjects_omca
