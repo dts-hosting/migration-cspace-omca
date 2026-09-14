@@ -2,7 +2,7 @@
 
 module Omca
   module Jobs
-    module TestReport
+    module Report
       module CommonnameOnlyConcept
         module_function
 
@@ -10,7 +10,7 @@ module Omca
           Kiba::Extend::Jobs::Job.new(
             files: {
               source: :authorities__fix_malformed_usages,
-              destination: :test_report__commonname_only_concept
+              destination: :report__commonname_only_concept
             },
             transformer: [Omca::Authorities.add_term_index, xforms]
           )

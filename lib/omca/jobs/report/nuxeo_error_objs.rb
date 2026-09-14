@@ -2,7 +2,7 @@
 
 module Omca
   module Jobs
-    module TestReport
+    module Report
       module NuxeoErrorObjs
         module_function
 
@@ -10,7 +10,7 @@ module Omca
           Kiba::Extend::Jobs::Job.new(
             files: {
               source: :rels_source_nonhier__collectionobject_group,
-              destination: :test_report__nuxeo_error_objs,
+              destination: :report__nuxeo_error_objs,
               lookup: {
                 jobkey: :preprocess_main__collectionobjects_common,
                 lookup_on: :recordcsid
