@@ -9,7 +9,7 @@ module Omca
         def job(type:)
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :"fcarmerge_main__#{type}_common",
+              source: :"remap_main__#{type}_common",
               destination: :"medialink__#{type}_blobcsid",
               lookup: [
                 {

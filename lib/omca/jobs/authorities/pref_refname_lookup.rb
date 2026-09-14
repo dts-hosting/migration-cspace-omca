@@ -21,7 +21,7 @@ module Omca
             .select { |rectype| Omca::Mappers.authority?(rectype) }
             .map do |rectype|
               table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
-              :"fcarmerge_main__#{table}"
+              :"remapped_main__#{table}"
             end.select { |job| Kiba::Extend::Job.output?(job) }
         end
 

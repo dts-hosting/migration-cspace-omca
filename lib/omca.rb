@@ -46,9 +46,6 @@ module Omca
   # If I want to be lazy I can define this to avoid typing out full directory
   #   paths. It also makes a nice example for using a constructor:
   setting :derived_dirs,
-    # orig
-    # reference authority_ref
-    # preprocess authorityprep fix fcarmerge authmerge build
     default: %w[],
     reader: true,
     constructor: proc { |value| value.map { |dir| File.join(datadir, dir) } }
