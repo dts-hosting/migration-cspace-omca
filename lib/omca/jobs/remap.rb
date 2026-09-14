@@ -58,7 +58,7 @@ module Omca
         Kiba.job_segment do
           case table
           when "acquisitioncontactgroup"
-            transform Omca::Xforms::Remap::DropAllRows
+            transform Omca::Xforms::DropAllRows
           when "acquisitions_common"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
               lookup: acquisitions_omca
@@ -90,9 +90,9 @@ module Omca
               action: :keep,
               field: :item
           when "viewercontributiongroup"
-            transform Omca::Xforms::Remap::DropAllRows
+            transform Omca::Xforms::DropAllRows
           when "viewerreferences"
-            transform Omca::Xforms::Remap::DropAllRows
+            transform Omca::Xforms::DropAllRows
           end
         end
       end
