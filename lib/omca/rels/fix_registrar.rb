@@ -54,8 +54,8 @@ module Omca
       end
 
       def nonhier_entry(row, base)
-        source = "rels_source_#{row[:reltype]}__"\
-          "#{row[:source0]}_#{row[:source1]}"
+        srcs = [row[:source0], row[:source1]].reject(&:blank?)
+        source = "rels_source_#{row[:reltype]}__#{srcs.join("_")}"
         base.merge({
           creator: {
             callee: Omca::Jobs::Rels::NonhierFix,
