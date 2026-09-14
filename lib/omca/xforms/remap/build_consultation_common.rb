@@ -20,6 +20,7 @@ module Omca
           posplus = pos + 1
           row[target] = "#{prefix}#{objnum}.#{posplus}"
           row[:ingestid] = row[target]
+          row[:recordcsid] = "#{row[:recordcsid]}_#{row[:pos]}"
 
           %i[pos viewername viewerrole viewercontributiondate
             viewercontributionnote viewercontribution].each do |f|
