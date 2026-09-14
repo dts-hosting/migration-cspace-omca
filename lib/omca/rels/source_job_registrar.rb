@@ -35,7 +35,8 @@ module Omca
       def namespace(row) = "rels_source_#{row[:reltype]}"
 
       def key(row)
-        :"#{row[:source0]}_#{row[:source1]}"
+        srcs = [row[:source0], row[:source1]].reject(&:blank?)
+        :"#{srcs.join("_")}"
       end
 
       def entry(row)
@@ -53,15 +54,30 @@ module Omca
       end
 
       def nonhier_entry(row, base)
-        base.merge({
-          creator: {
-            callee: Omca::Rels::NonhierSource.method(:new),
-            args: {subject: row[:source0], object: row[:source1],
-                   path: base[:path]}
-          },
+        with_desc = base.merge({
           desc: "Source data for nonhierarchical relations between "\
-            "#{row[:source0]} and #{row[:source1]}"
+            "#{row[:target0]} and #{row[:target1]}"
         })
+
+        unless row[:source1].blank?
+          return base.merge({
+            creator: {
+              callee: Omca::Rels::NonhierSource.method(:new),
+              args: {subject: row[:source0], object: row[:source1],
+                     path: base[:path]}
+            }
+          })
+        end
+
+        custom_nonhier_entry(row, with_desc)
+      end
+
+      def custom_nonhier_entry(row, base)
+        creator = case row[:source0]
+        when "collectionobject_consultation"
+          Omca::Jobs::Rels::CollectionobjectConsultationSource
+        end
+        base.merge({creator: creator})
       end
 
       def hier_entry(row, base)

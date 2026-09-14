@@ -906,7 +906,7 @@ module Omca
           when "movement"
             "authmerge"
           else
-            "fcarmerge"
+            "fix"
           end
 
           args = {
@@ -949,13 +949,13 @@ module Omca
             "#{subtype[:name].downcase}".tr(" ", "_")
 
           args = {
-            source: :"fcarmerge_main__#{subtype[:table]}",
+            source: :"remap_main__#{subtype[:table]}",
             dest: :"#{ns}__#{type_subtype}",
             table: subtype[:table],
             rectype: subtype[:rectype],
             id_field: :termdisplayname,
             auth_subtype: subtype[:subtype],
-            source_phase: "fcarmerge"
+            source_phase: "remap"
           }
 
           entry = {
@@ -990,7 +990,7 @@ module Omca
           id_field = Omca::Mappers.id_field_for_table(table)
 
           args = {
-            source: :"fcarmerge_main__#{table}",
+            source: :"remap_main__#{table}",
             dest: :"#{ns}__#{rectype}",
             rectype: rectype,
             id_field: id_field
