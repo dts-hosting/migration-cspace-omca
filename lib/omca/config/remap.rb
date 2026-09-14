@@ -21,6 +21,14 @@ module Omca
             rectype: "consultation"
           }
         },
+        "repeatable_field" => {
+          "consultations_common_consultationoutcomes" => {
+            source: [
+              :"#{previous}_repeatable_field_group__viewercontributiongroup"
+            ],
+            rectype: "consultation"
+          }
+        },
         "repeatable_field_group" => {
           "partiesinvolvedgroup" => {
             source: ["acquisitioncontactgroup", "viewercontributiongroup"],
