@@ -669,6 +669,15 @@ module Omca
           desc: "Ids and other info about the objects in the 'Nuxeo "\
             "Error' group"
         }
+        register :loanout_insurers, {
+          path: File.join(
+            Omca.datadir, "reports", "loanout_insurers.csv"
+          ),
+          creator: Omca::Jobs::Report::LoanoutInsurers,
+          tags: %i[reports loanout insurance],
+          desc: "The 3 non-migrating rows, with new csids merged in and "\
+            "refnames deURNed"
+        }
       end
 
       Omca.registry.namespace("map_report") do

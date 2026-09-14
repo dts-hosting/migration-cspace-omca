@@ -16,7 +16,6 @@ module Omca
       def close
         add_nonhier_object_consultation
         add_nonhier_insurance_loan("in")
-        add_nonhier_insurance_loan("out")
         rows.each { |row| yield row }
       end
 

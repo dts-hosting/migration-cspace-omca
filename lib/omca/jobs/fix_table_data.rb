@@ -214,6 +214,10 @@ module Omca
             end
           end
 
+          if table == "loansout_omca_loanoutinsuranceinsurers"
+            transform Omca::Xforms::DropAllRows
+          end
+
           # applies to both media_omca and restrictedmedia_omca tables
           if table.match?(/media_omca/)
             transform Replace::FieldValueWithStaticMapping,
