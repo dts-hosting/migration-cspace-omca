@@ -652,22 +652,20 @@ module Omca
         }
       end
 
-      Omca.registry.namespace("test_report") do
+      Omca.registry.namespace("report") do
         register :commonname_only_concept, {
           path: File.join(
-            Omca.datadir, "reports", "test_reports",
-            "commonname_only_concept.csv"
+            Omca.datadir, "reports", "commonname_only_concept.csv"
           ),
-          creator: Omca::Jobs::TestReport::CommonnameOnlyConcept,
-          tags: [:test_report, :reports, :concept]
+          creator: Omca::Jobs::Report::CommonnameOnlyConcept,
+          tags: [:reports, :concept]
         }
         register :nuxeo_error_objs, {
           path: File.join(
-            Omca.datadir, "reports", "test_reports",
-            "nuxeo_error_objs.csv"
+            Omca.datadir, "reports", "nuxeo_error_objs.csv"
           ),
-          creator: Omca::Jobs::TestReport::NuxeoErrorObjs,
-          tags: %i[test_report reports collectionobject group],
+          creator: Omca::Jobs::Report::NuxeoErrorObjs,
+          tags: %i[reports collectionobject group],
           desc: "Ids and other info about the objects in the 'Nuxeo "\
             "Error' group"
         }
