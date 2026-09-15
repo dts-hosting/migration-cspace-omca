@@ -21,13 +21,13 @@ module Omca
         base = []
         Omca::Mappings::Fields.skeleton_fields(rectype, "repeatable_field")
           .each do |cfg|
-            base << Omca::Dependencies.jobkey_for(
+            base << Omca.jobkey_for(
               source_phase, cfg["source_db_table"]
             )
           end
         Omca::Mappings::Fields.skeleton_fields(rectype, "addtl_fields")
           .each do |cfg|
-            base << Omca::Dependencies.jobkey_for(
+            base << Omca.jobkey_for(
               source_phase, cfg["source_db_table"]
             )
           end
@@ -66,7 +66,7 @@ module Omca
           Omca::Mappings::Fields.skeleton_fields(
             rectype, "repeatable_field"
           ).each do |cfg|
-            lkup_meth = Omca::Dependencies.jobkey_for(
+            lkup_meth = Omca.jobkey_for(
               source_phase, cfg["source_db_table"]
             )
             transform Omca::Xforms::MergeRepeatableField,
