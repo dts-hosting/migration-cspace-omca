@@ -15,7 +15,6 @@ module Omca
 
       def close
         add_nonhier_object_consultation
-        add_nonhier_insurance_loan("in")
         rows.each { |row| yield row }
       end
 
@@ -30,16 +29,6 @@ module Omca
           source1: nil,
           target0: "collectionobject",
           target1: "consultation"
-        }
-      end
-
-      def add_nonhier_insurance_loan(type)
-        rows << {
-          reltype: "nonhier",
-          source0: nil,
-          source1: nil,
-          target0: "insurance",
-          target1: "loan#{type}"
         }
       end
     end

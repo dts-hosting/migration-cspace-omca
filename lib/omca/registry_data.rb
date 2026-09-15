@@ -678,6 +678,24 @@ module Omca
           desc: "The 3 non-migrating rows, with new csids merged in and "\
             "refnames deURNed"
         }
+        register :loanin_insurers, {
+          path: File.join(
+            Omca.datadir, "reports", "loanin_insurers.csv"
+          ),
+          creator: Omca::Jobs::Report::LoaninInsurers,
+          tags: %i[reports loanin insurance],
+          desc: "The 2 non-migrating rows, with new csids merged in and "\
+            "refnames deURNed"
+        }
+        register :loanin_insurance_notes, {
+          path: File.join(
+            Omca.datadir, "reports", "loanin_insurance_notes.csv"
+          ),
+          creator: Omca::Jobs::Report::LoaninInsuranceNotes,
+          tags: %i[reports loanin insurance],
+          desc: "The 2 non-migrating rows, with new csids merged in and "\
+            "note values"
+        }
       end
 
       Omca.registry.namespace("map_report") do
