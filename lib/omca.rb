@@ -141,6 +141,11 @@ module Omca
     reader: true,
     default: :auth_vocab_remap__uniq_usages
 
+  def jobkey_for(phase, table)
+    tabletype = Omca::Mappings::Db.table_type(table, mode: :dir)
+    :"#{phase}_#{tabletype}__#{table}"
+  end
+
   def connection = @connection
 
   # @param connection_obj [PG::Connection]
