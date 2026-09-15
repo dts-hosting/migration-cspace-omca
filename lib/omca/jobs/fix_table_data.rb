@@ -214,6 +214,14 @@ module Omca
             end
           end
 
+          if table == "loansin_omca"
+            transform Delete::Fields, fields: :loanininsurancenote
+          end
+
+          if table == "loansin_omca_loanininsuranceinsurers"
+            transform Omca::Xforms::DropAllRows
+          end
+
           if table == "loansout_omca_loanoutinsuranceinsurers"
             transform Omca::Xforms::DropAllRows
           end
