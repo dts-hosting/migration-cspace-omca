@@ -797,6 +797,17 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("structured_dates") do
+        ns = "structured_dates"
+
+        register :exitdate, {
+          path: File.join(Omca.wrkdir, "structured_dates_exitdate.csv"),
+          creator: Omca::Jobs::StructuredDates::Exitdate.method(:new),
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::StructuredDates::Exitdate.desc
+        }
+      end
+
       Omca.registry.register :omca_source_db, {
         dynamic_source: true,
         desc: "Queries on OMCA's source database"
