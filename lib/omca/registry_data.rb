@@ -610,6 +610,13 @@ module Omca
       end
 
       Omca.registry.namespace("auth_vocab_remap") do
+        register :usages_undiverted, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "usages_undiverted.csv"),
+          creator: Omca::Jobs::AuthVocabRemap::UsagesUndiverted.method(:new),
+          tags: %i[auth_vocab_remap],
+          desc: Omca::Jobs::AuthVocabRemap::UsagesUndiverted.desc
+        }
         register :usages, {
           path: File.join(Omca.datadir, "authority_ref",
             "usages_auth_vocab_remap.csv"),
@@ -938,6 +945,8 @@ module Omca
 
           source_phase = case rectype
           when "consultation"
+            "remap"
+          when "exit"
             "remap"
           when "movement"
             "authmerge"

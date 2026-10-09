@@ -12,7 +12,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :big_auth__collapsing_usage_merge,
+              source: :auth_vocab_remap__usages_undiverted,
               destination: :auth_vocab_remap__usages
             },
             transformer: xforms
