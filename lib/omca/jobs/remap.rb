@@ -68,13 +68,6 @@ module Omca
           when "acquisitions_omca"
             transform Delete::Fields,
               fields: %i[accessiondescription anonymous]
-          when "partiesinvolvedgroup"
-            transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
-            transform FilterRows::WithLambda,
-              action: :reject,
-              lambda: ->(row) do
-                row[:involvedparty].blank? && row[:involvedrole].blank?
-              end
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
@@ -89,6 +82,13 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :item
+          when "partiesinvolvedgroup"
+            transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                row[:involvedparty].blank? && row[:involvedrole].blank?
+              end
           when "viewercontributiongroup"
             transform Omca::Xforms::DropAllRows
           when "viewerreferences"
