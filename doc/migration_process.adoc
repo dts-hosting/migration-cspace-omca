@@ -453,6 +453,7 @@ Implement for:
 == Reporting
 
 * [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
+* [ ] `+:structured_dates__exitdate` without `:datelatestscalarvalue` that did not migrate into `exits_common.exitdate` (non-structured date)
 
 == Media migration
 
