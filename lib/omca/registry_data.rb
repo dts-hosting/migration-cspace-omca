@@ -623,6 +623,19 @@ module Omca
             tags: %i[auth_vocab_remap],
             desc: Omca::Jobs::AuthVocabRemap::DivertUsages.desc(args)
           }
+          remapname = "remap_#{args[:table]}_#{args[:field]}_usages"
+          register remapname.to_sym, {
+            path: File.join(Omca.wrkdir, "#{remapname}.csv"),
+            creator: {
+              callee: Omca::Jobs::AuthVocabRemap::RemapUsages,
+              args: args.merge({name: remapname, source: name})
+            },
+            tags: %i[auth_vocab_remap],
+            desc: Omca::Jobs::AuthVocabRemap::RemapUsages.desc(args),
+            dest_special_opts: {
+              initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
+            }
+          }
         end
         register :usages_undiverted, {
           path: File.join(Omca.datadir, "authority_ref",
