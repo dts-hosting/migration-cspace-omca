@@ -40,6 +40,12 @@ module Omca
               :"#{previous}_repeatable_field_group__viewercontributiongroup"
             ],
             rectype: "consultation"
+          },
+          "exits_common_methods" => {
+            source: [
+              :"#{previous}_repeatable_field__objectexit_common_exitmethods"
+            ],
+            rectype: "exit"
           }
         },
         "repeatable_field_group" => {

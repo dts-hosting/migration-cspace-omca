@@ -99,6 +99,8 @@ module Omca
               lookup: dates
             transform Delete::Fields,
               fields: :depositor
+          when "objectexit_common_exitmethods"
+            transform Omca::Xforms::DropAllRows
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
             transform FilterRows::WithLambda,
