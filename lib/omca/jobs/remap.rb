@@ -99,6 +99,12 @@ module Omca
               lookup: dates
             transform Delete::Fields,
               fields: :depositor
+          when "exits_common_owners"
+            transform Delete::FieldsExcept, fields: %i[recordcsid id depositor]
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :depositor
+            transform Merge::ConstantValue, target: :pos, value: "0"
           when "objectexit_common_exitmethods"
             transform Omca::Xforms::DropAllRows
           when "partiesinvolvedgroup"

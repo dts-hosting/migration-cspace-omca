@@ -46,6 +46,10 @@ module Omca
               :"#{previous}_repeatable_field__objectexit_common_exitmethods"
             ],
             rectype: "exit"
+          },
+          "exits_common_owners" => {
+            source: [:"#{previous}_main__objectexit_common"],
+            rectype: "exit"
           }
         },
         "repeatable_field_group" => {
