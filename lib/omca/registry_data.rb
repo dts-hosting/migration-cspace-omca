@@ -610,6 +610,20 @@ module Omca
       end
 
       Omca.registry.namespace("auth_vocab_remap") do
+        [
+          {table: "objectexit_common", field: "depositor"}
+        ].each do |args|
+          name = "divert_#{args[:table]}_#{args[:field]}_usages"
+          register name.to_sym, {
+            path: File.join(Omca.wrkdir, "#{name}.csv"),
+            creator: {
+              callee: Omca::Jobs::AuthVocabRemap::DivertUsages.method(:new),
+              args: args.merge({name: name})
+            },
+            tags: %i[auth_vocab_remap],
+            desc: Omca::Jobs::AuthVocabRemap::DivertUsages.desc(args)
+          }
+        end
         register :usages_undiverted, {
           path: File.join(Omca.datadir, "authority_ref",
             "usages_undiverted.csv"),
