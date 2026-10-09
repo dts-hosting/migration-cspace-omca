@@ -22,6 +22,10 @@ module Omca
               :"#{previous}_repeatable_field_group__viewercontributiongroup"
             ],
             rectype: "consultation"
+          },
+          "exits_common" => {
+            source: [:"#{previous}_main__objectexit_common"],
+            rectype: "exit"
           }
         },
         "repeatable_field" => {

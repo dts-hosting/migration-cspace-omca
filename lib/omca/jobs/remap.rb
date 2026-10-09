@@ -49,6 +49,12 @@ module Omca
             lookup_on: :groupid,
             name: :viewerreferences
           }
+        when "exits_common"
+          base << {
+            jobkey: :structured_dates__exitdate,
+            lookup_on: :recordcsid,
+            name: :dates
+          }
         end
 
         base
@@ -82,6 +88,17 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :item
+          when "exits_common"
+            transform Rename::Fields, fieldmap: {
+              exitnote: :note,
+              exitreason: :reason
+            }
+            transform Clean::DowncaseFieldValues,
+              fields: :reason
+            transform Omca::Xforms::Remap::UnstructureExitdates,
+              lookup: dates
+            transform Delete::Fields,
+              fields: :depositor
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
             transform FilterRows::WithLambda,
