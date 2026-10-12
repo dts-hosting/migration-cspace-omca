@@ -148,6 +148,19 @@ module Omca
       Omca.registry.namespace("vocab") do
         ns = "vocab"
 
+        register :orig, {
+          path: File.join(Omca.datadir, "vocab", "orig.csv"),
+          creator: Omca::Jobs::Vocab::Orig.method(:new),
+          tags: [ns.to_sym],
+          desc: "Vocabulary term data from source db"
+        }
+        register :orig_prep, {
+          path: File.join(Omca.wrkdir, "vocab_orig_prep.csv"),
+          creator: Omca::Jobs::Vocab::OrigPrep,
+          tags: [ns.to_sym],
+          desc: "Adds matchpoint",
+          lookup_on: :matchpoint
+        }
         register :usages, {
           path: File.join(Omca.datadir, "vocab", "usages.csv"),
           creator: Omca::Jobs::Vocab::Usages.method(:new),
@@ -179,7 +192,20 @@ module Omca
           path: File.join(Omca.wrkdir, "vocab_diff.csv"),
           creator: Omca::Jobs::Vocab::Diff,
           tags: [ns.to_sym],
-          desc: "Identify vocab terms that need to be added"
+          desc: "Add :exist field to indicate whether term already exists in "\
+            "target system; merge in term fields"
+        }
+        register :ingest_new, {
+          path: File.join(Omca.datadir, "ingest", "vocab_new.csv"),
+          creator: Omca::Jobs::Vocab::IngestNew,
+          tags: [ns.to_sym],
+          desc: "New vocabulary terms to create"
+        }
+        register :ingest_update, {
+          path: File.join(Omca.datadir, "ingest", "vocab_update.csv"),
+          creator: Omca::Jobs::Vocab::IngestUpdate,
+          tags: [ns.to_sym],
+          desc: "Add additional fields to vocab term records"
         }
       end
 

@@ -6,6 +6,25 @@ module Omca
 
     extend Dry::Configurable
 
+    setting :norm_xforms,
+      reader: true,
+      default: nil,
+      constructor: ->(default) do
+        Kiba.job_segment do
+          transform Cspace::NormalizeForID,
+            source: :term,
+            target: :normterm
+          transform CombineValues::FromFieldsWithDelimiter,
+            sources: %i[vocab normterm],
+            target: :matchpoint,
+            delete_sources: false,
+            delim: "%^&"
+          transform Delete::FieldsExcept,
+            fields: %i[term matchpoint vocab description termstatus
+              source sourcepage]
+        end
+      end
+
     # tabletype (source) > table > field Hash of fields that are mapping
     #   to vocabulary-controlled target fields. Used to extract values
     #   for customizing the terms in target instance term lists/vocabularies

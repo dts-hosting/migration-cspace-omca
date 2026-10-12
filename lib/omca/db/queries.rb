@@ -333,6 +333,21 @@ module Omca
             lower(rel.subjectdocumenttype) = 'collectionobject'
         SQL
       end
+
+      def vocab_items
+        <<~SQL
+          select
+            vc.shortidentifier as vocab,
+            vi.displayname as term,
+            vi.description,
+            vi.termstatus,
+            vi.source,
+            vi.sourcepage
+          from vocabularyitems_common vi
+          inner join hierarchy hier on hier.name = vi.inauthority
+          inner join vocabularies_common vc on vc.id = hier.id
+        SQL
+      end
     end
   end
 end

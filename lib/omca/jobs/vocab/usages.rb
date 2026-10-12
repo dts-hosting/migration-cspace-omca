@@ -21,7 +21,7 @@ module Omca
           CSV.open(
             destination_path,
             "w",
-            headers: %i[vocabulary term],
+            headers: %i[vocab term],
             write_headers: true
           ) do |csv|
             holder.each { |row| csv << row }

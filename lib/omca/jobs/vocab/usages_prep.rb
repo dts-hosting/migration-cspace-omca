@@ -12,23 +12,8 @@ module Omca
               source: :vocab__usages,
               destination: :vocab__usages_prep
             },
-            transformer: xforms
+            transformer: Omca::Vocab.norm_xforms
           )
-        end
-
-        def xforms
-          Kiba.job_segment do
-            transform Cspace::NormalizeForID,
-              source: :term,
-              target: :normterm
-            transform CombineValues::FromFieldsWithDelimiter,
-              sources: %i[vocabulary normterm],
-              target: :matchpoint,
-              delete_sources: false,
-              delim: "%^&"
-            transform Delete::Fields,
-              fields: :normterm
-          end
         end
       end
     end
