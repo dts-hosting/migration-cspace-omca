@@ -143,6 +143,7 @@ Other extract tasks:
 
 * Vocabularies (Term Lists)
 ** [x] Extract all vocabulary terms used (`thor run job vocab__usages`)
+** [x] Extract full db records for all vocabulary terms, used or not; additional fields will be merged into any used terms (or existing terms in hosted instance)
 
 * Authorities
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor run job authorities__usages` => >1GB CSV file)
@@ -350,7 +351,7 @@ What we are doing here is creating database table rows that will match the chang
 ** [x] downcase and adjust relevant values in fix phase (when values are re-extracted, list should be clean)
 
 * Vocabulary term fixes
-** [x] Adjust case/form of used values to be consistent with other terms in target instance vocabs
+** [ ] Adjust case/form of used values to be consistent with other terms in target instance vocabs in target system IN A HOLISTIC WAY
 
 [#newtable]
 === NewTable
@@ -472,4 +473,5 @@ Hopefully that's all and Michael can take care of the rest in the database. 🤞
 ** [x] objexitmethod
 ** [x] publishto
 ** [x] taxonqualifier
-* [ ] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro
+* [x] Generate ingest CSV of terms that need to be added to vocabularies that do exist in anthro (`+vocab__ingest_new+`)
+* [x] Generate ingest CSV of used terms now in target instance, where additional term fields need to be added (`+vocab__ingest_update+`)
