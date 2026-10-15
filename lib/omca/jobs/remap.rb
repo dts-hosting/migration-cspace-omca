@@ -62,9 +62,16 @@ module Omca
 
       def xforms(table, tabletype, rectype)
         Kiba.job_segment do
+          drop_tables = %w[
+            accessrestrictiongroup
+            acquisitioncontactgroup
+            objectexit_common_exitmethods
+            viewercontributiongroup
+            viewerreferences
+          ]
+          transform Omca::Xforms::DropAllRows if drop_tables.include?(table)
+
           case table
-          when "acquisitioncontactgroup"
-            transform Omca::Xforms::DropAllRows
           when "acquisitions_common"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
               lookup: acquisitions_omca
@@ -105,8 +112,6 @@ module Omca
               action: :keep,
               field: :depositor
             transform Merge::ConstantValue, target: :pos, value: "0"
-          when "objectexit_common_exitmethods"
-            transform Omca::Xforms::DropAllRows
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
             transform FilterRows::WithLambda,
@@ -114,10 +119,6 @@ module Omca
               lambda: ->(row) do
                 row[:involvedparty].blank? && row[:involvedrole].blank?
               end
-          when "viewercontributiongroup"
-            transform Omca::Xforms::DropAllRows
-          when "viewerreferences"
-            transform Omca::Xforms::DropAllRows
           end
         end
       end
