@@ -69,6 +69,7 @@ module Omca
             collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_anthropology_nagprainventorynamelist
             collectionobjects_omca
+            exitstatusgroup
             objectexit_common
             objectexit_common_exitmethods
             viewercontributiongroup
@@ -85,6 +86,18 @@ module Omca
           when "acquisitions_common_acquisitionsources"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAnonymous,
               lookup: acquisitions_omca
+          when "approvalstatusgroup"
+            transform Clean::RegexpFindReplaceFieldVals,
+              fields: :rectype,
+              find: "objectexit",
+              replace: "exit"
+            transform Rename::Fields, fieldmap: {
+              exitstatus: :status,
+              exitstatusdate: :date
+            }
+            transform FilterRows::AnyFieldsPopulated,
+              action: :keep,
+              fields: %i[status date]
           when "collectionobjects_nagpra_nagpracategories"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
