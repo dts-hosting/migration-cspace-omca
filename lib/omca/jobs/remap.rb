@@ -37,6 +37,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :acquisitions_omca
           }
+        when "citationtermgroup"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__citations_omca",
+            lookup_on: :recordcsid,
+            name: :citations_omca
+          }
         when "consultations_common"
           base << {
             jobkey: :"#{prev}_main__collectionobjects_common",
@@ -66,6 +72,7 @@ module Omca
             accessrestrictiongroup
             acquisitioncontactgroup
             acquisitions_omca
+            citations_omca
             collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_anthropology_nagprainventorynamelist
             collectionobjects_omca
@@ -98,6 +105,17 @@ module Omca
             transform FilterRows::AnyFieldsPopulated,
               action: :keep,
               fields: %i[status date]
+          when "citationtermgroup"
+            transform Rename::Field, from: :termtype, to: :termflag
+            transform Merge::MultiRowLookup,
+              lookup: citations_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {termtype: :publicationtype},
+              conditions: ->(r, rows) do
+                return [] unless r[:pos] == "0"
+
+                rows
+              end
           when "collectionobjects_nagpra_nagpracategories"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
