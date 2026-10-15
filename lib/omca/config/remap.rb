@@ -52,7 +52,13 @@ module Omca
             rectype: "exit"
           }
         },
-        "repeatable_field_group" => {
+        "extension_field_group" => {
+          "accesslimitationsgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__accessrestrictiongroup"
+            ],
+            rectype: "multi"
+          },
           "partiesinvolvedgroup" => {
             source: [
               "acquisitioncontactgroup", "viewercontributiongroup"
