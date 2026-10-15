@@ -66,6 +66,7 @@ module Omca
             accessrestrictiongroup
             acquisitioncontactgroup
             acquisitions_omca
+            collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_omca
             objectexit_common
             objectexit_common_exitmethods
@@ -83,6 +84,8 @@ module Omca
           when "acquisitions_common_acquisitionsources"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAnonymous,
               lookup: acquisitions_omca
+          when "collectionobjects_nagpra_nagpracategories"
+            transform Omca::Xforms::Remap::RepeatableFieldTable
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common

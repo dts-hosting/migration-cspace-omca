@@ -29,6 +29,14 @@ module Omca
           }
         },
         "repeatable_field" => {
+          "collectionobjects_nagpra_nagpracategories" => {
+            source: [
+              # rubocop:disable Layout/LineLength
+              :"#{previous}_repeatable_field__collectionobjects_anthropology_nagpraapplicabilitylist"
+              # rubocop:enable Layout/LineLength
+            ],
+            rectype: "collectionobject"
+          },
           "consultations_common_consultationoutcomes" => {
             source: [
               :"#{previous}_repeatable_field_group__viewercontributiongroup"
