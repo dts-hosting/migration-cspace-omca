@@ -120,6 +120,9 @@ module Omca
               action: :keep,
               field: :depositor
             transform Merge::ConstantValue, target: :pos, value: "0"
+          when "media_common_publishtolist"
+            transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
+              fieldmap: {approveforpublic: :item}
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
           when "rightsgroup"
