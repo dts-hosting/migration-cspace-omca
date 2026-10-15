@@ -66,6 +66,10 @@ module Omca
           "exits_common_owners" => {
             source: [:"#{previous}_main__objectexit_common"],
             rectype: "exit"
+          },
+          "media_common_publishtolist" => {
+            source: [:"#{previous}_addtl_fields__media_omca"],
+            rectype: "media"
           }
         },
         "repeatable_field_group" => {
