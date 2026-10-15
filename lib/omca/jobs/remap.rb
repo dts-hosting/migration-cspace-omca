@@ -72,6 +72,8 @@ module Omca
           transform Omca::Xforms::DropAllRows if drop_tables.include?(table)
 
           case table
+          when "accesslimitationsgroup"
+            transform Omca::Xforms::Remap::BuildAccesslimitationsgroup
           when "acquisitions_common"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAccessiondescription,
               lookup: acquisitions_omca
