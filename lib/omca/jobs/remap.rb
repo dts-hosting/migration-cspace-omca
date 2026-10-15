@@ -116,6 +116,8 @@ module Omca
             transform Merge::ConstantValue, target: :pos, value: "0"
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
+          when "taxonomicidentgroup"
+            transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           end
         end
       end
