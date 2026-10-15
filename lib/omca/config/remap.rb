@@ -73,6 +73,12 @@ module Omca
           }
         },
         "repeatable_field_group" => {
+          "approvalstatusgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__exitstatusgroup"
+            ],
+            rectype: "exit"
+          },
           "rightsgroup" => {
             source: [
               :"#{previous}_addtl_fields__collectionobjects_omca"
