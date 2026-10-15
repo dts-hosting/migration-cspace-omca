@@ -70,6 +70,10 @@ module Omca
           "media_common_publishtolist" => {
             source: [:"#{previous}_addtl_fields__media_omca"],
             rectype: "media"
+          },
+          "restrictedmedia_common_publishtolist" => {
+            source: [:"#{previous}_addtl_fields__restrictedmedia_omca"],
+            rectype: "restrictedmedia"
           }
         },
         "repeatable_field_group" => {
