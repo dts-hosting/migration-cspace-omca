@@ -52,6 +52,14 @@ module Omca
             rectype: "exit"
           }
         },
+        "repeatable_field_group" => {
+          "taxonomicidentgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__determinationhistorygroup"
+            ],
+            rectype: "collectionobject"
+          }
+        },
         "extension_field_group" => {
           "accesslimitationsgroup" => {
             source: [
