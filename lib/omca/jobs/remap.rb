@@ -114,11 +114,6 @@ module Omca
             transform Merge::ConstantValue, target: :pos, value: "0"
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
-            transform FilterRows::WithLambda,
-              action: :reject,
-              lambda: ->(row) do
-                row[:involvedparty].blank? && row[:involvedrole].blank?
-              end
           end
         end
       end
