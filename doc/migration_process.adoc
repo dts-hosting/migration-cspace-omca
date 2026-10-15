@@ -460,7 +460,36 @@ Implement for:
 
 * [x] Produce mappings of new db ids for `media_common` and `restrictedmedia_common` and the old `blobcsid` value to be merged into each
 
-Hopefully that's all and Michael can take care of the rest in the database. 🤞
+Michael Getzy will be handling the migration of blobs and associated tables via the database so that we don't have to re-ingest all the files.
+
+* [ ] Set media priority values in collectionobject records
+
+In the object record, this looks like:
+
+[source,xml]
+----
+<mediaPriorityList>
+  <mediaPriority>urn:cspace:omca.staging.collectionspace.org:media:id(5dd6891d-9731-4936-b2d5)</mediaPriority>
+  <mediaPriority>urn:cspace:omca.staging.collectionspace.org:media:id(3fb4d734-decf-48bd-a920)</mediaPriority>
+</mediaPriorityList>
+----
+
+OMCA only has 55 `restrictedmedia` records.
+
+Mike Ritter says CollectionSpace is only including `media` in the Media Priority section currently.
+
+Because OMCA models primary-ness on MEDIA and CollectionSpace models it on the Object, I'm sure there will be some level of mess here. We will just do the best we can on this, which is better than what Jessi had me doing in the mappings (prepared prior to 9.0).
+
+And at least we can ignore `restrictedmedia` and primary-ness collisions that might occur between them and `media`.
+
+To do this, we need to do the following for each Object:
+
+* Find all media related to the object. Bail if none
+* How many related media records are there?
+** If 1: bail
+** If >1: Do any of the related media records have `isprimary` = `t`?
+*** If no, bail. They media will be on the object in whatever default order
+*** If yes, we need to populate `mediaPriority`. The media with `isprimary` = `t` must be first, followed by the others in whatever order they are coming back in.
 
 == Vocabulary terms
 
