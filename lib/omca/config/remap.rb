@@ -53,6 +53,12 @@ module Omca
           }
         },
         "repeatable_field_group" => {
+          "rightsgroup" => {
+            source: [
+              :"#{previous}_addtl_fields__collectionobjects_omca"
+            ],
+            rectype: "collectionobject"
+          },
           "taxonomicidentgroup" => {
             source: [
               :"#{previous}_repeatable_field_group__determinationhistorygroup"

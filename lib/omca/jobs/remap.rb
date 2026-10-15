@@ -116,6 +116,12 @@ module Omca
             transform Merge::ConstantValue, target: :pos, value: "0"
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
+          when "rightsgroup"
+            transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
+              fieldmap: {ipaudit: :standardizedrightstatement}
+            transform Merge::ConstantValue,
+              target: :rectype,
+              value: "collectionobject"
           when "taxonomicidentgroup"
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           end
