@@ -25,18 +25,24 @@ module Omca
         end
       end
 
-    # tabletype (source) > table > field Hash of fields that are mapping
+    # tabletype > table > field Hash of fields that are mapping
     #   to vocabulary-controlled target fields. Used to extract values
     #   for customizing the terms in target instance term lists/vocabularies
-    def source_fields_to_vocab
+    # @param type [:source, :target] Whether we are returning info on
+    #   source or target field/table
+    def vocab_fields(type)
+      ttypecol = (type == :source) ? "db_table_type" : "target_db_table_type"
+      tablecol = "#{type}_db_table"
+      fieldcol = (type == :source) ? "db_field" : "target_db_field"
+
       result = {}
       Omca::Mappings::Fields.vocab_controlled_target_rows
         .reject do |row|
           row["mapping_treatment"]&.match?(/supply value|special merge/)
         end.each do |row|
-          tt = row["db_table_type"]
-          table = row["source_db_table"]
-          field = row["db_field"]
+          tt = row[ttypecol]
+          table = row[tablecol]
+          field = row[fieldcol]
           vocab = row["target_field_source"].delete_prefix("vocabulary: ")
 
           table_info = [tt, table]
