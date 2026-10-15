@@ -65,6 +65,9 @@ module Omca
           drop_tables = %w[
             accessrestrictiongroup
             acquisitioncontactgroup
+            acquisitions_omca
+            collectionobjects_omca
+            objectexit_common
             objectexit_common_exitmethods
             viewercontributiongroup
             viewerreferences
@@ -80,9 +83,6 @@ module Omca
           when "acquisitions_common_acquisitionsources"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAnonymous,
               lookup: acquisitions_omca
-          when "acquisitions_omca"
-            transform Delete::Fields,
-              fields: %i[accessiondescription anonymous]
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
