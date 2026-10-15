@@ -17,12 +17,19 @@ module Omca
         )
       end
 
+      def lookup_table_field(rectype)
+        target_types = %w[exit]
+        return "source_db_table" unless target_types.include?(rectype)
+
+        "target_db_table"
+      end
+
       def get_lookups(rectype, source_phase)
         base = []
         Omca::Mappings::Fields.skeleton_fields(rectype, "repeatable_field")
           .each do |cfg|
             base << Omca.jobkey_for(
-              source_phase, cfg["source_db_table"]
+              source_phase, cfg[lookup_table_field(rectype)]
             )
           end
         Omca::Mappings::Fields.skeleton_fields(rectype, "addtl_fields")
@@ -36,7 +43,11 @@ module Omca
       end
 
       def xforms(rectype, id_field, auth_subtype, source_phase)
+        bind = binding
+
         Kiba.job_segment do
+          mod = bind.receiver
+
           keepfields = Omca::Mappings::Fields.skeleton_fields(
             rectype, "main"
           ).map { |row| row["target_field"].to_sym } - [id_field] +
@@ -67,7 +78,7 @@ module Omca
             rectype, "repeatable_field"
           ).each do |cfg|
             lkup_meth = Omca.jobkey_for(
-              source_phase, cfg["source_db_table"]
+              source_phase, cfg[mod.lookup_table_field(rectype)]
             )
             transform Omca::Xforms::MergeRepeatableField,
               config: cfg,
