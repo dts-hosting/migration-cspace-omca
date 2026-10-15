@@ -138,6 +138,9 @@ module Omca
               fieldmap: {approveforpublic: :item}
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
+          when "restrictedmedia_common_publishtolist"
+            transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
+              fieldmap: {approveforpublic: :item}
           when "rightsgroup"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {ipaudit: :standardizedrightstatement}
