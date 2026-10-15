@@ -54,7 +54,9 @@ module Omca
         },
         "repeatable_field_group" => {
           "partiesinvolvedgroup" => {
-            source: ["acquisitioncontactgroup", "viewercontributiongroup"],
+            source: [
+              "acquisitioncontactgroup", "viewercontributiongroup"
+            ].map { |table| :"#{previous}_repeatable_field_group__#{table}" },
             rectype: "multi"
           }
         }
