@@ -6,6 +6,9 @@ module Omca
       class Usages
         include Omca::DynamicCsvJobable
 
+        def self.desc = "Extract unique values used in source fields mapping "\
+          "to target fields controlled by vocabularies, with tablefield"
+
         def initialize
           @holder = Set.new
         end

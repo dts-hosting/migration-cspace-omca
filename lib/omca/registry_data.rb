@@ -152,27 +152,26 @@ module Omca
           path: File.join(Omca.datadir, "vocab", "orig.csv"),
           creator: Omca::Jobs::Vocab::Orig.method(:new),
           tags: [ns.to_sym],
-          desc: "Vocabulary term data from source db"
+          desc: Omca::Jobs::Vocab::Orig.desc
         }
         register :orig_prep, {
           path: File.join(Omca.wrkdir, "vocab_orig_prep.csv"),
           creator: Omca::Jobs::Vocab::OrigPrep,
           tags: [ns.to_sym],
-          desc: "Adds matchpoint",
+          desc: Omca::Jobs::Vocab::OrigPrep.desc,
           lookup_on: :matchpoint
         }
         register :usages, {
           path: File.join(Omca.datadir, "vocab", "usages.csv"),
           creator: Omca::Jobs::Vocab::Usages.method(:new),
           tags: [ns.to_sym],
-          desc: "Extract unique values used in source fields mapping to "\
-            "target fields controlled by vocabularies, with tablefield"
+          desc: Omca::Jobs::Vocab::Usages.desc
         }
         register :usages_prep, {
           path: File.join(Omca.wrkdir, "vocab_usages_prep.csv"),
           creator: Omca::Jobs::Vocab::UsagesPrep,
           tags: [ns.to_sym],
-          desc: "Add normalized matchpoint to vocab__usages",
+          desc: Omca::Jobs::Vocab::UsagesPrep.desc,
           lookup_on: :matchpoint
         }
         register :in_target, {
@@ -185,27 +184,27 @@ module Omca
           path: File.join(Omca.wrkdir, "vocab_in_target_prep.csv"),
           creator: Omca::Jobs::Vocab::InTargetPrep,
           tags: [ns.to_sym],
-          desc: "Add normalized matchpoint to vocab__in_target",
+          desc: Omca::Jobs::Vocab::InTargetPrep.desc,
           lookup_on: :matchpoint
         }
         register :diff, {
           path: File.join(Omca.wrkdir, "vocab_diff.csv"),
           creator: Omca::Jobs::Vocab::Diff,
           tags: [ns.to_sym],
-          desc: "Add :exist field to indicate whether term already exists in "\
-            "target system; merge in term fields"
+          desc: Omca::Jobs::Vocab::Diff.desc
         }
         register :ingest_new, {
           path: File.join(Omca.datadir, "ingest", "vocab_new.csv"),
           creator: Omca::Jobs::Vocab::IngestNew,
           tags: [ns.to_sym],
-          desc: "New vocabulary terms to create"
+          desc: Omca::Jobs::Vocab::IngestNew.desc
         }
         register :ingest_update, {
           path: File.join(Omca.datadir, "ingest", "vocab_update.csv"),
           creator: Omca::Jobs::Vocab::IngestUpdate,
           tags: [ns.to_sym],
-          desc: "Add additional fields to vocab term records"
+          desc: Omca::Jobs::Vocab::IngestUpdate.desc
+        }
         register :fix_in_authmerge, {
           path: File.join(Omca.wrkdir, "vocab_fix_in_authmerge.csv"),
           creator: Omca::Jobs::Vocab::FixInAuthmerge,

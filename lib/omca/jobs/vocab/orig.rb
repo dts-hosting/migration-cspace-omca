@@ -6,6 +6,8 @@ module Omca
       class Orig
         include Omca::DynamicCsvJobable
 
+        def self.desc = "Vocabulary term data from source db"
+
         def source = :omca_source_db
 
         def destination = :vocab__orig
