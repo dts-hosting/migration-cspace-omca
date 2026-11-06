@@ -6,6 +6,8 @@ module Omca
       module IngestNew
         module_function
 
+        def desc = "New vocabulary terms to create"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {

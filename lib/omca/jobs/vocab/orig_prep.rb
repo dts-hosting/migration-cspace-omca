@@ -6,6 +6,8 @@ module Omca
       module OrigPrep
         module_function
 
+        def desc = "Adds matchpoint to vocab__orig"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {

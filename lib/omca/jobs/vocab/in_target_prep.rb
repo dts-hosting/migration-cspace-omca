@@ -6,6 +6,8 @@ module Omca
       module InTargetPrep
         module_function
 
+        def desc = "Add normalized matchpoint to vocab__in_target"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {

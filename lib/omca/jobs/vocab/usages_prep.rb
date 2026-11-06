@@ -6,6 +6,9 @@ module Omca
       module UsagesPrep
         module_function
 
+        def desc = "Add normalized matchpoint to vocab__usages and "\
+          "deduplicate on it, collating :fieldtable vals"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {

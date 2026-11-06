@@ -6,6 +6,9 @@ module Omca
       module Diff
         module_function
 
+        def desc = "Add :exist field to indicate whether term already exists "\
+          "in target system; merge in term fields"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {

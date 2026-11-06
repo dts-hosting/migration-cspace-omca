@@ -6,6 +6,8 @@ module Omca
       module IngestUpdate
         module_function
 
+        def desc = "Add additional fields to vocab term records"
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
