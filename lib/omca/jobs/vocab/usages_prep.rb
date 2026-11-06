@@ -15,8 +15,16 @@ module Omca
               source: :vocab__usages,
               destination: :vocab__usages_prep
             },
-            transformer: Omca::Vocab.norm_xforms
+            transformer: [Omca::Vocab.norm_xforms, xforms]
           )
+        end
+
+        def xforms
+          Kiba.job_segment do
+            transform Deduplicate::Table,
+              field: :matchpoint,
+              compile_uniq_fieldvals: true
+          end
         end
       end
     end
