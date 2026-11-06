@@ -206,6 +206,11 @@ module Omca
           creator: Omca::Jobs::Vocab::IngestUpdate,
           tags: [ns.to_sym],
           desc: "Add additional fields to vocab term records"
+        register :fix_in_authmerge, {
+          path: File.join(Omca.wrkdir, "vocab_fix_in_authmerge.csv"),
+          creator: Omca::Jobs::Vocab::FixInAuthmerge,
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Vocab::FixInAuthmerge.desc
         }
       end
 
