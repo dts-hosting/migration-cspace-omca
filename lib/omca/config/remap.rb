@@ -29,6 +29,15 @@ module Omca
           }
         },
         "repeatable_field" => {
+          "collectionobjects_common_controlledcontentplaces" => {
+            source: [
+              # rubocop:disable Layout/LineLength
+              :"#{previous}_repeatable_field_group__assocplacegroup",
+              :"#{previous}_repeatable_field__collectionobjects_common_contentplaces"
+              # rubocop:enable Layout/LineLength
+            ],
+            rectype: "collectionobject"
+          },
           "collectionobjects_nagpra_nagpracategories" => {
             source: [
               # rubocop:disable Layout/LineLength
