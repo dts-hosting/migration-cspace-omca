@@ -468,11 +468,7 @@ Also, to avoid shoving in an additional phase just for this:
 
 * [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
 * [ ] `+:structured_dates__exitdate` without `:datelatestscalarvalue` that did not migrate into `exits_common.exitdate` (non-structured date)
-* [ ] Values from repeatable_field_group culturalgroupsinvolvedgroup table that will not migrate, with new repatriationrequest csids merged in. There are only 10 values, and it is not worth me dealing with converting these 10 ORGANIZATION terms to Concept/Cultural Group or Concept/Archaeological Culture authorities for 10 values.
-* [ ] Values from repeatable_field_group recommendationsnagpracommitteegroup - only 2 populated values not worth complicated remapping
-* [ ] Values from repeatable_field_group responsesnationalnagpragroup - only 2 populated values not worth complicated remapping
-* [ ] Values from repeatable_field_group sitesinvolvedgroup - free text to place/archaeological authority is not happening. They don't all look like collection sites, anyway
-* [ ] Values from repeatable_field_group claimclaimantomcagroup - required authority types for involved party fields these (on surface level) appear to map to don't match up
+* [ ] CLAIMS data will not migrate. Only 127 claims records in source data. 70 fields. 38 of these fields are totally empty or so sparsely populated it wasn't worth dealing with them programmatically anyway. 28 database tables involved, 12 of them custom and in no way matching up to current CollectionSpace anthro data model.
 
 == Media migration
 
