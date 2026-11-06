@@ -406,6 +406,10 @@ Implement for:
 * [x] Split new usages into mergeable files for each authority-controlled field
 * [x] Merge new authority refnames into fields
 
+Also, to avoid shoving in an additional phase just for this:
+
+* [ ] Do final fix/matching of *vocabulary term / term list term* form (case, etc.) in the data
+
 ==== Special handling
 
 * [x] Delete now-unused concept/associated terms that got remapped to concept/ethculture
