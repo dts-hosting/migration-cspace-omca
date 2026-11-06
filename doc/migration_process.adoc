@@ -367,6 +367,15 @@ This may include to newly created tables (see <<newtable>>), or to different pla
 
 `thor jobs tagged remap -r`
 
+[NOTE]
+.Remap phase is the source for vocabulary term / term list term usages
+====
+The remap phase is the source for vocabulary term / term list term usages.
+
+This is because a number of these terms are being created or significantly modified in the remap phase.
+Pulling usages prior to remapping creates a mess that doesn't accurately reflect the terms we need to handle.
+====
+
 === Skeleton
 
 First we load the "rectypes_common" table data for main record types with:
