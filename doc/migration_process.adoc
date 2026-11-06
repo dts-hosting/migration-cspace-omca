@@ -185,7 +185,7 @@ Required to do other fixes/reporting on authority usages
 
 Does not include changing the authority or authority vocabulary of terms, or generating new terms.
 
-* [ ] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
+* [x] assocplacegroup.assocplace usages map to collectionobject /controlledcontentplaces/controlledcontentplace
 
 === Unlinked authority refnames
 

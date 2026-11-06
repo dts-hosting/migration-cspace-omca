@@ -116,6 +116,14 @@ module Omca
 
                 rows
               end
+          when "collectionobjects_common_controlledcontentplaces"
+            transform Delete::Fields,
+              fields: %i[rectype assocplacenote]
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[assocplace item],
+              target: :item,
+              delete_sources: true,
+              delim: " "
           when "collectionobjects_nagpra_nagpracategories"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
