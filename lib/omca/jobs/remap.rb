@@ -43,6 +43,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :citations_omca
           }
+        when "collectionobjects_common_responsibledepartments"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__collectionobjects_omca",
+            lookup_on: :recordcsid,
+            name: :collectionobjects_omca
+          }
         when "consultations_common"
           base << {
             jobkey: :"#{prev}_main__collectionobjects_common",
@@ -133,10 +139,16 @@ module Omca
             transform Merge::ConstantValue,
               target: :pos,
               value: "0"
+          when "collectionobjects_common_responsibledepartments"
+            transform Omca::Xforms::Remap::MergeArtHistoryScienceRespdepts,
+              lookup: collectionobjects_omca
           when "collectionobjects_nagpra_nagpracategories"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
             transform Omca::Xforms::Remap::RepeatableFieldTable
+          when "collectionobjects_omca"
+            transform Delete::Fields,
+              fields: %i[art history science]
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
