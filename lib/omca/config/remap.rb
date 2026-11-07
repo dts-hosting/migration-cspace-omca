@@ -38,6 +38,12 @@ module Omca
             ],
             rectype: "collectionobject"
           },
+          "collectionobjects_common_namedcollections" => {
+            source: [
+              :"#{previous}_main__collectionobjects_common"
+            ],
+            rectype: "collectionobject"
+          },
           "collectionobjects_nagpra_nagpracategories" => {
             source: [
               # rubocop:disable Layout/LineLength
