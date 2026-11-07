@@ -49,6 +49,14 @@ module Omca
             lookup_on: :recordcsid,
             name: :collectionobjects_omca
           }
+        when "conditionchecks_common"
+          # rubocop:disable Layout/LineLength
+          base << {
+            jobkey: :"#{prev}_repeatable_field__conditionchecks_omca_omcaconditioncheckmethods",
+            lookup_on: :recordcsid,
+            name: :omcaconditioncheckmethods
+          }
+          # rubocop:enable Layout/LineLength
         when "consultations_common"
           base << {
             jobkey: :"#{prev}_main__collectionobjects_common",
@@ -149,6 +157,51 @@ module Omca
           when "collectionobjects_omca"
             transform Delete::Fields,
               fields: %i[art history science]
+          when "conditionchecks_common"
+            transform Merge::MultiRowLookup,
+              lookup: omcaconditioncheckmethods,
+              keycolumn: :recordcsid,
+              fieldmap: {o_conditioncheckmethod: :item},
+              conditions: ->(_r, rows) { rows.select { |r| r[:pos] == "0" } }
+            transform Merge::MultiRowLookup,
+              lookup: omcaconditioncheckmethods,
+              keycolumn: :recordcsid,
+              fieldmap: {more_conditioncheckmethod: :item},
+              conditions: ->(_r, rows) { rows.reject { |r| r[:pos] == "0" } },
+              delim: "; "
+
+            transform do |row|
+              methexist = row.key?(:conditioncheckmethod)
+              row[:conditioncheckmethod] = nil unless methexist
+
+              ometh = row[:o_conditioncheckmethod]
+              row.delete(:o_conditioncheckmethod)
+
+              if methexist
+                next row if ometh.blank?
+                meth = row[:conditioncheckmethod]
+                if meth.blank?
+                  row[:conditioncheckmethod] = ometh
+                else
+                  row[:more_conditioncheckmethod] = [
+                    ometh, row[:more_conditioncheckmethod]
+                  ].join("; ")
+                end
+              else
+                row[:conditioncheckmethod] = ometh
+              end
+
+              row
+            end
+
+            transform Prepend::ToFieldValue,
+              field: :more_conditioncheckmethod,
+              value: "Additional condition check methods: "
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[conditionchecknote more_conditioncheckmethod],
+              target: :conditionchecknote,
+              delete_sources: true,
+              delim: "\n\n"
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
