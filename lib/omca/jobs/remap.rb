@@ -124,6 +124,15 @@ module Omca
               target: :item,
               delete_sources: true,
               delim: " "
+          when "collectionobjects_common_namedcollections"
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :collection
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id collection]
+            transform Merge::ConstantValue,
+              target: :pos,
+              value: "0"
           when "collectionobjects_nagpra_nagpracategories"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
