@@ -7,7 +7,8 @@ module Omca
         include Omca::DynamicCsvJobable
 
         def self.desc = "Extract original usages of "\
-          "collectionobjects_common.collection field, in a "\
+          "collectionobjects_common.collection field, and converts them to "\
+          "items in repeatable namedcollections table, in a "\
           "format that can be joined to main usages table"
 
         def source = :nuke_bom_main__collectionobjects_common
@@ -22,9 +23,9 @@ module Omca
 
           data = CSV.parse(xan_result, headers: true)
             .map do |row|
-              row["tabletype"] = "main"
-              row["table"] = "collectionobjects_common"
-              row["field"] = "collection"
+              row["tabletype"] = "repeatable_field"
+              row["table"] = "collectionobjects_common_namedcollections"
+              row["field"] = "item"
               row["pos"] = "0"
               refname = fix_refname(row["collection"])
               row["refname"] = refname
