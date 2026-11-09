@@ -44,6 +44,12 @@ module Omca
             ],
             rectype: "collectionobject"
           },
+          "collectionobjects_common_publishtolist" => {
+            source: [
+              :"#{previous}_addtl_fields__collectionobjects_omca"
+            ],
+            rectype: "collectionobject"
+          },
           "collectionobjects_nagpra_nagpracategories" => {
             source: [
               # rubocop:disable Layout/LineLength

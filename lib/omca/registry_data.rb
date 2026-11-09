@@ -5,6 +5,10 @@ module Omca
   module RegistryData
     module_function
 
+    def skip_tables = [
+      "collectionobjects_common_publishtolist.csv"
+    ]
+
     def phase_config
       {
         "orig" => :skip,
@@ -67,6 +71,10 @@ module Omca
         Dir.children(dir).select do |file|
           File.extname(file) == ".csv"
         end.each do |csvfile|
+          next if Omca::RegistryData.skip_tables.include?(
+            File.basename(csvfile)
+          )
+
           key = csvfile.delete_suffix(".csv").to_sym
 
           register key, {
@@ -920,38 +928,39 @@ module Omca
 
       prev_phase = previous_phase(phase)
       orig_dir_path = File.join(Omca.datadir, "orig", dir)
-      entries = Dir.children(orig_dir_path).reject { |f| f.end_with?("#") }
-        .map do |tablefilename|
-          table = tablefilename.delete_suffix(".csv")
-          rectype = Omca::Mappings::Db.rectype_for_table(table)
-          srckey = if prev_phase == "orig"
-            :"#{dir}__#{table}"
-          else
-            :"#{prev_phase}_#{dir}__#{table}"
-          end
-
-          args = {
-            source: srckey,
-            dest: :"#{ns}__#{table}",
-            table: table,
-            rectype: rectype,
-            tabletype: dir
-          }
-
-          tags = [phase.to_sym, ns.to_sym, table.to_sym]
-          tags << rectype.to_sym if rectype
-
-          entry = {
-            path: File.join(Omca.datadir, phase, dir, "#{table}.csv"),
-            creator: {
-              callee: callee,
-              args: args
-            },
-            tags: tags
-          }
-
-          [table.to_sym, entry]
+      entries = Dir.children(orig_dir_path).reject do |f|
+        Omca::RegistryData.skip_tables.include?(f) || f.end_with?("#")
+      end.map do |tablefilename|
+        table = tablefilename.delete_suffix(".csv")
+        rectype = Omca::Mappings::Db.rectype_for_table(table)
+        srckey = if prev_phase == "orig"
+          :"#{dir}__#{table}"
+        else
+          :"#{prev_phase}_#{dir}__#{table}"
         end
+
+        args = {
+          source: srckey,
+          dest: :"#{ns}__#{table}",
+          table: table,
+          rectype: rectype,
+          tabletype: dir
+        }
+
+        tags = [phase.to_sym, ns.to_sym, table.to_sym]
+        tags << rectype.to_sym if rectype
+
+        entry = {
+          path: File.join(Omca.datadir, phase, dir, "#{table}.csv"),
+          creator: {
+            callee: callee,
+            args: args
+          },
+          tags: tags
+        }
+
+        [table.to_sym, entry]
+      end
 
       if phase == "remap"
         register_new_table_remappings(entries, callee, dir, prev_phase, ns)
