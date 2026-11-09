@@ -30,6 +30,10 @@ module Omca
           deleter.process(row)
           filter.process(row)
 
+          if row[:limitationtype] == "handling: gender"
+            row[:limitationtype] = "handling - gender"
+          end
+
           row
         end
 

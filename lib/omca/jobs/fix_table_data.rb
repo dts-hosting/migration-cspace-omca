@@ -124,6 +124,8 @@ module Omca
                 "UNITED KINGDOM" => "GB",
                 "UNITED STATES" => "US"
               }
+          when "citationagentinfogroup"
+            transform Clean::DowncaseFieldValues, fields: :role
           when "citations_common"
             transform do |row|
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
@@ -137,6 +139,8 @@ module Omca
             end
 
             transform Clean::EnsureConsistentFields
+          when "citations_omca"
+            transform Clean::DowncaseFieldValues, fields: :publicationtype
           when "citationtermgroup"
             transform Clean::DowncaseFieldValues, fields: :termtype
           when "collectionobjects_anthropology_nagpraapplicabilitylist"
@@ -185,6 +189,7 @@ module Omca
 
             transform Replace::FieldValueWithStaticMapping,
               source: :donotpublishonweb,
+              fallback_val: :nil,
               mapping: {
                 "t" => "none",
                 "f" => "OMCA Browser"
@@ -230,6 +235,8 @@ module Omca
                 "Pest - Anoxia" => "pest - anoxia",
                 "Pest - Low temp" => "pest - low temp"
               }
+          when "conservationstatusgroup"
+            transform Clean::DowncaseFieldValues, fields: :status
           when "contactgroup"
             transform Clean::DowncaseFieldValues, fields: :contactrole
           when "determinationhistorygroup"
@@ -240,6 +247,10 @@ module Omca
               fields: :dimension,
               find: /^running-time$/,
               replace: "running time"
+          when "exhibitions_common"
+            transform Clean::DowncaseFieldValues, fields: :type
+          when "exhibitionstatusgroup"
+            transform Clean::DowncaseFieldValues, fields: :exhibitionstatus
           when "exitstatusgroup"
             transform Clean::DowncaseFieldValues, fields: :exitstatus
           when "groups_common"
@@ -263,12 +274,16 @@ module Omca
 
               row
             end
+          when "intakes_common_entrymethods"
+            transform Clean::DowncaseFieldValues, fields: :item
           when "loansin_omca"
             transform Delete::Fields, fields: :loanininsurancenote
           when "loansin_omca_loanininsuranceinsurers"
             transform Omca::Xforms::DropAllRows
           when "loansout_omca_loanoutinsuranceinsurers"
             transform Omca::Xforms::DropAllRows
+          when "locations_common"
+            transform Clean::DowncaseFieldValues, fields: :locationtype
           when "movements_common"
             transform FilterRows::FieldPopulated,
               action: :keep,
@@ -285,6 +300,8 @@ module Omca
           when "objectexit_common_exitmethods"
             transform Clean::DowncaseFieldValues,
               fields: :item
+          when "otherpartygroup"
+            transform Clean::DowncaseFieldValues, fields: :otherpartyrole
           end
         end
       end
