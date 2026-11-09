@@ -67,6 +67,58 @@ module Omca
               }
           end
 
+          if table == "addressgroupomca"
+            transform do |row|
+              row[:countrynote] = nil
+              notable = ["a. e. f."]
+              val = row[:addresscountryomca]
+              next row if val.blank?
+              next row unless notable.include?(val)
+
+              row[:countrynote] = "Pre-migration country value was: #{val}"
+
+              row
+            end
+
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[addressnoteomca countrynote],
+              target: :addressnoteomca,
+              delete_sources: true,
+              delim: Omca.notedelim
+
+            transform Replace::FieldValueWithStaticMapping,
+              source: :addresscountryomca,
+              mapping: {
+                "VENEZUELA, BOLIVARIAN REPUBLIC OF" => "VE",
+                "a. e. f." => "",
+                "ARGENTINA" => "AR",
+                "BAHAMAS" => "BS",
+                "BRAZIL" => "BR",
+                "CANADA" => "CA",
+                "CHINA" => "CN",
+                "DENMARK" => "DK",
+                "ECUADOR" => "EC",
+                "EL SALVADOR" => "SV",
+                "FRANCE" => "FR",
+                "GERMANY" => "DE",
+                "GUAM" => "GU",
+                "HONDURAS" => "HN",
+                "ICELAND" => "IS",
+                "IRELAND" => "IE",
+                "ISLE OF MAN" => "IM",
+                "ITALY" => "IT",
+                "JAPAN" => "JP",
+                "MEXICO" => "MX",
+                "NEW CALEDONIA" => "NC",
+                "NEW ZEALAND" => "NZ",
+                "PHILIPPINES" => "PH",
+                "SPAIN" => "ES",
+                "SWEDEN" => "SE",
+                "UNITED KINGDOM" => "GB",
+                "UNITED STATES" => "US"
+              }
+          end
+
           if table == "citations_common"
             transform do |row|
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
