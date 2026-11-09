@@ -730,6 +730,14 @@ module Omca
           desc: "The 3 non-migrating rows, with new csids merged in and "\
             "refnames deURNed"
         }
+        register :loanin_anonymous, {
+          path: File.join(
+            Omca.datadir, "reports", "loanin_anonymous.csv"
+          ),
+          creator: Omca::Jobs::Report::LoaninAnonymous,
+          tags: %i[reports loanin],
+          desc: "The 15 non-migrating values, with new csids merged in."
+        }
         register :loanin_insurers, {
           path: File.join(
             Omca.datadir, "reports", "loanin_insurers.csv"
