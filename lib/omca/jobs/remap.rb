@@ -75,6 +75,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :dates
           }
+        when "objectcomponentgroup"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__collectionobjects_omca",
+            lookup_on: :recordcsid,
+            name: :collectionobjects_omca
+          }
         when "organizations_common"
           base << {
             jobkey: :contact__addressnotes,
@@ -264,6 +270,9 @@ module Omca
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
+          when "objectcomponentgroup"
+            transform Omca::Xforms::Remap::CollectionobjectsOmcaAccessory,
+              lookup: collectionobjects_omca
           when "organizations_common"
             transform Merge::MultiRowLookup,
               lookup: addressnotes,
