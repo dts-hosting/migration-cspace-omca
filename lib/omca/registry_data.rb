@@ -822,6 +822,17 @@ module Omca
         }
       end
 
+      Omca.registry.namespace("contact") do
+        ns = "contact"
+
+        register :addressnotes, {
+          path: File.join(Omca.wrkdir, "contact_addressnotes.csv"),
+          creator: Omca::Jobs::Contact::Addressnotes,
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Contact::Addressnotes.desc
+        }
+      end
+
       Omca.registry.namespace("works") do
         ns = "works"
 
