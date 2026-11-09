@@ -118,6 +118,12 @@ module Omca
             ],
             rectype: "multi"
           },
+          "addressgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__addressgroupomca"
+            ],
+            rectype: "multi"
+          },
           "partiesinvolvedgroup" => {
             source: [
               "acquisitioncontactgroup", "viewercontributiongroup"

@@ -107,6 +107,22 @@ module Omca
           when "acquisitions_common_acquisitionsources"
             transform Omca::Xforms::Remap::AcquisitionsOmcaAnonymous,
               lookup: acquisitions_omca
+          when "addressgroup"
+            fieldmap = {
+              addresscountryomca: :addresscountry,
+              addressmunicipalityomca: :addressmunicipality,
+              addressplace1omca: :addressplace1,
+              addressplace2omca: :addressplace2,
+              addresspostcodeomca: :addresspostcode,
+              addressstateorprovinceomca: :addressstateorprovince,
+              addresstypeomca: :addresstype
+            }
+            transform Delete::Fields,
+              fields: :addressnoteomca
+            transform Rename::Fields, fieldmap: fieldmap
+            transform FilterRows::AnyFieldsPopulated,
+              action: :keep,
+              fields: fieldmap.values
           when "approvalstatusgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :rectype,
