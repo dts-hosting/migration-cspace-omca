@@ -305,6 +305,8 @@ module Omca
               value: "collectionobject"
           when "taxonomicidentgroup"
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
+          when "textualinscriptiongroup"
+            transform Omca::Xforms::Remap::BuildTextualinscriptiongroup
           end
         end
       end

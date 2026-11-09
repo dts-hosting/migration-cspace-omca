@@ -109,6 +109,12 @@ module Omca
               :"#{previous}_repeatable_field_group__determinationhistorygroup"
             ],
             rectype: "collectionobject"
+          },
+          "textualinscriptiongroup" => {
+            source: [
+              :"#{previous}_addtl_fields__collectionobjects_omca"
+            ],
+            rectype: "collectionobject"
           }
         },
         "extension_field_group" => {
