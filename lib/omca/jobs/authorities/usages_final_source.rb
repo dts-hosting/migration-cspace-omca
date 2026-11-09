@@ -6,12 +6,15 @@ module Omca
       class UsagesFinalSource
         include Omca::DynamicCsvJobable
 
+        # rubocop:disable Layout/LineLength
         def source = [
           Omca.auth_usages,
           :works__orig_usages,
           :orgs__orig_usages_acqfundsource,
-          :auth_vocab_remap__remap_objectexit_common_depositor_usages
+          :auth_vocab_remap__remap_objectexit_common_depositor_usages,
+          :auth_vocab_remap__remap_accessrestrictiongroup_accessrestrictionrequestor_usages
         ]
+        # rubocop:enable Layout/LineLength
 
         def destination = :authorities__usages_final_source
 

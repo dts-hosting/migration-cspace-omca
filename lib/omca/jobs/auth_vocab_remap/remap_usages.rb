@@ -30,6 +30,14 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "accessrestrictiongroup" &&
+                field == "accessrestrictionrequestor"
+              transform do |row|
+                row[:tabletype] = "extension_field_group"
+                row[:table] = "accesslimitationsgroup"
+                row[:field] = "requester"
+                row
+              end
             end
           end
         end

@@ -641,7 +641,8 @@ module Omca
 
       Omca.registry.namespace("auth_vocab_remap") do
         [
-          {table: "objectexit_common", field: "depositor"}
+          {table: "objectexit_common", field: "depositor"},
+          {table: "accessrestrictiongroup", field: "accessrestrictionrequestor"}
         ].each do |args|
           name = "divert_#{args[:table]}_#{args[:field]}_usages"
           register name.to_sym, {
@@ -650,7 +651,7 @@ module Omca
               callee: Omca::Jobs::AuthVocabRemap::DivertUsages.method(:new),
               args: args.merge({name: name})
             },
-            tags: %i[auth_vocab_remap],
+            tags: %i[auth_vocab_remap diverted],
             desc: Omca::Jobs::AuthVocabRemap::DivertUsages.desc(args)
           }
           remapname = "remap_#{args[:table]}_#{args[:field]}_usages"
