@@ -181,6 +181,16 @@ module Omca
             transform Merge::ConstantValue,
               target: :pos,
               value: "0"
+          when "collectionobjects_common_publishtolist"
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :donotpublishonweb
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id donotpublishonweb]
+            transform Rename::Field, from: :donotpublishonweb, to: :item
+            transform Merge::ConstantValue,
+              target: :pos,
+              value: "0"
           when "collectionobjects_common_responsibledepartments"
             transform Omca::Xforms::Remap::MergeArtHistoryScienceRespdepts,
               lookup: collectionobjects_omca
