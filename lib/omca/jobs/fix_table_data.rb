@@ -49,14 +49,22 @@ module Omca
               fields: Omca::OptList.downcase_field_config[table]
           end
 
-          # Table-specific fixes, ordered by table name
-
-          if table == "acquisitioncontactgroup"
-            transform Clean::DowncaseFieldValues,
-              fields: :contactrole
+          # applies to both media_omca and restrictedmedia_omca tables
+          if table.match?(/media_omca/)
+            transform Replace::FieldValueWithStaticMapping,
+              source: :approveforpublic,
+              mapping: {
+                "t" => "OMCA Browser",
+                "f" => "none"
+              }
           end
 
-          if table == "acquisitions_omca"
+          # Table-specific fixes, ordered by table name
+          case table
+          when "acquisitioncontactgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :contactrole
+          when "acquisitions_omca"
             transform Replace::FieldValueWithStaticMapping,
               source: :anonymous,
               mapping: {
@@ -65,9 +73,7 @@ module Omca
                   "name(Anonymous430877234)'Anonymous'",
                 "f" => nil
               }
-          end
-
-          if table == "addressgroupomca"
+          when "addressgroupomca"
             transform do |row|
               row[:countrynote] = nil
               notable = ["a. e. f."]
@@ -88,6 +94,7 @@ module Omca
 
             transform Replace::FieldValueWithStaticMapping,
               source: :addresscountryomca,
+              fallback_val: nil,
               mapping: {
                 "VENEZUELA, BOLIVARIAN REPUBLIC OF" => "VE",
                 "a. e. f." => "",
@@ -117,9 +124,7 @@ module Omca
                 "UNITED KINGDOM" => "GB",
                 "UNITED STATES" => "US"
               }
-          end
-
-          if table == "citations_common"
+          when "citations_common"
             transform do |row|
               if row[:id] == "8d1e478c-81d8-4ec2-bb28-2204a3938109"
                 val = row[Omca.ingestid_field]
@@ -132,33 +137,25 @@ module Omca
             end
 
             transform Clean::EnsureConsistentFields
-          end
-
-          if table == "citationtermgroup"
-            transform Clean::DowncaseFieldValues,
-              fields: :termtype
-          end
-
-          if table == "collectionobjects_anthropology_nagpraapplicabilitylist"
+          when "citationtermgroup"
+            transform Clean::DowncaseFieldValues, fields: :termtype
+          when "collectionobjects_anthropology_nagpraapplicabilitylist"
             transform Replace::FieldValueWithStaticMapping,
               source: :item,
               mapping: {
-                "nonNagpra" => "not subject to NAGPRA",
                 "afo" => "associated funerary object (AFO)",
+                "nonNagpra" => "not subject to NAGPRA",
+                "objectOfCulturalPatrimony" => "object of cultural patrimony",
+                "ufo" => "unassociated funerary object (UFO)",
                 "unaffiliatedCuiHsr" => "unaffiliated human skeletal "\
-                  "remains (HSR) (=CUI)",
-                "ufo" => "unassociated funerary object (UFO)"
+                  "remains (HSR) (=CUI)"
               }
-          end
-
-          if table == "collectionobjects_anthropology_nagprainventorynamelist"
+          when "collectionobjects_anthropology_nagprainventorynamelist"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :item,
               find: /^notOnAnInventory$/,
               replace: "not on an inventory"
-          end
-
-          if table == "collectionobjects_common_responsibledepartments"
+          when "collectionobjects_common_responsibledepartments"
             transform Delete::FieldValueConditional,
               fields: :item,
               lambda: ->(val, row) do
@@ -174,9 +171,7 @@ module Omca
               fields: :item,
               find: / Department/,
               replace: ""
-          end
-
-          if table == "collectionobjects_omca"
+          when "collectionobjects_omca"
             fields = %i[art history science]
             transform Delete::FieldValueMatchingRegexp,
               fields: fields,
@@ -191,59 +186,63 @@ module Omca
             transform Replace::FieldValueWithStaticMapping,
               source: :donotpublishonweb,
               mapping: {
-                "t" => "None",
+                "t" => "none",
                 "f" => "OMCA Browser"
               }
 
-            {"No Copyright - United States (Public Domain)" =>
-               "no copyright - United States (public domain)",
-             "Copyright OMCA" => "copyright OMCA",
-             "Assumed Protected by Copyright" =>
-               "assumed protected by copyright"}.each do |f, r|
-              transform Clean::RegexpFindReplaceFieldVals,
-                fields: :ipaudit,
-                find: Regexp.new(f),
-                replace: r
-            end
-          end
-
-          if table == "conditionchecks_common"
+            transform Replace::FieldValueWithStaticMapping,
+              source: :ipaudit,
+              fallback_val: :orig,
+              mapping: {
+                "Assumed Protected by Copyright" =>
+                  "assumed protected by copyright",
+                "Copyright Not Evaluated" => "copyright not evaluated",
+                "Copyright OMCA" => "copyright OMCA",
+                "Copyright Undetermined" => "copyright undetermined",
+                "In Copyright" => "in copyright",
+                "No Copyright - United States (Public Domain)" =>
+                  "no copyright - United States (public domain)",
+                "No Known Copyright" => "no known copyright"
+              }
+          when "conditionchecks_common"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :conditioncheckreason,
               find: /appraisal'<\/refname>/,
               replace: "appraisal"
-          end
-
-          if table == "conditionchecks_omca_omcaconditioncheckmethods"
+          when "conditionchecks_omca_omcaconditioncheckmethods"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :item,
               find: /handheld led illumination/,
               replace: "handheld LED illumination"
-          end
-
-          if table == "contactgroup"
-            transform Clean::DowncaseFieldValues,
-              fields: :contactrole
-          end
-
-          if table == "determinationhistorygroup"
+          when "conservation_common"
+            transform Replace::FieldValueWithStaticMapping,
+              source: :treatmentpurpose,
+              fallback_val: :orig,
+              mapping: {
+                "Acquisition" => "acquisition",
+                "Appraisal" => "appraisal",
+                "Damage" => "damage",
+                "Exhibition" => "exhibition",
+                "Insurance" => "insurance",
+                "Loan Out" => "loan out",
+                "Loan Return" => "loan return",
+                "Other" => "other",
+                "Pest - Anoxia" => "pest - anoxia",
+                "Pest - Low temp" => "pest - low temp"
+              }
+          when "contactgroup"
+            transform Clean::DowncaseFieldValues, fields: :contactrole
+          when "determinationhistorygroup"
             transform Clean::DowncaseFieldValues,
               fields: :dhqualifier
-          end
-
-          if table == "dimensionsubgroup"
+          when "dimensionsubgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :dimension,
               find: /^running-time$/,
               replace: "running time"
-          end
-
-          if table == "exitstatusgroup"
-            transform Clean::DowncaseFieldValues,
-              fields: :exitstatus
-          end
-
-          if table == "groups_common"
+          when "exitstatusgroup"
+            transform Clean::DowncaseFieldValues, fields: :exitstatus
+          when "groups_common"
             transform do |row|
               val = row[Omca.ingestid_field]
               fulltitle = "Guy Rose, American Impressionist: OMCA "\
@@ -264,31 +263,13 @@ module Omca
 
               row
             end
-          end
-
-          if table == "loansin_omca"
+          when "loansin_omca"
             transform Delete::Fields, fields: :loanininsurancenote
-          end
-
-          if table == "loansin_omca_loanininsuranceinsurers"
+          when "loansin_omca_loanininsuranceinsurers"
             transform Omca::Xforms::DropAllRows
-          end
-
-          if table == "loansout_omca_loanoutinsuranceinsurers"
+          when "loansout_omca_loanoutinsuranceinsurers"
             transform Omca::Xforms::DropAllRows
-          end
-
-          # applies to both media_omca and restrictedmedia_omca tables
-          if table.match?(/media_omca/)
-            transform Replace::FieldValueWithStaticMapping,
-              source: :approveforpublic,
-              mapping: {
-                "t" => "OMCA Browser",
-                "f" => "None"
-              }
-          end
-
-          if table == "movements_common"
+          when "movements_common"
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :currentlocation
@@ -301,9 +282,7 @@ module Omca
 
               row
             end
-          end
-
-          if table == "objectexit_common_exitmethods"
+          when "objectexit_common_exitmethods"
             transform Clean::DowncaseFieldValues,
               fields: :item
           end
