@@ -468,6 +468,7 @@ Also, to avoid shoving in an additional phase just for this:
 
 * [ ] Unused authority terms that will be dropped from migration - Done, but need to also implement generating this raw report now that fixes are implemented
 * [ ] `+:structured_dates__exitdate` without `:datelatestscalarvalue` that did not migrate into `exits_common.exitdate` (non-structured date)
+* [x] `loansin_omca.anonymous` - only 15 records. Not worth time to do this complicated remapping into a repeatable field group programmatically
 * [ ] CLAIMS data will not migrate. Only 127 claims records in source data. 70 fields. 38 of these fields are totally empty or so sparsely populated it wasn't worth dealing with them programmatically anyway. 28 database tables involved, 12 of them custom and in no way matching up to current CollectionSpace anthro data model.
 
 == Media migration
