@@ -75,6 +75,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :dates
           }
+        when "organizations_common"
+          base << {
+            jobkey: :contact__addressnotes,
+            lookup_on: :termcsid,
+            name: :addressnotes
+          }
         when "persons_common"
           base << {
             jobkey: :contact__addressnotes,
@@ -258,6 +264,20 @@ module Omca
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
+          when "organizations_common"
+            transform Merge::MultiRowLookup,
+              lookup: addressnotes,
+              keycolumn: :recordcsid,
+              fieldmap: {addressnotes: :note},
+              sorter: Lookup::RowSorter.new(
+                on: :pos, as: :to_i, blanks: :last
+              ),
+              delim: Omca.notedelim
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[namenote addressnotes],
+              target: :namenote,
+              delete_sources: true,
+              delim: Omca.notedelim
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
           when "persons_common"
