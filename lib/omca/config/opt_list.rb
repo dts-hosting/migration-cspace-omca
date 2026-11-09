@@ -12,9 +12,9 @@ module Omca
     def source_fields_to_opt_list
       result = {}
       Omca::Mappings::Fields.opt_list_controlled_target_rows.each do |row|
-        tt = row["db_table_type"]
-        table = row["source_db_table"]
-        field = row["db_field"]
+        tt = row["target_db_table_type"]
+        table = row["target_db_table"]
+        field = row["target_db_field"]
         optlist = row["target_field_source"].delete_prefix("option list: ")
 
         table_info = [tt, table]
@@ -22,6 +22,7 @@ module Omca
 
         result[table_info] << [optlist, field]
       end
+
       result
     end
 
