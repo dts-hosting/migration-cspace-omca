@@ -139,6 +139,12 @@ module Omca
             ],
             rectype: "collectionobject"
           },
+          "anthroownershipgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__previousownersgroup"
+            ],
+            rectype: "collectionobject"
+          },
           "approvalstatusgroup" => {
             source: [
               :"#{previous}_repeatable_field_group__exitstatusgroup"
