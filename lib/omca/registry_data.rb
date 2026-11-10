@@ -379,8 +379,9 @@ module Omca
           ),
           creator: Omca::Jobs::Authorities::UsagesFinalSource.method(:new),
           tags: [ns.to_sym],
-          desc: "Combines :#{Omca.auth_usages} with any \"faux\" usage files "\
-            "generated as part of authority remapping and/or generation"
+          desc: "Combines :auth_vocab_remap__usages_undiverted with any "\
+            "\"faux\" usage files generated as part of authority remapping "\
+            "and/or generation"
         }
       end
 
@@ -678,14 +679,7 @@ module Omca
             "usages_undiverted.csv"),
           creator: Omca::Jobs::AuthVocabRemap::UsagesUndiverted.method(:new),
           tags: %i[auth_vocab_remap],
-          desc: Omca::Jobs::AuthVocabRemap::UsagesUndiverted.desc
-        }
-        register :usages, {
-          path: File.join(Omca.datadir, "authority_ref",
-            "usages_auth_vocab_remap.csv"),
-          creator: Omca::Jobs::AuthVocabRemap::Usages,
-          tags: %i[auth_vocab_remap],
-          desc: Omca::Jobs::AuthVocabRemap::Usages.desc,
+          desc: Omca::Jobs::AuthVocabRemap::UsagesUndiverted.desc,
           dest_special_opts: {
             initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
           }

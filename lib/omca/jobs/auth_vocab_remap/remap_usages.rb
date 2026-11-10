@@ -47,6 +47,32 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "materialgroup" &&
+                field == "material"
+              transform do |row|
+                row[:field] = "materialcontrolled"
+                row
+              end
+            elsif table == "assocculturalcontextgroup" &&
+                field == "assocculturalcontext"
+              transform do |row|
+                target = "ethculture"
+                row[:vocab] = target
+                id = "#{row[:termid]}#{target}"
+                row[:termid] = id
+
+                row[:index] = [row[:authority], target, id].join(" ")
+
+                refname = row[:refname]
+                vocabreplace = refname.sub("(concept)", "(#{target})")
+                row[:refname] = vocabreplace.sub(
+                  /item:name\([^)]*\)/, "item:name(#{id})"
+                )
+                row[:table] = "nagpradetermgroup"
+                row[:field] = "nagpradetermculture"
+
+                row
+              end
             elsif table == "determinationhistorygroup"
               case field
               when "dhname"

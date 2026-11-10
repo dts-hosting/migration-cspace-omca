@@ -15,7 +15,7 @@ module Omca
 
         def source = [
           :nuke_bom_repeatable_field_group__acquisitionfunding,
-          Omca.auth_uniq_usages
+          :big_auth__uniq_usages
         ]
 
         def source_path = Omca.registry
@@ -39,9 +39,9 @@ module Omca
 
           data = CSV.parse(xan_result, headers: true)
             .map do |row|
-              row["tabletype"] = "repeatable_field_group"
-              row["table"] = "acquisitionfunding"
-              row["field"] = "acquisitionfundingsource"
+              row[:tabletype] = "repeatable_field_group"
+              row[:table] = "acquisitionfunding"
+              row[:field] = "acquisitionfundingsource"
               vocab_refname = row["acquisitionfundingsource"]
               row.delete("acquisitionfundingsource")
               normterm = norm.call(Omca::Refname.deurn(vocab_refname))
@@ -52,7 +52,7 @@ module Omca
                 fix_refname(vocab_refname)
               end
               Omca::Refname.add_parsed_detail(row, refname)
-              row["index"] = [
+              row[:index] = [
                 row[:authority], row["vocab"], row["termid"]
               ].join(" ")
 
