@@ -47,6 +47,25 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "determinationhistorygroup"
+              case field
+              when "dhname"
+                transform do |row|
+                  row[:table] = "taxonomicidentgroup"
+                  row[:field] = "taxon"
+                  row
+                end
+              when "identby"
+                transform do |row|
+                  row[:table] = "taxonomicidentgroup"
+                  row
+                end
+              when "institution"
+                transform do |row|
+                  row[:table] = "taxonomicidentgroup"
+                  row
+                end
+              end
             end
           end
         end
