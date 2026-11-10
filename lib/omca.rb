@@ -134,7 +134,7 @@ module Omca
   #   usages
   setting :auth_usages,
     reader: true,
-    default: :auth_vocab_remap__usages
+    default: :authorities__usages_final_source
 
   # @return [Symbol] job key of finalized authority uniq usages job for source
   #   usages
