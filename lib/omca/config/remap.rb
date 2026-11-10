@@ -84,6 +84,14 @@ module Omca
             ],
             rectype: "collectionobject"
           },
+          "collectionobjects_nagpra_nagpraculturaldeterminations" => {
+            source: [
+              # rubocop:disable Layout/LineLength
+              :"#{previous}_repeatable_field__collectionobjects_anthropology_nagpraculturaldeterminationlist"
+              # rubocop:enable Layout/LineLength
+            ],
+            rectype: "collectionobject"
+          },
           "collectionobjects_nagpra_nagprainventorynames" => {
             source: [
               # rubocop:disable Layout/LineLength
