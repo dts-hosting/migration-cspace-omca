@@ -370,6 +370,10 @@ module Omca
               fields: :item
           when "otherpartygroup"
             transform Clean::DowncaseFieldValues, fields: :otherpartyrole
+          when "previousownersgroup"
+            transform FilterRows::AnyFieldsPopulated,
+              action: :keep,
+              fields: %i[previousowner provenanceinformation]
           end
         end
       end

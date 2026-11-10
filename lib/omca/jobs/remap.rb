@@ -192,6 +192,11 @@ module Omca
             transform FilterRows::AnyFieldsPopulated,
               action: :keep,
               fields: fieldmap.values
+          when "anthroownershipgroup"
+            transform Rename::Fields, fieldmap: {
+              previousowner: :anthroowner,
+              provenanceinformation: :anthroownershipnote
+            }
           when "approvalstatusgroup"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :rectype,
