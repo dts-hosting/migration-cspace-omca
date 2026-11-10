@@ -272,6 +272,8 @@ module Omca
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
             transform Omca::Xforms::Remap::RepeatableFieldTable
+          when "collectionobjects_nagpra_repatriationnotes"
+            transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_omca"
             transform Delete::Fields,
               fields: %i[art history science]
