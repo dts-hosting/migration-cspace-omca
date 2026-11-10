@@ -154,6 +154,7 @@ module Omca
             collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_anthropology_nagprainventorynamelist
             collectionobjects_omca
+            collectionobjects_omca_exhibitionhistories
             conservation_omca
             exitstatusgroup
             loansout_omca
@@ -480,6 +481,13 @@ module Omca
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           when "textualinscriptiongroup"
             transform Omca::Xforms::Remap::BuildTextualinscriptiongroup
+          when "usagegroup"
+            transform Rename::Field, from: :item, to: :usagenote
+            transform Merge::ConstantValues,
+              constantmap: {
+                rectype: "collectionobject",
+                usage: "Exhibition history"
+              }
           end
         end
       end
