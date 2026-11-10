@@ -19,5 +19,11 @@ module Omca
         {table: "materialgroup", field: "material"},
         {table: "assocculturalcontextgroup", field: "assocculturalcontext"}
       ]
+
+    def remapped_diverted
+      fields_to_divert.map do |h|
+        :"auth_vocab_remap__remap_#{h[:table]}_#{h[:field]}_usages"
+      end
+    end
   end
 end
