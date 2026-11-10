@@ -165,6 +165,12 @@ module Omca
             ],
             rectype: "conditioncheck"
           },
+          "depositorgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__depositoromcagroup"
+            ],
+            rectype: "intake"
+          },
           "nagpradetermgroup" => {
             source: [
               :"#{previous}_repeatable_field_group__assocculturalcontextgroup"
