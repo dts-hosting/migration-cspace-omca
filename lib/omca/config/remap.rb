@@ -159,6 +159,12 @@ module Omca
             ],
             rectype: "exit"
           },
+          "conditioncheckgroup" => {
+            source: [
+              :"#{previous}_addtl_fields__conditionchecks_omca"
+            ],
+            rectype: "conditioncheck"
+          },
           "nagpradetermgroup" => {
             source: [
               :"#{previous}_repeatable_field_group__assocculturalcontextgroup"
