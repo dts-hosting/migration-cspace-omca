@@ -14,10 +14,26 @@ module Omca
         Kiba::Extend::Jobs::Job.new(
           files: {
             source: source,
-            destination: dest
+            destination: dest,
+            lookup: get_lookups(table)
           },
           transformer: xforms(table, tabletype, rectype)
         )
+      end
+
+      def get_lookups(table)
+        base = []
+        prev = Omca::RegistryData.previous_phase("fix")
+        case table
+        when "loanoutvenuesgroup"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__loansout_omca",
+            lookup_on: :recordcsid,
+            name: :loansout_omca
+          }
+        end
+
+        base
       end
 
       def xforms(table, tabletype, rectype)
@@ -124,6 +140,9 @@ module Omca
                 "UNITED KINGDOM" => "GB",
                 "UNITED STATES" => "US"
               }
+          when "assocculturalcontextgroup"
+            transform Clean::DowncaseFieldValues,
+              fields: :assocculturalcontexttype
           when "citationagentinfogroup"
             transform Clean::DowncaseFieldValues, fields: :role
           when "citations_common"
@@ -214,6 +233,21 @@ module Omca
               fields: :conditioncheckreason,
               find: /appraisal'<\/refname>/,
               replace: "appraisal"
+          when "conditionchecks_omca"
+            transform Prepend::ToFieldValue,
+              field: :humidityrequirement,
+              value: "Humidity requirement: "
+            transform Prepend::ToFieldValue,
+              field: :lightrequirement,
+              value: "Light requirement: "
+            transform Prepend::ToFieldValue,
+              field: :temprequirement,
+              value: "Temperature requirement: "
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[humidityrequirement lightrequirement temprequirement],
+              target: :envrecommendations,
+              delete_sources: true,
+              delim: "\n"
           when "conditionchecks_omca_omcaconditioncheckmethods"
             transform Clean::RegexpFindReplaceFieldVals,
               fields: :item,
@@ -276,6 +310,36 @@ module Omca
             end
           when "intakes_common_entrymethods"
             transform Clean::DowncaseFieldValues, fields: :item
+          when "loanoutfeesgroup"
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                val = row[:loanoutfeesamount]
+                val.blank? || val == "0"
+              end
+            transform Delete::FieldValueMatchingRegexp,
+              fields: :loanoutfeescurrency,
+              match: "US Dollar"
+            transform Prepend::ToFieldValue,
+              field: :loanoutfeesdatepaid,
+              value: "paid on "
+            transform Prepend::ToFieldValue,
+              field: :loanoutfeesamount,
+              value: "$"
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[loanoutfeesamount loanoutfeesdatepaid],
+              target: :note,
+              delete_sources: true,
+              delim: " "
+            transform Prepend::ToFieldValue,
+              field: :note,
+              value: "Loan fee: "
+            transform Delete::EmptyFields
+          when "loanoutvenuesgroup"
+            transform Merge::MultiRowLookup,
+              lookup: loansout_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {exhibitiontitle: :loanoutexhibitiontitle}
           when "loansin_omca"
             transform Delete::Fields, fields: :loanininsurancenote
           when "loansin_omca_loanininsuranceinsurers"

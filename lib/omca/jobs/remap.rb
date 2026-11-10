@@ -57,6 +57,17 @@ module Omca
             name: :omcaconditioncheckmethods
           }
           # rubocop:enable Layout/LineLength
+          base << {
+            jobkey: :"#{prev}_addtl_fields__conditionchecks_omca",
+            lookup_on: :recordcsid,
+            name: :conditionchecks_omca
+          }
+        when "conservation_common"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__conservation_omca",
+            lookup_on: :recordcsid,
+            name: :conservation_omca
+          }
         when "consultations_common"
           base << {
             jobkey: :"#{prev}_main__collectionobjects_common",
@@ -74,6 +85,23 @@ module Omca
             jobkey: :structured_dates__exitdate,
             lookup_on: :recordcsid,
             name: :dates
+          }
+        when "loansin_common"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__loansin_omca",
+            lookup_on: :recordcsid,
+            name: :loansin_omca
+          }
+        when "loansout_common"
+          base << {
+            jobkey: :"#{prev}_repeatable_field_group__loanoutvenuesgroup",
+            lookup_on: :recordcsid,
+            name: :loanoutvenuesgroup
+          }
+          base << {
+            jobkey: :"#{prev}_repeatable_field_group__loanoutfeesgroup",
+            lookup_on: :recordcsid,
+            name: :loanoutfeesgroup
           }
         when "objectcomponentgroup"
           base << {
@@ -108,7 +136,9 @@ module Omca
             collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_anthropology_nagprainventorynamelist
             collectionobjects_omca
+            conservation_omca
             exitstatusgroup
+            loansout_omca
             objectexit_common
             objectexit_common_exitmethods
             viewercontributiongroup
@@ -203,6 +233,10 @@ module Omca
               fields: %i[art history science]
           when "conditionchecks_common"
             transform Merge::MultiRowLookup,
+              lookup: conditionchecks_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {envrecommendations: :envrecommendations}
+            transform Merge::MultiRowLookup,
               lookup: omcaconditioncheckmethods,
               keycolumn: :recordcsid,
               fieldmap: {o_conditioncheckmethod: :item},
@@ -246,6 +280,19 @@ module Omca
               target: :conditionchecknote,
               delete_sources: true,
               delim: "\n\n"
+          when "conservation_common"
+            transform Merge::MultiRowLookup,
+              lookup: conservation_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {datefornote: :dateofanalysis}
+            transform Prepend::ToFieldValue,
+              field: :datefornote,
+              value: "Date of analysis: "
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[proposedanalysis datefornote],
+              target: :proposedanalysis,
+              delete_sources: true,
+              delim: Omca.notedelim
           when "consultations_common"
             transform Omca::Xforms::Remap::BuildConsultationCommon,
               lookup: collectionobjects_common
@@ -277,9 +324,41 @@ module Omca
               action: :keep,
               field: :depositor
             transform Merge::ConstantValue, target: :pos, value: "0"
+          when "loansin_common"
+            transform Merge::MultiRowLookup,
+              lookup: loansin_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {lendernote: :lendernote}
+            transform Prepend::ToFieldValue,
+              field: :lendernote,
+              value: "Lender note: "
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[loaninnote lendernote],
+              target: :loaninnote,
+              delete_sources: true,
+              delim: Omca.notedelim
+          when "loansout_common"
+            transform Merge::MultiRowLookup,
+              lookup: loanoutfeesgroup,
+              keycolumn: :recordcsid,
+              fieldmap: {feenote: :note},
+              delim: "\n"
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[loanoutnote feenote],
+              target: :loanoutnote,
+              delete_sources: true,
+              delim: Omca.notedelim
+            transform Omca::Xforms::Remap::MergeVenueInfo,
+              lookup: loanoutvenuesgroup
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
+          when "nagpradetermgroup"
+            transform Rename::Fields, fieldmap: {
+              assocculturalcontexttype: :nagpradetermtype,
+              assocculturalcontext: :nagpradetermculture,
+              assocculturalcontextnote: :nagpradetermnote
+            }
           when "objectcomponentgroup"
             transform Omca::Xforms::Remap::CollectionobjectsOmcaAccessory,
               lookup: collectionobjects_omca

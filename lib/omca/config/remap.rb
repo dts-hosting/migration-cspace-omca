@@ -104,6 +104,12 @@ module Omca
             ],
             rectype: "exit"
           },
+          "nagpradetermgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__assocculturalcontextgroup"
+            ],
+            rectype: "collectionobject"
+          },
           "rightsgroup" => {
             source: [
               :"#{previous}_addtl_fields__collectionobjects_omca"
