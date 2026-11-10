@@ -61,8 +61,6 @@ module Omca
                 id = "#{row[:termid]}#{target}"
                 row[:termid] = id
 
-                row[:index] = [row[:authority], target, id].join(" ")
-
                 refname = row[:refname]
                 vocabreplace = refname.sub("(concept)", "(#{target})")
                 row[:refname] = vocabreplace.sub(
