@@ -386,6 +386,11 @@ module Omca
               delim: Omca.notedelim
             transform Omca::Xforms::Remap::MergeVenueInfo,
               lookup: loanoutvenuesgroup
+          when "materialgroup"
+            transform Rename::Fields, fieldmap: {
+              material: :materialcontrolled,
+              materialcomponent: :materialcomponentnote
+            }
           when "media_common"
             transform Merge::MultiRowLookup,
               lookup: media_omca,
