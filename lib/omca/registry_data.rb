@@ -666,7 +666,7 @@ module Omca
               callee: Omca::Jobs::AuthVocabRemap::RemapUsages,
               args: args.merge({name: remapname, source: name})
             },
-            tags: %i[auth_vocab_remap],
+            tags: %i[auth_vocab_remap diverted_remap],
             desc: Omca::Jobs::AuthVocabRemap::RemapUsages.desc(args),
             dest_special_opts: {
               initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
