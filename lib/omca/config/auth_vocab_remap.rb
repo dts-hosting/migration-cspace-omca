@@ -19,7 +19,8 @@ module Omca
         {table: "materialgroup", field: "material"},
         {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
         {table: "objectnamegroup", field: "objectname"},
-        {table: "previousownersgroup", field: "previousowner"}
+        {table: "previousownersgroup", field: "previousowner"},
+        {table: "depositoromcagroup", field: "depositoromca"}
       ]
 
     def remapped_diverted
