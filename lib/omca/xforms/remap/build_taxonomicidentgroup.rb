@@ -6,6 +6,7 @@ module Omca
       class BuildTaxonomicidentgroup
         def initialize
           fieldmap = {
+            dhname: :taxon,
             dhnotes: :notes,
             dhqualifier: :qualifier
           }
@@ -14,7 +15,9 @@ module Omca
             suppress_missing_key_warnings: true
           )
           @deleter = Delete::FieldsExcept.new(
-            fields: %i[recordcsid rectype pos id] + fieldmap.values
+            fields: %i[recordcsid rectype pos id] +
+              fieldmap.values +
+              %i[identby identkind institution]
           )
           @filter = FilterRows::AnyFieldsPopulated.new(
             action: :keep,

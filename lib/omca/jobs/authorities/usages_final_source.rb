@@ -13,7 +13,10 @@ module Omca
           :orgs__orig_usages_acqfundsource,
           :auth_vocab_remap__remap_objectexit_common_depositor_usages,
           :auth_vocab_remap__remap_accessrestrictiongroup_accessrestrictionrequestor_usages,
-          :auth_vocab_remap__remap_collectionobjects_omca_copyrightholder_usages
+          :auth_vocab_remap__remap_collectionobjects_omca_copyrightholder_usages,
+          :auth_vocab_remap__remap_determinationhistorygroup_dhname_usages,
+          :auth_vocab_remap__remap_determinationhistorygroup_identby_usages,
+          :auth_vocab_remap__remap_determinationhistorygroup_institution_usages
         ]
         # rubocop:enable Layout/LineLength
 
