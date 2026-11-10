@@ -57,6 +57,13 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "depositoromcagroup" &&
+                field == "depositoromca"
+              transform do |row|
+                row[:table] = "depositorgroup"
+                row[:field] = "depositor"
+                row
+              end
             elsif table == "determinationhistorygroup"
               case field
               when "dhname"
