@@ -53,6 +53,12 @@ module Omca
                 row[:field] = "materialcontrolled"
                 row
               end
+            elsif table == "objectnamegroup" &&
+                field == "objectname"
+              transform do |row|
+                row[:field] = "objectnamecontrolled"
+                row
+              end
             elsif table == "assocculturalcontextgroup" &&
                 field == "assocculturalcontext"
               transform do |row|

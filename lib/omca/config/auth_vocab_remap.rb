@@ -17,7 +17,8 @@ module Omca
         {table: "determinationhistorygroup", field: "identby"},
         {table: "determinationhistorygroup", field: "institution"},
         {table: "materialgroup", field: "material"},
-        {table: "assocculturalcontextgroup", field: "assocculturalcontext"}
+        {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
+        {table: "objectnamegroup", field: "objectname"}
       ]
 
     def remapped_diverted
