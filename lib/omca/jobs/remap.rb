@@ -152,6 +152,7 @@ module Omca
             acquisitions_omca
             citations_omca
             collectionobjects_anthropology_nagpraapplicabilitylist
+            collectionobjects_anthropology_nagpraculturaldeterminationlist
             collectionobjects_anthropology_nagprainventorynamelist
             collectionobjects_omca
             collectionobjects_omca_exhibitionhistories
@@ -261,6 +262,8 @@ module Omca
             transform Omca::Xforms::Remap::MergeArtHistoryScienceRespdepts,
               lookup: collectionobjects_omca
           when "collectionobjects_nagpra_nagpracategories"
+            transform Omca::Xforms::Remap::RepeatableFieldTable
+          when "collectionobjects_nagpra_nagpraculturaldeterminations"
             transform Omca::Xforms::Remap::RepeatableFieldTable
           when "collectionobjects_nagpra_nagprainventorynames"
             transform Omca::Xforms::Remap::RepeatableFieldTable
