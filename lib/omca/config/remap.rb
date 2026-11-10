@@ -98,6 +98,13 @@ module Omca
           }
         },
         "repeatable_field_group" => {
+          "annotationgroup" => {
+            source: [
+              :"#{previous}_addtl_fields__collectionobjects_omca",
+              :"#{previous}_repeatable_field__collectionobjects_omca_photos"
+            ],
+            rectype: "collectionobject"
+          },
           "approvalstatusgroup" => {
             source: [
               :"#{previous}_repeatable_field_group__exitstatusgroup"

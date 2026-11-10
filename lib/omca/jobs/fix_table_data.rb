@@ -178,6 +178,10 @@ module Omca
               fields: :item,
               find: /^notOnAnInventory$/,
               replace: "not on an inventory"
+          when "collectionobjects_common"
+            transform Prepend::ToFieldValue,
+              field: :distinguishingfeatures,
+              value: "Distinguishing features: "
           when "collectionobjects_common_responsibledepartments"
             transform Delete::FieldValueConditional,
               fields: :item,

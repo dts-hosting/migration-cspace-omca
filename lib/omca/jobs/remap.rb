@@ -43,6 +43,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :citations_omca
           }
+        when "collectionobjects_common_comments"
+          base << {
+            jobkey: :"#{prev}_main__collectionobjects_common",
+            lookup_on: :recordcsid,
+            name: :collectionobjects
+          }
         when "collectionobjects_common_responsibledepartments"
           base << {
             jobkey: :"#{prev}_addtl_fields__collectionobjects_omca",
@@ -103,6 +109,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :loanoutfeesgroup
           }
+        when "media_common"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__media_omca",
+            lookup_on: :recordcsid,
+            name: :media_omca
+          }
         when "objectcomponentgroup"
           base << {
             jobkey: :"#{prev}_addtl_fields__collectionobjects_omca",
@@ -120,6 +132,12 @@ module Omca
             jobkey: :contact__addressnotes,
             lookup_on: :termcsid,
             name: :addressnotes
+          }
+        when "restrictedmedia_common"
+          base << {
+            jobkey: :"#{prev}_addtl_fields__restrictedmedia_omca",
+            lookup_on: :recordcsid,
+            name: :restrictedmedia_omca
           }
         end
 
@@ -139,6 +157,7 @@ module Omca
             conservation_omca
             exitstatusgroup
             loansout_omca
+            media_omca
             objectexit_common
             objectexit_common_exitmethods
             viewercontributiongroup
@@ -183,6 +202,8 @@ module Omca
             transform FilterRows::AnyFieldsPopulated,
               action: :keep,
               fields: %i[status date]
+          when "annotationgroup"
+            transform Omca::Xforms::Remap::BuildArgusremarksPhotoAnnotations
           when "citationtermgroup"
             transform Rename::Field, from: :termtype, to: :termflag
             transform Merge::MultiRowLookup,
@@ -194,6 +215,11 @@ module Omca
 
                 rows
               end
+          when "collectionobjects_common"
+            transform Delete::Fields, fields: :distinguishingfeatures
+          when "collectionobjects_common_comments"
+            transform Omca::Xforms::Remap::AddDistinguishingfeatureComments,
+              lookup: collectionobjects
           when "collectionobjects_common_controlledcontentplaces"
             transform Delete::Fields,
               fields: %i[rectype assocplacenote]
@@ -350,6 +376,16 @@ module Omca
               delim: Omca.notedelim
             transform Omca::Xforms::Remap::MergeVenueInfo,
               lookup: loanoutvenuesgroup
+          when "media_common"
+            transform Merge::MultiRowLookup,
+              lookup: media_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {filename: :originalfilename}
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[title filename],
+              target: :title,
+              delete_sources: true,
+              delim: " - "
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
@@ -392,6 +428,16 @@ module Omca
               target: :namenote,
               delete_sources: true,
               delim: Omca.notedelim
+          when "restrictedmedia_common"
+            transform Merge::MultiRowLookup,
+              lookup: restrictedmedia_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {filename: :originalfilename}
+            transform CombineValues::FromFieldsWithDelimiter,
+              sources: %i[title filename],
+              target: :title,
+              delete_sources: true,
+              delim: " - "
           when "restrictedmedia_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
