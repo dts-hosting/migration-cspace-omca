@@ -167,6 +167,14 @@ module Omca
               :"#{previous}_addtl_fields__collectionobjects_omca"
             ],
             rectype: "collectionobject"
+          },
+          "usagegroup" => {
+            source: [
+              # rubocop:disable Layout/LineLength
+              :"#{previous}_repeatable_field__collectionobjects_omca_exhibitionhistories"
+              # rubocop:enable Layout/LineLength
+            ],
+            rectype: "collectionobject"
           }
         },
         "subgroup" => {
