@@ -21,11 +21,25 @@ module Omca
         def destination = :auth_vocab_remap__usages_undiverted
 
         def job_code
-          cmd = %(xan filter '!(table eq "objectexit_common") && ) +
-            %(!(field eq "depositor")' #{source_path})
-
           xan_result = `#{cmd}`.chomp
           File.open(destination_path, "w") { |f| f << xan_result }
+        end
+
+        private
+
+        def cmd
+          diverting = Omca::AuthVocabRemap.fields_to_divert
+          [
+            init_cmd(diverting[0]),
+            diverting[1..].map { |h| xan_filter(h) }
+          ].flatten.join(" | ")
+        end
+
+        def init_cmd(hash) = "#{xan_filter(hash)} #{source_path}"
+
+        def xan_filter(hash)
+          %(xan filter '!(table eq "#{hash[:table]}") && ) +
+            %(!(field eq "#{hash[:field]}")')
         end
       end
     end
