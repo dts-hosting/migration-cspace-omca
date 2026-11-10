@@ -22,41 +22,12 @@ module Omca
 
         def xforms(table:, field:)
           Kiba.job_segment do
-            if table == "objectexit_common" && field == "depositor"
-              transform do |row|
-                row[:tabletype] = "repeatable_field"
-                row[:table] = "exits_common_owners"
-                row[:field] = "item"
-                row[:pos] = "0"
-                row
-              end
-            elsif table == "accessrestrictiongroup" &&
+            if table == "accessrestrictiongroup" &&
                 field == "accessrestrictionrequestor"
               transform do |row|
                 row[:tabletype] = "extension_field_group"
                 row[:table] = "accesslimitationsgroup"
                 row[:field] = "requester"
-                row
-              end
-            elsif table == "collectionobjects_omca" &&
-                field == "copyrightholder"
-              transform do |row|
-                row[:tabletype] = "subgroup"
-                row[:table] = "rightholdergroup"
-                row[:field] = "rightholder"
-                row[:pos] = "0"
-                row
-              end
-            elsif table == "materialgroup" &&
-                field == "material"
-              transform do |row|
-                row[:field] = "materialcontrolled"
-                row
-              end
-            elsif table == "objectnamegroup" &&
-                field == "objectname"
-              transform do |row|
-                row[:field] = "objectnamecontrolled"
                 row
               end
             elsif table == "assocculturalcontextgroup" &&
@@ -77,6 +48,15 @@ module Omca
 
                 row
               end
+            elsif table == "collectionobjects_omca" &&
+                field == "copyrightholder"
+              transform do |row|
+                row[:tabletype] = "subgroup"
+                row[:table] = "rightholdergroup"
+                row[:field] = "rightholder"
+                row[:pos] = "0"
+                row
+              end
             elsif table == "determinationhistorygroup"
               case field
               when "dhname"
@@ -95,6 +75,26 @@ module Omca
                   row[:table] = "taxonomicidentgroup"
                   row
                 end
+              end
+            elsif table == "materialgroup" &&
+                field == "material"
+              transform do |row|
+                row[:field] = "materialcontrolled"
+                row
+              end
+            elsif table == "objectexit_common" && field == "depositor"
+              transform do |row|
+                row[:tabletype] = "repeatable_field"
+                row[:table] = "exits_common_owners"
+                row[:field] = "item"
+                row[:pos] = "0"
+                row
+              end
+            elsif table == "objectnamegroup" &&
+                field == "objectname"
+              transform do |row|
+                row[:field] = "objectnamecontrolled"
+                row
               end
             end
           end
