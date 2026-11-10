@@ -96,6 +96,14 @@ module Omca
                 row[:field] = "objectnamecontrolled"
                 row
               end
+            elsif table == "previousownersgroup" &&
+                field == "previousowner"
+              transform do |row|
+                row[:table] = "anthroownershipgroup"
+                row[:field] = "anthroowner"
+                row
+              end
+
             end
           end
         end
