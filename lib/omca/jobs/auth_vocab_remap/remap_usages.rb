@@ -38,6 +38,15 @@ module Omca
                 row[:field] = "requester"
                 row
               end
+            elsif table == "collectionobjects_omca" &&
+                field == "copyrightholder"
+              transform do |row|
+                row[:tabletype] = "subgroup"
+                row[:table] = "rightholdergroup"
+                row[:field] = "rightholder"
+                row[:pos] = "0"
+                row
+              end
             end
           end
         end

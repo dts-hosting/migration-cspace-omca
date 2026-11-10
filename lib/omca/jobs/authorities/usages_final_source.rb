@@ -12,7 +12,8 @@ module Omca
           :works__orig_usages,
           :orgs__orig_usages_acqfundsource,
           :auth_vocab_remap__remap_objectexit_common_depositor_usages,
-          :auth_vocab_remap__remap_accessrestrictiongroup_accessrestrictionrequestor_usages
+          :auth_vocab_remap__remap_accessrestrictiongroup_accessrestrictionrequestor_usages,
+          :auth_vocab_remap__remap_collectionobjects_omca_copyrightholder_usages
         ]
         # rubocop:enable Layout/LineLength
 

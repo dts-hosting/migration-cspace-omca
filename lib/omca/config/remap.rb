@@ -16,6 +16,32 @@ module Omca
     setting :new_tables,
       reader: true,
       default: {
+        "addtl_fields" => {
+          "collectionobjects_anthro" => {
+            source: [:"#{previous}_addtl_fields__collectionobjects_omca"],
+            rectype: "collectionobject"
+          }
+        },
+        "extension_field_group" => {
+          "accesslimitationsgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__accessrestrictiongroup"
+            ],
+            rectype: "multi"
+          },
+          "addressgroup" => {
+            source: [
+              :"#{previous}_repeatable_field_group__addressgroupomca"
+            ],
+            rectype: "multi"
+          },
+          "partiesinvolvedgroup" => {
+            source: [
+              "acquisitioncontactgroup", "viewercontributiongroup"
+            ].map { |table| :"#{previous}_repeatable_field_group__#{table}" },
+            rectype: "multi"
+          }
+        },
         "main" => {
           "consultations_common" => {
             source: [
@@ -117,6 +143,13 @@ module Omca
             ],
             rectype: "collectionobject"
           },
+          "objectcountgroup" => {
+            source: [
+              :"#{previous}_main__collectionobjects_common",
+              :"#{previous}_addtl_fields__collectionobjects_omca"
+            ],
+            rectype: "collectionobject"
+          },
           "rightsgroup" => {
             source: [
               :"#{previous}_addtl_fields__collectionobjects_omca"
@@ -136,24 +169,12 @@ module Omca
             rectype: "collectionobject"
           }
         },
-        "extension_field_group" => {
-          "accesslimitationsgroup" => {
+        "subgroup" => {
+          "rightholdergroup" => {
             source: [
-              :"#{previous}_repeatable_field_group__accessrestrictiongroup"
+              :"#{previous}_addtl_fields__collectionobjects_omca"
             ],
-            rectype: "multi"
-          },
-          "addressgroup" => {
-            source: [
-              :"#{previous}_repeatable_field_group__addressgroupomca"
-            ],
-            rectype: "multi"
-          },
-          "partiesinvolvedgroup" => {
-            source: [
-              "acquisitioncontactgroup", "viewercontributiongroup"
-            ].map { |table| :"#{previous}_repeatable_field_group__#{table}" },
-            rectype: "multi"
+            rectype: "collectionobject"
           }
         }
       }
