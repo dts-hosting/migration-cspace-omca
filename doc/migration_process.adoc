@@ -153,7 +153,7 @@ Other extract tasks:
 
 * Option Lists
 ** [x] Extract all values used in source fields that map to target fields controlled by option lists
-** [ ] Configure Lyrasis hosted UI config with option list customizations
+** [x] Configure Lyrasis hosted UI config with option list customizations
 
 === Malformed usage fixes
 
@@ -351,7 +351,7 @@ What we are doing here is creating database table rows that will match the chang
 ** [x] downcase and adjust relevant values in fix phase (when values are re-extracted, list should be clean)
 
 * Vocabulary term fixes
-** [ ] Adjust case/form of used values to be consistent with other terms in target instance vocabs in target system IN A HOLISTIC WAY
+** [x] Adjust case/form of used values to be consistent with other terms in target instance vocabs in target system IN A HOLISTIC WAY
 
 [#newtable]
 === NewTable
@@ -408,7 +408,7 @@ Implement for:
 
 Also, to avoid shoving in an additional phase just for this:
 
-* [ ] Do final fix/matching of *vocabulary term / term list term* form (case, etc.) in the data
+* [x] Do final fix/matching of *vocabulary term / term list term* form (case, etc.) in the data
 
 ==== Special handling
 
