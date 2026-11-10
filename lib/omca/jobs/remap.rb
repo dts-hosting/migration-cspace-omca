@@ -277,6 +277,18 @@ module Omca
           when "collectionobjects_omca"
             transform Delete::Fields,
               fields: %i[art history science]
+          when "conditioncheckgroup"
+            content_fields = %i[condition conditiondate conditionnote]
+            transform FilterRows::AnyFieldsPopulated,
+              action: :keep,
+              fields: content_fields
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id] + content_fields
+            transform Merge::ConstantValues,
+              constantmap: {
+                rectype: "conditioncheck",
+                pos: "0"
+              }
           when "conditionchecks_common"
             transform Merge::MultiRowLookup,
               lookup: conditionchecks_omca,
@@ -326,6 +338,10 @@ module Omca
               target: :conditionchecknote,
               delete_sources: true,
               delim: "\n\n"
+            transform Merge::MultiRowLookup,
+              lookup: conditionchecks_omca,
+              keycolumn: :recordcsid,
+              fieldmap: {conditioncheckassessmentdate: :conditiondate}
           when "conservation_common"
             transform Merge::MultiRowLookup,
               lookup: conservation_omca,
