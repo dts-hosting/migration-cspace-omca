@@ -650,7 +650,9 @@ module Omca
       Omca.registry.namespace("auth_vocab_remap") do
         [
           {table: "objectexit_common", field: "depositor"},
-          {table: "accessrestrictiongroup", field: "accessrestrictionrequestor"}
+          {table: "accessrestrictiongroup",
+           field: "accessrestrictionrequestor"},
+          {table: "collectionobjects_omca", field: "copyrightholder"}
         ].each do |args|
           name = "divert_#{args[:table]}_#{args[:field]}_usages"
           register name.to_sym, {

@@ -215,6 +215,15 @@ module Omca
 
                 rows
               end
+          when "collectionobjects_anthro"
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id argusdescription]
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :argusdescription
+            transform Rename::Field,
+              from: :argusdescription,
+              to: :materialtechniquedescription
           when "collectionobjects_common"
             transform Delete::Fields, fields: :distinguishingfeatures
           when "collectionobjects_common_comments"
@@ -398,6 +407,8 @@ module Omca
           when "objectcomponentgroup"
             transform Omca::Xforms::Remap::CollectionobjectsOmcaAccessory,
               lookup: collectionobjects_omca
+          when "objectcountgroup"
+            transform Omca::Xforms::Remap::BuildObjectcountgroup
           when "organizations_common"
             transform Merge::MultiRowLookup,
               lookup: addressnotes,
@@ -447,6 +458,24 @@ module Omca
             transform Merge::ConstantValue,
               target: :rectype,
               value: "collectionobject"
+          when "rightsholdergroup"
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id copyrightholder]
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :copyrightholder
+            transform Rename::Field,
+              from: :copyrightholder,
+              to: :rightholder
+            transform Copy::Field,
+              from: :id,
+              to: :groupid
+            transform Merge::ConstantValues,
+              constantmap: {
+                rectype: "collectionobject",
+                pos: "0",
+                grouptable: "rightsgroup"
+              }
           when "taxonomicidentgroup"
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           when "textualinscriptiongroup"
