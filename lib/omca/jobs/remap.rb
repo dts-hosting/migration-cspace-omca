@@ -369,6 +369,15 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :item
+          when "depositorgroup"
+            content_fields = %i[depositorsrequirementsomca depositoromca]
+            transform FilterRows::AnyFieldsPopulated,
+              action: :keep,
+              fields: content_fields
+            transform Rename::Fields, fieldmap: {
+              depositorsrequirementsomca: :depositorsrequirements,
+              depositoromca: :depositor
+            }
           when "exits_common"
             transform Rename::Fields, fieldmap: {
               exitnote: :note,
