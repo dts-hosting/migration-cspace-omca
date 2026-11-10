@@ -418,6 +418,10 @@ module Omca
               lookup: collectionobjects_omca
           when "objectcountgroup"
             transform Omca::Xforms::Remap::BuildObjectcountgroup
+          when "objectnamegroup"
+            transform Rename::Fields, fieldmap: {
+              objectname: :objectnamecontrolled
+            }
           when "organizations_common"
             transform Merge::MultiRowLookup,
               lookup: addressnotes,
