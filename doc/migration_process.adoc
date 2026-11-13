@@ -41,11 +41,11 @@ Problems with usages that are addressed:
 
 * `nuke_bom` phase - Removal of BOM from values in all original tables
 * non-refname usages extracted, auto-matched or FCAR matched to `nuke_bom`-ed refnames via term match - values in authority controlled fields that are not the expected refname URNs
-* `authorities__usages`- Extract all refname URN usages
-* `authorities__fix_malformed_usages` - bad concept refnames fixed; citations with no form dropped
+* `+authorities__usages+`- Extract all refname URN usages
+* `+authorities__fix_malformed_usages+` - bad concept refnames fixed; citations with no form dropped
 * `+non_refname_auth__usages_final+` - adds fixed non-refname uses to `+authorities__fix_malformed_usages+`
-* `authorities__fix_usages` - delete usages in fields that are uncontrolled in target CollectionSpace
-* `authorities__fixed_with_remapped` - authority field usage remappings (with no change in authority or vocabulary, and no new term generation
+* `+authorities__fix_usages+` - delete usages in fields that are uncontrolled in target CollectionSpace
+* `+authorities__fixed_with_remapped+` - authority field usage remappings (with no change in authority or vocabulary, and no new term generation
 * extract, auto-match or FCAR match unlinked refname usages - refnames that do not match an established term
 * BigAuth FCAR - Altering the preferred form of terms with too many usages to update the term in-system
 
@@ -428,11 +428,11 @@ Also, to avoid shoving in an additional phase just for this:
 
 == Relations (not really a phase since nothing else depends on it)
 
-* [x] identify existing relationship types - `rel_info__types_uniq`
+* [x] identify existing relationship types - `+rel_info__types_uniq+`
 * [x] apply any recordtype remappings
 * [x] insert any migration-generated relations
 * [x] map to recordtypes
-* [x] split into hier and non-hier: `rel_info__hier_rels` and `rel_info__nonhier_rels`
+* [x] split into hier and non-hier: `+rel_info__hier_rels+` and `+rel_info__nonhier_rels+`
 * [x] develop recordtype -> document type mapping
 
 * authority hierarchy
