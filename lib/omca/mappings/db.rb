@@ -115,6 +115,23 @@ module Omca
           db_tables_sheet.select { |row| row["table_type"] == "subgroup" }
             .map { |r| r["table_name"] }
       end
+
+      def target_tables(type)
+        Omca::Mappings::Fields.migrating
+          .select { |row| row["target_db_table_type"] == type }
+          .map { |row| row["target_db_table"] }
+          .uniq
+          .reject { |v| v == "collectionobjects_common_mediaprioritylist" }
+      end
+
+      # @return [Array<String>] used to register remap and authmerge phase jobs
+      def target_table_types
+        Omca::Mappings::Fields.migrating
+          .map { |row| row["target_db_table_type"] }
+          .uniq
+          .reject { |v| v == "structured dates" }
+          .map { |v| v.tr(" ", "_") }
+      end
     end
   end
 end

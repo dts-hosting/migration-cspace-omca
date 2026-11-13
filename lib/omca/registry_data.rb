@@ -283,14 +283,14 @@ module Omca
         register :fixed_sans_remapped, {
           path: File.join(Omca.wrkdir, "auth_usages_fixed_sans_remapped.csv"),
           creator: Omca::Jobs::Authorities::FixedSansRemapped.method(:new),
-          tags: [ns.to_sym, :usages, :remap, :assocplace],
+          tags: [ns.to_sym, :usages, :remapped, :assocplace],
           desc: Omca::Jobs::Authorities::FixedSansRemapped.desc
         }
 
         register :fixed_with_remapped, {
           path: File.join(Omca.wrkdir, "auth_usages_fixed_with_remapped.csv"),
           creator: Omca::Jobs::Authorities::FixedWithRemapped.method(:new),
-          tags: [ns.to_sym, :usages, :remap, :assocplace],
+          tags: [ns.to_sym, :usages, :remapped, :assocplace],
           desc: Omca::Jobs::Authorities::FixedWithRemapped.desc
         }
 
@@ -756,6 +756,18 @@ module Omca
           desc: "The 2 non-migrating rows, with new csids merged in and "\
             "note values"
         }
+        register :missing_blobcsid, {
+          path: File.join(
+            Omca.datadir, "reports", "missing_blobcsid.csv"
+          ),
+          creator: Omca::Jobs::Report::MissingBlobcsid,
+          tags: %i[reports media blob],
+          desc: "The 2 media handling records whose blobcsids don't match "\
+            "blob records in db, with new csids merged in",
+          dest_special_opts: {
+            initial_headers: %i[identificationnumber oldcsid newcsid]
+          }
+        }
       end
 
       Omca.registry.namespace("map_report") do
@@ -905,27 +917,81 @@ module Omca
     end
     private_class_method :register_files
 
+    def source_table_type_dirs
+      proc { Dir.children(File.join(Omca.datadir, "orig")) }
+    end
+    private_class_method :source_table_type_dirs
+
+    def target_table_type_dirs = proc { Omca::Mappings::Db.target_table_types }
+    private_class_method :target_table_type_dirs
+
+    def build_table_type_dirs = proc { [] }
+    private_class_method :build_table_type_dirs
+
+    def source_table_type_files
+      ->(dir) do
+        orig_dir_path = File.join(Omca.datadir, "orig", dir)
+        Dir.children(orig_dir_path).reject do |f|
+          Omca::RegistryData.skip_tables.include?(f) || f.end_with?("#")
+        end
+      end
+    end
+    private_class_method :source_table_type_files
+
+    # @return [Array<String>]
+    def target_table_type_files
+      ->(dir) do
+        Omca::Mappings::Db.target_tables(dir)
+          .map { |v| "#{v}.csv" }
+      end
+    end
+    private_class_method :target_table_type_files
+
+    # @return [Array<String>]
+    def build_table_type_files
+      ->(dir) { [] }
+    end
+    private_class_method :build_table_type_files
+
     def register_phase_jobs(phase, callee)
       return if callee == :skip
 
-      Dir.children(File.join(Omca.datadir, "orig")).each do |dir|
-        register_phase_dir_jobs(phase, callee, dir)
+      srctype = if %w[remap authmerge].include?(phase)
+        :target
+      elsif phase == "build"
+        :build
+      else
+        :source
+      end
+
+      send(:"#{srctype}_table_type_dirs").call.each do |dir|
+        register_phase_dir_jobs(phase, srctype, callee, dir)
       end
     end
     private_class_method :register_phase_jobs
 
-    def register_phase_dir_jobs(phase, callee, dir)
+    def register_phase_dir_jobs(phase, srctype, callee, dir)
       ns = "#{phase}_#{dir}"
 
       prev_phase = previous_phase(phase)
-      orig_dir_path = File.join(Omca.datadir, "orig", dir)
-      entries = Dir.children(orig_dir_path).reject do |f|
-        Omca::RegistryData.skip_tables.include?(f) || f.end_with?("#")
-      end.map do |tablefilename|
+      files = send(:"#{srctype}_table_type_files").call(dir)
+      entries = files.map do |tablefilename|
         table = tablefilename.delete_suffix(".csv")
-        rectype = Omca::Mappings::Db.rectype_for_table(table)
+        rectype = if Omca::Remap.new_tables.dig(dir, table)
+          Omca::Remap.new_tables.dig(dir, table, :rectype)
+        else
+          Omca::Mappings::Db.rectype_for_table(table)
+        end
+
         srckey = if prev_phase == "orig"
           :"#{dir}__#{table}"
+        elsif phase == "remap"
+          cfg = Omca::Remap.new_tables.dig(dir, table)
+          if cfg
+            cfg[:source]
+          else
+            :"#{prev_phase}_#{dir}__#{table}"
+          end
         else
           :"#{prev_phase}_#{dir}__#{table}"
         end
@@ -953,51 +1019,11 @@ module Omca
         [table.to_sym, entry]
       end
 
-      if phase == "remap"
-        register_new_table_remappings(entries, callee, dir, prev_phase, ns)
-      end
-
       Omca.registry.namespace(ns) do
         entries.each { |entry| register entry[0], entry[1] }
       end
     end
     private_class_method :register_phase_dir_jobs
-
-    def register_new_table_remappings(entries, callee, dir, prev_phase, ns)
-      config = Omca::Remap.new_tables[dir]
-      return entries if config.blank?
-
-      config.each do |table, detail|
-        source = detail[:source].map do |src|
-          convert_remap_source(src, dir, prev_phase)
-        end
-
-        args = {
-          source: source,
-          dest: :"remap_#{dir}__#{table}",
-          table: table,
-          rectype: detail[:rectype],
-          tabletype: dir
-        }
-        tags = [:remap, :"remap_#{dir}", table.to_sym]
-        entries << [
-          table.to_sym,
-          {
-            path: File.join(Omca.datadir, "remap", dir, "#{table}.csv"),
-            creator: {callee: callee, args: args},
-            tags: tags
-          }
-        ]
-      end
-    end
-    private_class_method :register_new_table_remappings
-
-    def convert_remap_source(source, dir, prev_phase)
-      return source if source["_"]
-
-      :"#{prev_phase}_#{dir}__#{source}"
-    end
-    private_class_method :convert_remap_source
 
     def register_skeleton_jobs
       ns = "skeleton"
