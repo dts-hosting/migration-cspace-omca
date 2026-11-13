@@ -503,7 +503,7 @@ module Omca
             transform Merge::ConstantValue,
               target: :rectype,
               value: "collectionobject"
-          when "rightsholdergroup"
+          when "rightholdergroup"
             transform Delete::FieldsExcept,
               fields: %i[recordcsid id copyrightholder]
             transform FilterRows::FieldPopulated,
