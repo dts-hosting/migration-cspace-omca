@@ -57,6 +57,15 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "collectionobjects_common" &&
+                field == "fieldcollectionplace"
+              transform do |row|
+                row[:tabletype] = "repeatable_field"
+                row[:table] = "collectionobjects_common_fieldcollectionplaces"
+                row[:field] = "item"
+                row[:pos] = "0"
+                row
+              end
             elsif table == "depositoromcagroup" &&
                 field == "depositoromca"
               transform do |row|
