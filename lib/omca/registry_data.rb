@@ -384,6 +384,19 @@ module Omca
             "\"faux\" usage files generated as part of authority remapping "\
             "and/or generation"
         }
+        register :uniq_usages_final_source, {
+          path: File.join(Omca.datadir, "authority_ref",
+            "uniq_usages_final_source.csv"),
+          creator: {
+            callee: Omca::Jobs::Authorities::UniqUsages,
+            args: {
+              source: :authorities__usages_final_source,
+              destination: :authorities__uniq_usages_final_source
+            }
+          },
+          tags: [ns.to_sym],
+          desc: "Re-derive unique usages from authorities__usages_final_source"
+        }
       end
 
       Omca.registry.namespace("auth_merge_prep") do
