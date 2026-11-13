@@ -43,6 +43,11 @@ module Omca
               fields: %i[target0 target1],
               find: /valuationcontrol/,
               replace: "valuation"
+            transform FilterRows::WithLambda,
+              action: :reject,
+              lambda: ->(row) do
+                [row[:source0], row[:source1]].any? { |v| v == "claim" }
+              end
             transform Omca::Xforms::AddMigReltypes
             transform CombineValues::FullRecord
             transform Deduplicate::Table,
