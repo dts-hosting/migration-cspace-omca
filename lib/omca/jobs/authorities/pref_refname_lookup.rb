@@ -17,11 +17,11 @@ module Omca
         end
 
         def sources
-          Omca::Mappings::Fields.skeleton_rectypes
+          Omca::Mappings::Fields.target_rectypes
             .select { |rectype| Omca::Mappers.authority?(rectype) }
             .map do |rectype|
               table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
-              :"remapped_main__#{table}"
+              :"remap_main__#{table}"
             end.select { |job| Kiba::Extend::Job.output?(job) }
         end
 
