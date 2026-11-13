@@ -508,6 +508,13 @@ To do this, we need to do the following for each Object:
 *** If no, bail. They media will be on the object in whatever default order
 *** If yes, we need to populate `mediaPriority`. The media with `isprimary` = `t` must be first, followed by the others in whatever order they are coming back in.
 
+=== DB Media/Blob migration reporting
+
+* [ ] Tables that don’t exist in the current version of CSpace (files/iptc)
+* [x] Funkiness log/post mig report: Two blob CSIDs in media_blobcsid.csv are not in the source database (e8cd48b2-def5-4297-9e00 and 1008e046-ccb2-434b-b845)
+* [x] Post mig report: One content row has no digest (50610a74-0f20-4c70-affe)
+* [ ] Nineteen original binaries and twenty view binaries are referenced by the dump and are not in cspace-omca-incoming
+* [ ] Media added after 2026-04-15 (date of database dump) is not included
 == Vocabulary terms
 
 * [x] Diff terms used against default terms in instance
