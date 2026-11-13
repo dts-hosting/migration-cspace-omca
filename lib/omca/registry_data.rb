@@ -125,6 +125,7 @@ module Omca
         end
       end
 
+      # Dynamically sets up nhr nonhier and hier relationship rels jobs
       if File.exist?(Omca::Rels.types_modified_path)
         [
           Omca::Rels::SourceJobRegistrar,
