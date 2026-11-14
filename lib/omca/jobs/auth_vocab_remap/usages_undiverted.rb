@@ -12,7 +12,7 @@ module Omca
 
         def phase = Omca::Remap.previous
 
-        def source = :big_auth__collapsing_usage_merge
+        def source = :big_auth__usages
 
         def source_path = Omca.registry
           .resolve(source)

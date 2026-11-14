@@ -23,7 +23,7 @@ module Omca
               field: :collapsingterm,
               value: "y"
             transform Delete::FieldsExcept,
-              fields: %i[form rectype index userefname]
+              fields: %i[form rectype index userefname termid]
             transform Rename::Fields, fieldmap: {
               userefname: :refname,
               form: :oldform
