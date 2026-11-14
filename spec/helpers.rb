@@ -40,9 +40,16 @@ module Helpers
   # @param filter [String] moonblade filter to run on path
   # @param path [String] to CSV in which to search
   # @param include_headers [Boolean]
-  def xan_filter(filter, path, include_headers: false)
+  # @param as [:csv, :array]
+  def xan_filter(filter, path, include_headers: false, as: :csv)
     basecmd = "xan filter #{filter} #{path}"
     cmd = include_headers ? basecmd : "#{basecmd} | xan behead"
-    `#{cmd}`.chomp.split("\n").reject { |v| v.blank? || v == '""' }
+    result = `#{cmd}`.chomp
+    case as
+    when :array
+      result.split("\n").reject { |v| v.blank? || v == '""' }
+    when :csv
+      CSV.parse(result, **Kiba::Extend.csvopts)
+    end
   end
 end

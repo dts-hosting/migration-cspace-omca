@@ -628,13 +628,40 @@ module Omca
             "separate record in the same authority vocabulary",
           lookup_on: :rectype
         }
-        register :collapsing_usage_merge, {
+        register :non_collapsing, {
+          path: File.join(Omca.wrkdir, "big_auth_non_collapsing.csv"),
+          creator: Omca::Jobs::BigAuth::NonCollapsing,
+          tags: %i[big_auth],
+          desc: "FCAR corrections that do NOT correct to a form that exists "\
+            "as a separate record in the same authority vocabulary",
+          lookup_on: :rectype
+        }
+
+        register :divert_usages, {
+          path: File.join(Omca.wrkdir, "big_auth_divert_usages.csv"),
+          creator: Omca::Jobs::BigAuth::DivertUsages.method(:new),
+          tags: %i[big_auth],
+          desc: Omca::Jobs::BigAuth::DivertUsages.desc
+        }
+        register :undiverted_usages, {
+          path: File.join(Omca.wrkdir, "big_auth_undiverted_usages.csv"),
+          creator: Omca::Jobs::BigAuth::UndivertedUsages.method(:new),
+          tags: %i[big_auth],
+          desc: Omca::Jobs::BigAuth::UndivertedUsages.desc
+        }
+        register :fix_diverted_usages, {
+          path: File.join(Omca.wrkdir, "big_auth_fix_diverted_usages.csv"),
+          creator: Omca::Jobs::BigAuth::FixDivertedUsages,
+          tags: %i[big_auth],
+          desc: Omca::Jobs::BigAuth::FixDivertedUsages.desc
+        }
+
+        register :usages, {
           path: File.join(Omca.datadir, "authority_ref",
             "usages_big_auth.csv"),
-          creator: Omca::Jobs::BigAuth::CollapsingUsageMerge,
+          creator: Omca::Jobs::BigAuth::Usages.method(:new),
           tags: %i[big_auth],
-          desc: "Update usages of terms being collapsed to use refname "\
-            "of term they are being collapsed into",
+          desc: Omca::Jobs::BigAuth::Usages.desc,
           dest_special_opts: {
             initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
           }
@@ -645,20 +672,12 @@ module Omca
           creator: {
             callee: Omca::Jobs::Authorities::UniqUsages,
             args: {
-              source: :big_auth__collapsing_usage_merge,
+              source: :big_auth__usages,
               destination: :big_auth__uniq_usages
             }
           },
           tags: %i[big_auth],
           desc: "Re-derive unique usages from big auth usages"
-        }
-        register :non_collapsing, {
-          path: File.join(Omca.wrkdir, "big_auth_non_collapsing.csv"),
-          creator: Omca::Jobs::BigAuth::NonCollapsing,
-          tags: %i[big_auth],
-          desc: "FCAR corrections that do NOT correct to a form that exists "\
-            "as a separate record in the same authority vocabulary",
-          lookup_on: :rectype
         }
       end
 
