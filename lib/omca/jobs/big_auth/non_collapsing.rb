@@ -24,6 +24,25 @@ module Omca
               value: "n"
             transform Delete::Fields,
               fields: %i[collapsingterm userefname]
+            transform Rename::Fields, fieldmap: {
+              form: :oldform
+            }
+            transform Copy::Field,
+              from: :termid,
+              to: :targettermid
+
+            transform do |row|
+              refname = row[:refname]
+
+              row[:refname] = refname.sub(
+                "'#{row[:oldform]}'", "'#{row[:new_form]}'"
+              )
+
+              row
+            end
+
+            transform Delete::FieldsExcept,
+              fields: %i[index rectype refname oldform targettermid termid]
           end
         end
       end

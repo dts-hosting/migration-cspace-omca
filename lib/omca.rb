@@ -140,7 +140,7 @@ module Omca
   #   usages
   setting :auth_uniq_usages,
     reader: true,
-    default: :auth_vocab_remap__uniq_usages
+    default: :authorities__uniq_usages_final_source
 
   def jobkey_for(phase, table)
     tabletype = Omca::Mappings::Db.table_type(table, mode: :dir)
