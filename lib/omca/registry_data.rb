@@ -1157,7 +1157,7 @@ module Omca
 
     def register_refname_csid_lookup_jobs
       ns = "refname_csid_lookup"
-      entries = Omca::Mappings::Fields.skeleton_rectypes
+      entries = Omca::Mappings::Fields.target_rectypes
         .map do |rectype|
           table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
           id_field = Omca::Mappers.id_field_for_table(table)
