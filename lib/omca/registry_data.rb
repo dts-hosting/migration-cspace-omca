@@ -282,27 +282,13 @@ module Omca
           desc: Omca::Jobs::Authorities::DropUsages.desc
         }
 
-        register :dropped_sans_remapped, {
-          path: File.join(Omca.wrkdir, "auth_usages_dropped_sans_remapped.csv"),
-          creator: Omca::Jobs::Authorities::DroppedSansRemapped.method(:new),
-          tags: [ns.to_sym, :usages, :remapped, :assocplace],
-          desc: Omca::Jobs::Authorities::DroppedSansRemapped.desc
-        }
-
-        register :dropped_with_remapped, {
-          path: File.join(Omca.wrkdir, "auth_usages_dropped_with_remapped.csv"),
-          creator: Omca::Jobs::Authorities::DroppedWithRemapped.method(:new),
-          tags: [ns.to_sym, :usages, :remapped, :assocplace],
-          desc: Omca::Jobs::Authorities::DroppedWithRemapped.desc
-        }
-
         register :drop_uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
             "uniq_usages_dropped.csv"),
           creator: {
             callee: Omca::Jobs::Authorities::UniqUsages,
             args: {
-              source: :authorities__dropped_with_remapped,
+              source: :authorities__drop_usages,
               destination: :authorities__drop_uniq_usages
             }
           },
@@ -848,26 +834,6 @@ module Omca
             tags: [:medialink, type.to_sym]
           }
         end
-      end
-
-      Omca.registry.namespace("assocplace") do
-        ns = "assocplace"
-
-        register :usages, {
-          path: File.join(Omca.wrkdir, "assocplace_usages.csv"),
-          creator: Omca::Jobs::Assocplace::Usages.method(:new),
-          tags: [ns.to_sym],
-          desc: Omca::Jobs::Assocplace::Usages.desc
-        }
-        register :remapped, {
-          path: File.join(Omca.wrkdir, "assocplace_remapped.csv"),
-          creator: Omca::Jobs::Assocplace::Remapped,
-          tags: [ns.to_sym],
-          desc: Omca::Jobs::Assocplace::Remapped.desc,
-          dest_special_opts: {
-            initial_headers: Omca::Authorities.usages_headers.map(&:to_sym)
-          }
-        }
       end
 
       Omca.registry.namespace("contact") do

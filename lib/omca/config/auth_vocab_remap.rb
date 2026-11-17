@@ -9,19 +9,20 @@ module Omca
     setting :fields_to_divert,
       reader: true,
       default: [
-        {table: "objectexit_common", field: "depositor"},
         {table: "accessrestrictiongroup",
          field: "accessrestrictionrequestor"},
+        {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
+        {table: "assocplacegroup", field: "assocplace"},
+        {table: "collectionobjects_common", field: "fieldcollectionplace"},
         {table: "collectionobjects_omca", field: "copyrightholder"},
+        {table: "depositoromcagroup", field: "depositoromca"},
         {table: "determinationhistorygroup", field: "dhname"},
         {table: "determinationhistorygroup", field: "identby"},
         {table: "determinationhistorygroup", field: "institution"},
         {table: "materialgroup", field: "material"},
-        {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
+        {table: "objectexit_common", field: "depositor"},
         {table: "objectnamegroup", field: "objectname"},
-        {table: "previousownersgroup", field: "previousowner"},
-        {table: "depositoromcagroup", field: "depositoromca"},
-        {table: "collectionobjects_common", field: "fieldcollectionplace"}
+        {table: "previousownersgroup", field: "previousowner"}
       ]
 
     def remapped_diverted

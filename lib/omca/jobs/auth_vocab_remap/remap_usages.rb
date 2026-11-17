@@ -48,6 +48,13 @@ module Omca
 
                 row
               end
+            elsif table == "assocplacegroup" && field == "assocplace"
+              transform do |row|
+                row[:tabletype] = "repeatable_field"
+                row[:table] = "collectionobjects_common_controlledcontentplaces"
+                row[:field] = "item"
+                row
+              end
             elsif table == "collectionobjects_omca" &&
                 field == "copyrightholder"
               transform do |row|
