@@ -275,35 +275,35 @@ module Omca
           desc: "Re-derive unique usages from fixed malformed usages"
         }
 
-        register :fix_usages, {
-          path: File.join(Omca.datadir, "authority_ref", "usages_fixed.csv"),
-          creator: Omca::Jobs::Authorities::FixUsages,
+        register :drop_usages, {
+          path: File.join(Omca.datadir, "authority_ref", "usages_dropped.csv"),
+          creator: Omca::Jobs::Authorities::DropUsages,
           tags: [ns.to_sym],
-          desc: "- Drop field usages tagged in mappings for usage removal"
+          desc: "Drop field usages tagged in mappings for usage removal"
         }
 
-        register :fixed_sans_remapped, {
-          path: File.join(Omca.wrkdir, "auth_usages_fixed_sans_remapped.csv"),
-          creator: Omca::Jobs::Authorities::FixedSansRemapped.method(:new),
+        register :dropped_sans_remapped, {
+          path: File.join(Omca.wrkdir, "auth_usages_dropped_sans_remapped.csv"),
+          creator: Omca::Jobs::Authorities::DroppedSansRemapped.method(:new),
           tags: [ns.to_sym, :usages, :remapped, :assocplace],
-          desc: Omca::Jobs::Authorities::FixedSansRemapped.desc
+          desc: Omca::Jobs::Authorities::DroppedSansRemapped.desc
         }
 
-        register :fixed_with_remapped, {
-          path: File.join(Omca.wrkdir, "auth_usages_fixed_with_remapped.csv"),
-          creator: Omca::Jobs::Authorities::FixedWithRemapped.method(:new),
+        register :dropped_with_remapped, {
+          path: File.join(Omca.wrkdir, "auth_usages_dropped_with_remapped.csv"),
+          creator: Omca::Jobs::Authorities::DroppedWithRemapped.method(:new),
           tags: [ns.to_sym, :usages, :remapped, :assocplace],
-          desc: Omca::Jobs::Authorities::FixedWithRemapped.desc
+          desc: Omca::Jobs::Authorities::DroppedWithRemapped.desc
         }
 
-        register :fix_uniq_usages, {
+        register :drop_uniq_usages, {
           path: File.join(Omca.datadir, "authority_ref",
-            "uniq_usages_fixed.csv"),
+            "uniq_usages_dropped.csv"),
           creator: {
             callee: Omca::Jobs::Authorities::UniqUsages,
             args: {
-              source: :authorities__fixed_with_remapped,
-              destination: :authorities__fix_uniq_usages
+              source: :authorities__dropped_with_remapped,
+              destination: :authorities__drop_uniq_usages
             }
           },
           tags: [ns.to_sym],

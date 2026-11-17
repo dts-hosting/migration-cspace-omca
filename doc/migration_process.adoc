@@ -44,8 +44,8 @@ Problems with usages that are addressed:
 * `+authorities__usages+`- Extract all refname URN usages
 * `+authorities__fix_malformed_usages+` - bad concept refnames fixed; citations with no form dropped
 * `+non_refname_auth__usages_final+` - adds fixed non-refname uses to `+authorities__fix_malformed_usages+`
-* `+authorities__fix_usages+` - delete usages in fields that are uncontrolled in target CollectionSpace
-* `+authorities__fixed_with_remapped+` - authority field usage remappings (with no change in authority or vocabulary, and no new term generation
+* `+authorities__drop_usages+` - delete usages in fields that are uncontrolled in target CollectionSpace
+* `+authorities__dropped_with_remapped+` - authority field usage remappings (with no change in authority or vocabulary, and no new term generation
 * extract, auto-match or FCAR match unlinked refname usages - refnames that do not match an established term
 * BigAuth FCAR - Altering the preferred form of terms with too many usages to update the term in-system
 
@@ -196,7 +196,7 @@ Required to do other fixes/reporting on authority usages
 
 === Authority usage fixes
 
-`thor run job authorities__fix_usages`
+`thor run job authorities__drop_usages`
 
 * [x] Remove usages for authority fields migrating to uncontrolled fields (marked `authority_treatment` = `uncontrol and remove usage` in mappings tab of spreadsheet.
 

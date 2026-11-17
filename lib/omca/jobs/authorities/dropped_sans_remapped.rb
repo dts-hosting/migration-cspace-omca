@@ -3,15 +3,15 @@
 module Omca
   module Jobs
     module Authorities
-      class FixedSansRemapped
+      class DroppedSansRemapped
         include Omca::DynamicCsvJobable
 
-        def self.desc = "Rows from authorities__fix_usages that are NOT "\
+        def self.desc = "Rows from authorities__drop_usages that are NOT "\
           "for field: collectionobjects_common.assocPlace"
 
-        def source = :authorities__fix_usages
+        def source = :authorities__drop_usages
 
-        def destination = :authorities__fixed_sans_remapped
+        def destination = :authorities__dropped_sans_remapped
 
         def job_code
           logic = %('(table ne "assocplacegroup") && ) +

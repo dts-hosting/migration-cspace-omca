@@ -6,10 +6,10 @@ module Omca
       class Usages
         include Omca::DynamicCsvJobable
 
-        def self.desc = "Rows from authorities__fix_usages "\
+        def self.desc = "Rows from authorities__drop_usages "\
           "for field: collectionobjects_common.assocPlace"
 
-        def source = :authorities__fix_usages
+        def source = :authorities__drop_usages
 
         def destination = :assocplace__usages
 

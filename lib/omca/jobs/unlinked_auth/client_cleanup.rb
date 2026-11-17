@@ -9,7 +9,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__fixed_with_remapped,
+              source: :authorities__dropped_with_remapped,
               destination: :unlinked_auth__client_cleanup,
               lookup: {
                 jobkey: :unlinked_auth__refname_fcar_fail,
