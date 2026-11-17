@@ -39,8 +39,8 @@ module Omca
         )
       end
       register_dir_files(
-        dir: File.join(Omca.datadir, "refnames_csids", "new"),
-        ns: "refnames_csids_new"
+        dir: File.join(Omca.datadir, "supplied", "ids_new"),
+        ns: "ids_new"
       )
 
       register_dir_files(
@@ -1172,12 +1172,12 @@ module Omca
               .dig(:config, :authority_subtypes)
             args[:auth_config] = auth_cfg
             args[:lookup] = [{
-              jobkey: :"refnames_csids_new__#{rectype}",
+              jobkey: :"ids_new__#{rectype}",
               lookup_on: :term
             }]
           else
             args[:lookup] = [{
-              jobkey: :"refnames_csids_new__#{rectype}", lookup_on: :id
+              jobkey: :"ids_new__#{rectype}", lookup_on: :id
             }]
           end
 
