@@ -31,7 +31,7 @@ module Omca
               fields: keepflds
 
             transform Merge::MultiRowLookup,
-              lookup: send(:"refnames_csids_new__#{rectype}"),
+              lookup: send(:"ids_new__#{rectype}"),
               keycolumn: Omca.ingestid_field,
               fieldmap: fieldmap,
               conditions: ->(r, rows) do
@@ -48,7 +48,7 @@ module Omca
             transform Delete::FieldsExcept,
               fields: keepfields
             transform Merge::MultiRowLookup,
-              lookup: send(:"refnames_csids_new__#{rectype}"),
+              lookup: send(:"ids_new__#{rectype}"),
               keycolumn: Omca.ingestid_field,
               fieldmap: fieldmap
             transform Rename::Field,
