@@ -3,20 +3,20 @@
 module Omca
   module Jobs
     module Authorities
-      class FixedWithRemapped
+      class DroppedWithRemapped
         include Omca::DynamicCsvJobable
 
         def self.desc = "Join sans-remapped usages with remapped usages"
 
         def source = %i[
-          authorities__fixed_sans_remapped
+          authorities__dropped_sans_remapped
           assocplace__remapped
         ]
 
         def source_paths = source.map { |s| Omca.registry.resolve(s).path }
           .join(" ")
 
-        def destination = :authorities__fixed_with_remapped
+        def destination = :authorities__dropped_with_remapped
 
         def job_code
           cmd = %(xan cat rows #{source_paths} ) +

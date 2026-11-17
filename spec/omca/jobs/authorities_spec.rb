@@ -32,14 +32,14 @@ RSpec.describe Omca::Jobs::Authorities do
     end
   end
 
-  describe ":authorities__fix_usages", :slow do
+  describe ":authorities__drop_usages", :slow do
     before(:context) do
-      jobkey = :authorities__fix_usages
+      jobkey = :authorities__drop_usages
       clear_output(jobkey)
       csv_job_output(jobkey)
     end
 
-    let(:jobkey) { :authorities__fix_usages }
+    let(:jobkey) { :authorities__drop_usages }
 
     it "removes usages from `uncontrol and remove usage` fields" do
       # data

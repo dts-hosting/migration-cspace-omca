@@ -9,7 +9,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :authorities__fix_uniq_usages,
+              source: :authorities__drop_uniq_usages,
               destination: :authorities__add_pref_term_data
             },
             transformer: xforms

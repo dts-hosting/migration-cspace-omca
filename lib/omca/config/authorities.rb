@@ -81,13 +81,14 @@ module Omca
           [["person", "local"]]
       }
 
-    setting :fix_usages_path,
+    setting :drop_usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "fix", "usages_fixed.csv")
+      default: File.join(Omca.datadir, "authority_ref", "usages_dropped.csv")
 
-    setting :fix_uniq_usages_path,
+    setting :drop_uniq_usages_path,
       reader: true,
-      default: File.join(Omca.datadir, "fix", "fixed_uniq_usages.csv")
+      default: File.join(Omca.datadir, "authority_ref",
+        "uniq_usages_dropped.csv")
 
     setting :add_term_index,
       reader: true,

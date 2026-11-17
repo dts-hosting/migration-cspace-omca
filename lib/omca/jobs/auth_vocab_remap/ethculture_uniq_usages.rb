@@ -12,7 +12,7 @@ module Omca
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
-              source: :auth_vocab_remap__uniq_usages,
+              source: :authorities__uniq_usages_final_source,
               destination: :auth_vocab_remap__ethculture_uniq_usages
             },
             transformer: xforms
