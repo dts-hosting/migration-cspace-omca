@@ -17,7 +17,7 @@ module Omca
         end
 
         def sources
-          Omca::Mappings::Fields.skeleton_rectypes
+          Omca::Mappings::Fields.target_rectypes
             .select { |rectype| Omca::Mappers.authority?(rectype) }
             .map { |rectype| :"refname_csid_lookup__#{rectype}" }
             .select { |job| Kiba::Extend::Job.output?(job) }
