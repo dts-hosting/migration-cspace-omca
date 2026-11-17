@@ -402,13 +402,15 @@ module Omca
       Omca.registry.namespace("auth_merge_prep") do
         ns = "auth_merge_prep"
 
+        dir = File.join(Omca.wrkdir, "merge_prep")
+        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+
         Omca::Authmerge.field_list.each do |tablefield|
           table = tablefield[0]
           field = tablefield[1]
 
           register :"#{table}_#{field}", {
-            path: File.join(Omca.datadir, "authority_ref", "merge_prep",
-              "#{table}_#{field}.csv"),
+            path: File.join(dir, "#{table}_#{field}.csv"),
             creator: {
               callee: Omca::Jobs::AuthMergePrep.method(:new),
               args: {table: table, field: field}
