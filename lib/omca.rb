@@ -96,6 +96,12 @@ module Omca
     reader: true,
     default: 0
 
+  # @return [String] name of the phase that finishes up initial fixes of the
+  #  orig extracted data
+  setting :fixed_orig_phase,
+    reader: true,
+    default: "strip"
+
   # @return [nil, Integer] corresponding to db_iteration for which skeleton
   #   authorities have been loaded in new instance, and refnames from the
   #   new instance put in place as a data source

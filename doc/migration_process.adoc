@@ -61,9 +61,7 @@ This populates the `~/data/omca/mig/orig` directory.
 * After load of skeleton-phase records, use of CMT `thor rr list RECORDTYPE` command to produce the files stored in `~/data/omca/mig/refnames_csids/new`.
 These are used to map the old system CSIDs to the new (client request), and to replace old authority refname usages with refnames in new instance.
 
-== Migration stages
-
-=== Extract
+== Extraction of data from database
 
 Pull the tables from the database, in CSV format.
 
@@ -139,19 +137,40 @@ subgroup:: One or more rows per group_table row; Data from repeatable a repeatab
 subrecord:: Blob and contact tables
 structured_dates:: Combined data from `dategroup` and `structureddategroup` tables, in two files based on whether the date is top-level in record, or nested inside a field group; Both of these extracted tables have multiple target record types and different target date fields within those.
 
-Other extract tasks:
+== Migration stages
 
-* Vocabularies (Term Lists)
+=== Pre-phases
+
+Fixes applied to all orig data.
+The final phase in this category is set as `Omca.fixed_orig_phase`.
+
+These include anything that we want reflected in the next phase of extracted data.
+
+==== `nuke_bom`
+
+Removal of BOM from values in all original tables
+
+==== `strip`
+
+* Delete leading and trailing spaces from all values
+* Replace two or more spaces in any value with one space
+
+=== Extraction from `Omca.fixed_orig_phase`
+
+==== Vocabularies (Term Lists)
+
 ** [x] Extract all vocabulary terms used (`thor run job vocab__usages`)
 ** [x] Extract full db records for all vocabulary terms, used or not; additional fields will be merged into any used terms (or existing terms in hosted instance)
 
-* Authorities
+==== Authorities
+
 ** [x] Extract all authority refnames used, parse, and write to usages file (`thor run job authorities__usages` => >1GB CSV file)
 ** [x] Split up/reformat usages file so that it is reasonably usable
 *** [x] Unique usages with usage counts (`thor run job authorities__uniq_usages`)
 ** [x] Extract any non-refname values in authority-controlled fields (`thor run job non_refname_auth__usages`)
 
-* Option Lists
+==== Option Lists
+
 ** [x] Extract all values used in source fields that map to target fields controlled by option lists
 ** [x] Configure Lyrasis hosted UI config with option list customizations
 

@@ -13,6 +13,7 @@ module Omca
       {
         "orig" => :skip,
         "nuke_bom" => Omca::Jobs::NukeBom.method(:new),
+        "strip" => Omca::Jobs::Strip,
         "preprocess" => Omca::Jobs::Preprocess,
         "authorityprep" => Omca::Jobs::Authorityprep,
         "fix" => Omca::Jobs::FixTableData,
@@ -930,15 +931,16 @@ module Omca
         dynamic_source: true,
         desc: "Queries on OMCA's source database"
       }
-      Omca.registry.register :nuke_bom_dir_files, {
+      Omca.registry.register :"#{Omca.fixed_orig_phase}_dir_files", {
         dynamic_source: true,
-        desc: "All tables after nuke_bom phase"
+        desc: "All tables produced by #{Omca.fixed_orig_phase} phase"
       }
-      Omca.registry.register :nuke_bom_authority_field_tables, {
-        dynamic_source: true,
-        desc: "Nuke-bomed source tables for fields containing authority "\
-          "term refnames"
-      }
+      Omca.registry.register :"#{Omca.fixed_orig_phase}_authority_field_tables",
+        {
+          dynamic_source: true,
+          desc: "Source tables from #{Omca.fixed_orig_phase} phase for fields "\
+            "containing authority term refnames"
+        }
       Omca.registry.register :remap_optlist_field_tables, {
         dynamic_source: true,
         desc: "Remapped source tables for field values mapping into "\

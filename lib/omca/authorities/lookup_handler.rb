@@ -68,9 +68,8 @@ module Omca
 
       def populate_terms
         termtable = Omca::Mappers.term_table_for(type)
-        path = File.join(Omca.datadir, "nuke_bom", "repeatable_field_group",
-          "#{termtable}.csv")
-
+        path = File.join(Omca.datadir, Omca.fixed_orig_phase,
+          "repeatable_field_group", "#{termtable}.csv")
         data = CSV.parse(
           File.read(path), headers: true, header_converters: :symbol
         )
