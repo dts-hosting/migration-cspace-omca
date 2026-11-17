@@ -277,9 +277,9 @@ module Omca
 
         register :drop_usages, {
           path: File.join(Omca.datadir, "authority_ref", "usages_dropped.csv"),
-          creator: Omca::Jobs::Authorities::DropUsages,
+          creator: Omca::Jobs::Authorities::DropUsages.method(:new),
           tags: [ns.to_sym],
-          desc: "Drop field usages tagged in mappings for usage removal"
+          desc: Omca::Jobs::Authorities::DropUsages.desc
         }
 
         register :dropped_sans_remapped, {
