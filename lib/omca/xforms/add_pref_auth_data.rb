@@ -32,7 +32,7 @@ module Omca
         table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
 
         lookups[auth] = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: :"nuke_bom_main__#{table}",
+          jobkey: :"#{Omca.fixed_orig_phase}_main__#{table}",
           lookup_on: :shortidentifier
         )
         lookups[auth]

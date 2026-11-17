@@ -13,8 +13,13 @@ module Omca
         def norm = @norm ||=
                      Kiba::Extend::Utils::StringNormalizer.new(mode: :cspaceid)
 
+        def srcfirst
+          "#{Omca.fixed_orig_phase}_repeatable_field_group__"\
+            "acquisitionfunding"
+        end
+
         def source = [
-          :nuke_bom_repeatable_field_group__acquisitionfunding,
+          srcfirst.to_sym,
           :big_auth__uniq_usages
         ]
 

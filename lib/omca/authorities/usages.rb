@@ -8,7 +8,7 @@ module Omca
       def self.desc = "Write all authority refname usages, with table, row "\
         "id, pos, and field"
 
-      def source = :nuke_bom_dir_files
+      def source = :"#{Omca.fixed_orig_phase}_dir_files"
 
       # Uncomment this and comment out the above definition if you want VERY
       #   LARGE job graphs
@@ -40,17 +40,19 @@ module Omca
         end
       end
 
-      def sources = Kiba::Extend::Command::Jobs::TaggedOr.call(:nuke_bom)
+      def sources = Kiba::Extend::Command::Jobs::TaggedOr.call(
+        Omca.fixed_orig_phase.to_sym
+      )
 
       def extract_from_files(dir, csv)
-        dirpath = File.join(Omca.datadir, "nuke_bom", dir)
+        dirpath = File.join(Omca.datadir, Omca.fixed_orig_phase, dir)
         Dir.children(dirpath).each do |filename|
           extract_from_file(dir, filename, csv)
         end
       end
 
       def extract_from_file(dir, filename, csv)
-        filepath = File.join(Omca.datadir, "nuke_bom", dir, filename)
+        filepath = File.join(Omca.datadir, Omca.fixed_orig_phase, dir, filename)
         puts "Extracting from #{filepath}"
         base = {
           "tabletype" => dir,

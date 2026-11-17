@@ -6,7 +6,7 @@ class Del < Thor
     FileUtils.cd(Omca.datadir) do
       Dir.each_child(Omca.datadir) do |child|
         next unless Dir.exist?(child)
-        next if ["orig", "nuke_bom"].include?(child)
+        next if ["orig", "nuke_bom", "strip"].include?(child)
 
         path = File.join(child, subpath)
         next unless File.exist?(path)

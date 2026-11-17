@@ -11,7 +11,7 @@ module Omca
           "items in repeatable namedcollections table, in a "\
           "format that can be joined to main usages table"
 
-        def source = :nuke_bom_main__collectionobjects_common
+        def source = :"#{Omca.fixed_orig_phase}_main__collectionobjects_common"
 
         def destination = :works__orig_usages
 

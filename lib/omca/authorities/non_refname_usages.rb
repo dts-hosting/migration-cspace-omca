@@ -8,12 +8,12 @@ module Omca
       def self.desc = "Get non-refname values used in authority controlled "\
         "fields "
 
-      def source = :nuke_bom_authority_field_tables
+      def source = :"#{Omca.fixed_orig_phase}_authority_field_tables"
 
       def destination = :non_refname_auth__usages
 
       def initialize
-        @phase_dir = "nuke_bom"
+        @phase_dir = Omca.fixed_orig_phase
         @authfields = {}
       end
 
