@@ -8,10 +8,10 @@ module Omca
 
         def job
           files = {
-              source: :authorities__usages_final_source,
-              destination: :authorities__usages_new_refname,
-              lookup: :authorities__uniq_usage_new_lookup
-            }
+            source: :authorities__usages_final_source,
+            destination: :authorities__usages_new_refname,
+            lookup: :authorities__uniq_usage_new_lookup
+          }
           unless Omca.ready_for_authority_merge?
             return Kiba::Extend::Jobs::NullJob.new(files: files)
           end
