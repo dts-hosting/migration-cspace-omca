@@ -7,12 +7,17 @@ module Omca
         module_function
 
         def job
-          Kiba::Extend::Jobs::Job.new(
-            files: {
+          files = {
               source: :authorities__usages_final_source,
               destination: :authorities__usages_new_refname,
               lookup: :authorities__uniq_usage_new_lookup
-            },
+            }
+          unless Omca.ready_for_authority_merge?
+            return Kiba::Extend::Jobs::NullJob.new(files: files)
+          end
+
+          Kiba::Extend::Jobs::Job.new(
+            files: files,
             transformer: xforms
           )
         end

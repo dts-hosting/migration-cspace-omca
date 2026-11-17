@@ -15,6 +15,13 @@ module Omca
       def destination = :"auth_merge_prep__#{table}_#{field}"
 
       def job_code
+        unless Omca::Authmerge.merge_prep_ready?
+          return Kiba::Extend::Jobs::NullJob.new(files: {
+            source: source,
+            destination: destination
+          })
+        end
+
         cmd = %(xan filter 'table eq "#{table}" && ) +
           %(field eq "#{field}"' #{source_path} > #{destination_path})
 
