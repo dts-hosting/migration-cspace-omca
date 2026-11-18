@@ -42,7 +42,8 @@ module Omca
             end
 
             transform Delete::FieldsExcept,
-              fields: %i[index rectype refname oldform targettermid termid]
+              fields: %i[index rectype refname oldform targettermid termid
+                new_form]
           end
         end
       end
