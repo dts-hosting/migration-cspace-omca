@@ -512,9 +512,7 @@ module Omca
           path: File.join(Omca.wrkdir, "unlinked_auth_uniq_usages.csv"),
           creator: Omca::Jobs::UnlinkedAuth::UniqUsages,
           tags: [ns.to_sym],
-          desc: "Deletes :authorities__collapse_to_pref rows with a refname "\
-            "merged in from authority term table. Adds :index for later merge "\
-            "back into usages"
+          desc: Omca::Jobs::UnlinkedAuth::UniqUsages.desc
         }
         register :uniq_usages_explode, {
           path: File.join(Omca.wrkdir, "unlinked_auth_uniq_usages_explode.csv"),
