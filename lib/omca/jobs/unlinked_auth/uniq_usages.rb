@@ -6,6 +6,9 @@ module Omca
       module UniqUsages
         module_function
 
+        def desc = "Deletes :authorities__add_pref_term_data rows with a "\
+          "refname merged in from authority term table."
+
         def job
           Kiba::Extend::Jobs::Job.new(
             files: {
