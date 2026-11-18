@@ -127,6 +127,11 @@ module Omca
             lookup_on: :termcsid,
             name: :addressnotes
           }
+          base << {
+            jobkey: :orgs__main_acqfundsource,
+            lookup_on: :id,
+            name: :acqfundsource
+          }
         when "persons_common"
           base << {
             jobkey: :contact__addressnotes,
@@ -468,6 +473,9 @@ module Omca
               target: :namenote,
               delete_sources: true,
               delim: Omca.notedelim
+            transform Omca::Xforms::Remap::AddAcqfundsource,
+              lookup: acqfundsource
+            transform Clean::EnsureConsistentFields
           when "partiesinvolvedgroup"
             transform Omca::Xforms::Remap::BuildPartiesinvolvedgroup
           when "persons_common"
