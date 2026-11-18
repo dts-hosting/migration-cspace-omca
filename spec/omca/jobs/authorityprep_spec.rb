@@ -3,6 +3,32 @@
 require "spec_helper"
 
 RSpec.describe Omca::Jobs::Authorityprep do
+  before(:all) do
+    path = File.join(Omca.wrkdir, "big_auth_non_collapsing.csv")
+    FileUtils.rm(path) if File.exist?(path)
+  end
+
+  describe ":authorityprep_main__persons_common" do
+    before(:all) do
+      path = File.join(Omca.datadir, "main", "persons_common.csv")
+      FileUtils.rm(path) if File.exist?(path)
+    end
+
+    let(:data) { csv_job_output(:authorityprep_main__persons_common) }
+
+    it "fixes noncollapsing BigAuth ingestid" do
+      row = data.find do |row|
+        row[:shortidentifier] == "staff1646"
+      end
+      expect(row[Omca.ingestid_field]).to eq("Joy A. Tahan")
+    end
+
+    it "tags unused terms" do
+      val = data[Omca::Authorities.used_tag_field].uniq.sort
+      expect(val).to eq(%w[n y])
+    end
+  end
+
   describe ":authorityprep_main__places_common" do
     let(:data) { csv_job_output(:authorityprep_main__places_common) }
 
