@@ -878,6 +878,12 @@ module Omca
           tags: [ns.to_sym, :skeleton],
           desc: Omca::Jobs::Orgs::SkeletonAcqfundsource.desc
         }
+        register :main_acqfundsource, {
+          path: File.join(Omca.wrkdir, "orgs_main_acqfundsource.csv"),
+          creator: Omca::Jobs::Orgs::MainAcqfundsource,
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Orgs::MainAcqfundsource.desc
+        }
       end
 
       Omca.registry.namespace("structured_dates") do

@@ -95,6 +95,10 @@ module Omca
             ":vocabularies:name(fundsource)",
             ":orgauthorities:name(organization)"
           ).sub(")'", "-new)'")
+            .sub(
+              "(hpf-new)'History Photo Fund'",
+              "(histphof-new)'History Photo Fund'"
+            )
         end
       end
     end
