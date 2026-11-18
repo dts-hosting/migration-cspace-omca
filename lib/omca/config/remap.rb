@@ -52,6 +52,10 @@ module Omca
           "exits_common" => {
             source: [:"#{previous}_main__objectexit_common"],
             rectype: "exit"
+          },
+          "works_common" => {
+            source: [:works__orig_usages],
+            rectype: "work"
           }
         },
         "repeatable_field" => {

@@ -57,6 +57,9 @@ module Omca
           val.sub(
             ":vocabularies:name(collection)",
             ":workauthorities:name(work)"
+          ).sub(
+            "(Andrew_J_Russell)",
+            "(Andrew_J._Russell)"
           )
         end
       end

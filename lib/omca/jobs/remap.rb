@@ -532,6 +532,24 @@ module Omca
                 rectype: "collectionobject",
                 usage: "Exhibition history"
               }
+          when "works_common"
+            transform Deduplicate::Table, field: :form
+            transform Delete::Fields,
+              fields: %i[tabletype table field pos authority]
+            transform Rename::Fields, fieldmap: {
+              vocab: :authority,
+              termid: :shortidentifier,
+              form: :ingestid
+            }
+            transform Copy::Field,
+              from: :ingestid,
+              to: :origpref
+            transform Copy::Field,
+              from: :id,
+              to: :recordcsid
+            transform Merge::ConstantValue,
+              target: :term_is_used,
+              value: "y"
           end
         end
       end
