@@ -4,8 +4,8 @@ require "spec_helper"
 
 RSpec.describe Omca::Jobs::BigAuth do
   before(:all) do
-    FileUtils.rm(File.join(Omca.datadir, "authority_ref",
-      "usages_big_auth.csv"))
+    path = File.join(Omca.datadir, "authority_ref", "usages_big_auth.csv")
+    FileUtils.rm(path) if File.exist?(path)
 
     Dir.children(Omca.wrkdir).each do |file|
       next unless file.start_with?("big_auth_")
@@ -16,10 +16,31 @@ RSpec.describe Omca::Jobs::BigAuth do
     end
   end
 
-  describe ":big_auth__usages_undiverted" do
-    before(:all) { csv_job_output(:big_auth__usages_undiverted) }
+  describe ":big_auth__final" do
+    before(:all) { csv_job_output(:big_auth__final) }
 
-    let(:path) { Omca.registry.resolve(:big_auth__usages_undiverted).path }
+    let(:path) { Omca.registry.resolve(:big_auth__final).path }
+
+    it "includes noncollapsing person with new form indicated" do
+      filter = "'termid eq \"staff1291\"'"
+      result = xan_filter(filter, path, include_headers: true, as: :csv)
+
+      expect(result.first[:new_form]).to eq("Gen M. Prlain")
+    end
+
+    it "includes collapsing person with new form indicated" do
+      filter = "'termid eq \"staff1646\"'"
+      result = xan_filter(filter, path, include_headers: true, as: :csv)
+
+      expect(result.first[:new_form]).to eq("Joy A. Tahan")
+    end
+
+    it "includes noncollapsing place with new form indicated" do
+      filter = "'termid eq \"pl97080\"'"
+      result = xan_filter(filter, path, include_headers: true, as: :csv)
+
+      expect(result.first[:new_form]).to eq("Oakland, California")
+    end
   end
 
   describe ":big_auth__fix_diverted_usages" do
