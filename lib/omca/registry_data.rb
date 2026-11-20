@@ -384,6 +384,14 @@ module Omca
           tags: [ns.to_sym],
           desc: "Re-derive unique usages from authorities__usages_final_source"
         }
+        register :usages_authmerged, {
+          path: File.join(
+            Omca.datadir, "authority_ref", "usages_authmerged.csv"
+          ),
+          creator: Omca::Jobs::Authorities::UsagesAuthmerged.method(:new),
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::Authorities::UsagesAuthmerged.desc
+        }
       end
 
       Omca.registry.namespace("auth_merge_prep") do
