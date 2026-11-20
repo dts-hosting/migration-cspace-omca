@@ -437,6 +437,27 @@ module Omca
           end
       end
 
+      Omca.registry.namespace("refname_usage_merge") do
+        ns = "refname_usage_merge"
+
+        Omca::AuthmergePrep.target_auth_vocabs
+          .each do |arr|
+            type_subtype = arr.join("_")
+            type = arr[0]
+            subtype = arr[1]
+
+            register type_subtype.to_sym, {
+              path: File.join(Omca.wrkdir, "#{ns}_#{type_subtype}.csv"),
+              creator: {
+                callee: Omca::Jobs::RefnameUsageMerge.method(:new),
+                args: {type: type, subtype: subtype}
+              },
+              tags: [ns, type_subtype, type, subtype].map(&:to_sym),
+              desc: Omca::Jobs::RefnameUsageMerge.desc(type_subtype)
+            }
+          end
+      end
+
       Omca.registry.namespace("auth_merge_prep") do
         ns = "auth_merge_prep"
 
