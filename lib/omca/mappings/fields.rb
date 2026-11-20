@@ -82,6 +82,12 @@ module Omca
         end
       end
 
+      def authority_controlled_target_rows
+        migrating.select do |row|
+          row["target_field_source"]&.start_with?("authority: ")
+        end
+      end
+
       def vocab_controlled_target_rows
         rows = migrating.select do |row|
           row["target_field_source"]&.start_with?("vocabulary: ")
