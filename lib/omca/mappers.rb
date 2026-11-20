@@ -89,22 +89,34 @@ module Omca
     def rectypes_by_authority_type
       @rectypes_by_authority_type ||=
         authorities.values
-          .map do |m|
+          .to_h do |m|
           [m[:config][:authority_type],
             m[:config][:recordtype]]
         end
-          .to_h
     end
 
     def rectype_by_authority_type(authtype)
       rectypes_by_authority_type[authtype]
     end
 
+    def authority_types_by_rectype
+      @authority_types_by_rectype ||=
+        authorities.values
+          .to_h do |m|
+          [m[:config][:recordtype],
+            m[:config][:authority_type]]
+        end
+    end
+
+    def authority_type_by_rectype(rectype) = authority_types_by_rectype[rectype]
+
     # @param rectype [String]
     # @param vocab [String] the authority subtype string (e.g. "local" for
     #   person)
     # @return [String] the db shortidentifier for the authority subtype
     def auth_vocab_shortid(rectype, vocab)
+      return vocab if vocab == "ethculture" || vocab == "archculture"
+
       mapper = mappers[rectype]
       return unless mapper
 
