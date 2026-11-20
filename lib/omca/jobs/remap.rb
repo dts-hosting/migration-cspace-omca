@@ -249,6 +249,18 @@ module Omca
               target: :item,
               delete_sources: true,
               delim: " "
+          when "collectionobjects_common_fieldcollectionplaces"
+            transform FilterRows::FieldPopulated,
+              action: :keep,
+              field: :fieldcollectionplace
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid id fieldcollectionplace]
+            transform Merge::ConstantValue,
+              target: :pos,
+              value: "0"
+            transform Rename::Field,
+              from: :fieldcollectionplace,
+              to: :item
           when "collectionobjects_common_namedcollections"
             transform FilterRows::FieldPopulated,
               action: :keep,
@@ -258,6 +270,9 @@ module Omca
             transform Merge::ConstantValue,
               target: :pos,
               value: "0"
+            transform Rename::Field,
+              from: :collection,
+              to: :item
           when "collectionobjects_common_publishtolist"
             transform FilterRows::FieldPopulated,
               action: :keep,
@@ -400,6 +415,9 @@ module Omca
               action: :keep,
               field: :depositor
             transform Merge::ConstantValue, target: :pos, value: "0"
+            transform Rename::Field,
+              from: :depositor,
+              to: :item
           when "loansin_common"
             transform Merge::MultiRowLookup,
               lookup: loansin_omca,
