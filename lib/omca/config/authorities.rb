@@ -102,5 +102,16 @@ module Omca
             delim: " "
         end
       end
+
+    def authority_controlled_target_field_config
+      result = {}
+      Omca::Mappings::Fields.authority_controlled_target_rows
+        .each do |row|
+          key = [row["target_db_table_type"], row["target_db_table"]]
+          result[key] = [] unless result.key?(key)
+          result[key] << row["target_db_field"]
+        end
+      result
+    end
   end
 end
