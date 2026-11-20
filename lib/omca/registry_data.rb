@@ -796,6 +796,14 @@ module Omca
             initial_headers: %i[identificationnumber oldcsid newcsid]
           }
         }
+        register :mergedauth_check, {
+          path: File.join(
+            Omca.datadir, "reports", "mergedauth_check.csv"
+          ),
+          creator: Omca::Jobs::Report::MergedauthCheck.method(:new),
+          tags: %i[reports authorities],
+          desc: Omca::Jobs::Report::MergedauthCheck.desc
+        }
       end
 
       Omca.registry.namespace("map_report") do
