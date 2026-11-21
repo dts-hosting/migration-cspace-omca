@@ -357,9 +357,9 @@ module Omca
           path: File.join(
             Omca.datadir, "authority_ref", "usages_new_refname.csv"
           ),
-          creator: Omca::Jobs::Authorities::UsagesNewRefname,
+          creator: Omca::Jobs::Authorities::UsagesNewRefname.method(:new),
           tags: [ns.to_sym],
-          desc: "Update usages with the new target refnames of used terms"
+          desc: Omca::Jobs::Authorities::UsagesNewRefname.desc
         }
         register :usages_final_source, {
           path: File.join(
