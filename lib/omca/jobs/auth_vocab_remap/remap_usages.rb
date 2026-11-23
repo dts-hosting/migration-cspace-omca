@@ -73,6 +73,12 @@ module Omca
                 row[:pos] = "0"
                 row
               end
+            elsif table == "collectionobjects_common_contentplaces" &&
+                field == "item"
+              transform do |row|
+                row[:table] = "collectionobjects_common_controlledcontentplaces"
+                row
+              end
             elsif table == "depositoromcagroup" &&
                 field == "depositoromca"
               transform do |row|
