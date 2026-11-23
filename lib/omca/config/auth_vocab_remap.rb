@@ -11,6 +11,7 @@ module Omca
       default: [
         {table: "accessrestrictiongroup",
          field: "accessrestrictionrequestor"},
+        {table: "acquisitioncontactgroup", field: "contact"},
         {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
         {table: "assocplacegroup", field: "assocplace"},
         {table: "collectionobjects_common", field: "fieldcollectionplace"},

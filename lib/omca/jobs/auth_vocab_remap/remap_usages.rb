@@ -30,6 +30,14 @@ module Omca
                 row[:field] = "requester"
                 row
               end
+            elsif table == "acquisitioncontactgroup" &&
+                field == "contact"
+              transform do |row|
+                row[:tabletype] = "extension_field_group"
+                row[:table] = "partiesinvolvedgroup"
+                row[:field] = "involvedparty"
+                row
+              end
             elsif table == "assocculturalcontextgroup" &&
                 field == "assocculturalcontext"
               transform do |row|
