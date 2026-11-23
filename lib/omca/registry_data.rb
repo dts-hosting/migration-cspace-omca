@@ -458,28 +458,26 @@ module Omca
           end
       end
 
-      Omca.registry.namespace("auth_merge_prep") do
-        ns = "auth_merge_prep"
+      Omca.registry.namespace("new_refname_usages_split") do
+        ns = "new_refname_usages_split"
 
-        dir = File.join(Omca.wrkdir, "merge_prep")
-        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+        Omca::Authmerge.authority_controlled_target_fields
+          .each do |arr|
+            table = arr[0]
+            field = arr[1]
+            table_field = arr.join("_")
 
-        Omca::Authmerge.field_list.each do |tablefield|
-          table = tablefield[0]
-          field = tablefield[1]
-
-          register :"#{table}_#{field}", {
-            path: File.join(dir, "#{table}_#{field}.csv"),
-            creator: {
-              callee: Omca::Jobs::AuthMergePrep.method(:new),
-              args: {table: table, field: field}
-            },
-            tags: [ns.to_sym, table.to_sym, field.to_sym],
-            desc: "Extract mergeable authority usages for "\
-              "#{table}.#{field}",
-            lookup_on: :id
-          }
-        end
+            register table_field.to_sym, {
+              path: File.join(Omca.wrkdir, "#{ns}_#{table_field}.csv"),
+              creator: {
+                callee: Omca::Jobs::NewRefnameUsagesSplit.method(:new),
+                args: {table: table, field: field}
+              },
+              tags: [ns, table_field, table, field].map(&:to_sym),
+              desc: Omca::Jobs::NewRefnameUsagesSplit.desc(table_field),
+              lookup_on: :id
+            }
+          end
       end
 
       Omca.registry.namespace("non_refname_auth") do

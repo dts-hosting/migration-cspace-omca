@@ -2,8 +2,11 @@
 
 module Omca
   module Jobs
-    class AuthMergePrep
+    class NewRefnameUsagesSplit
       include Omca::DynamicCsvJobable
+
+      def self.desc(table_field) = "Extract usages for #{table_field} from "\
+        ":authorities__usages_new_refname"
 
       def initialize(table:, field:)
         @table = table
@@ -12,7 +15,7 @@ module Omca
 
       def source = :authorities__usages_new_refname
 
-      def destination = :"auth_merge_prep__#{table}_#{field}"
+      def destination = :"new_refname_usages_split__#{table}_#{field}"
 
       def job_code
         unless Omca::Authmerge.merge_prep_ready?
@@ -26,11 +29,6 @@ module Omca
           %(field eq "#{field}"' #{source_path} > #{destination_path})
 
         `#{cmd}`
-      end
-
-      def outrows
-        ct = `xan count #{destination_path}`.chomp
-        "#{ct} rows"
       end
 
       private
