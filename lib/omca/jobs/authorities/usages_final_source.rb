@@ -15,11 +15,17 @@ module Omca
 
         def destination = :authorities__usages_final_source
 
-        def job_code
-          paths = source.map { |s| Omca.registry.resolve(s).path }
-            .join(" ")
+        def job_code = `#{cmd}`
 
-          `xan cat rows -o #{destination_path} #{paths}`
+        private
+
+        def cmd
+          "xan cat rows -o #{destination_path} #{paths}"
+        end
+
+        def paths
+          source.map { |s| Omca.registry.resolve(s).path }
+            .join(" ")
         end
       end
     end
