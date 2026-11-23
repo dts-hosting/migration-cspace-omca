@@ -866,6 +866,14 @@ module Omca
           tags: %i[reports authorities],
           desc: Omca::Jobs::Report::MergedauthCheck.desc
         }
+        register :unmerged_usages, {
+          path: File.join(
+            Omca.datadir, "reports", "unmerged_usages.csv"
+          ),
+          creator: Omca::Jobs::Report::UnmergedUsages.method(:new),
+          tags: %i[reports authorities],
+          desc: Omca::Jobs::Report::UnmergedUsages.desc
+        }
       end
 
       Omca.registry.namespace("map_report") do
