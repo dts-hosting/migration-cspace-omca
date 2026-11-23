@@ -16,29 +16,25 @@ module Omca
     end
 
     def merge_prep_ready? = Omca.ready_for_authority_merge? &&
-      File.exist?(usages_path)
+      Kiba::Extend::Job.output?(usages_key)
 
-    def field_list = @field_list ||= get_field_list
-
-    def by_table = @by_table ||= get_by_table
-
-    def get_field_list
-      return [] unless merge_prep_ready?
-
-      cmd = %(xan map 'col(1) ++ "." ++ col(3) as tablefield' ) +
-        %(#{usages_path} | ) +
-        %(xan select tablefield | ) +
-        %(xan dedup -s tablefield)
-      `#{cmd}`.chomp.split("\n")[1..].map { |e| e.split(".") }
+    def authority_controlled_target_field_config
+      result = {}
+      Omca::Mappings::Fields.authority_controlled_target_rows
+        .each do |row|
+          key = [row["target_db_table_type"], row["target_db_table"]]
+          result[key] = [] unless result.key?(key)
+          result[key] << row["target_db_field"]
+        end
+      result
     end
-    private_class_method :get_field_list
 
-    def get_by_table
-      return {} unless merge_prep_ready?
-
-      field_list.group_by { |arr| arr[0] }
-        .transform_values { |v| v.map { |arr| arr[1] } }
+    def authority_controlled_target_fields
+      result = []
+      authority_controlled_target_field_config.each do |ti, fields|
+        fields.each { |f| result << [ti[1], f] }
+      end
+      result.uniq
     end
-    private_class_method :get_by_table
   end
 end
