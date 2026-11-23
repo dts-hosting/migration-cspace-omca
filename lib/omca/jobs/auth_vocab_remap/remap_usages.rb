@@ -105,6 +105,15 @@ module Omca
                   row
                 end
               end
+            elsif table == "intakes_common" &&
+                field == "currentowner"
+              transform do |row|
+                row[:tabletype] = "repeatable_field"
+                row[:table] = "intakes_common_currentowners"
+                row[:field] = "item"
+                row[:pos] = "-1"
+                row
+              end
             elsif table == "materialgroup" &&
                 field == "material"
               transform do |row|
