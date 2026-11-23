@@ -92,6 +92,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :dates
           }
+        when "intakes_common_currentowners"
+          base << {
+            jobkey: :"#{prev}_main__intakes_common",
+            lookup_on: :recordcsid,
+            name: :intakes_common
+          }
         when "loansin_common"
           base << {
             jobkey: :"#{prev}_addtl_fields__loansin_omca",
@@ -418,6 +424,11 @@ module Omca
             transform Rename::Field,
               from: :depositor,
               to: :item
+          when "intakes_common"
+            transform Delete::Fields, fields: :currentowner
+          when "intakes_common_currentowners"
+            transform Omca::Xforms::Remap::AddMainCurrentowners,
+              lookup: intakes_common
           when "loansin_common"
             transform Merge::MultiRowLookup,
               lookup: loansin_omca,
