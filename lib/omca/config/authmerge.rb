@@ -26,7 +26,7 @@ module Omca
           result[key] = [] unless result.key?(key)
           result[key] << row["target_db_field"]
         end
-      result
+      result.transform_values(&:uniq)
     end
 
     def authority_controlled_target_fields
