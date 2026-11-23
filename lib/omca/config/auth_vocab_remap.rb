@@ -20,6 +20,7 @@ module Omca
         {table: "determinationhistorygroup", field: "dhname"},
         {table: "determinationhistorygroup", field: "identby"},
         {table: "determinationhistorygroup", field: "institution"},
+        {table: "intakes_common", field: "currentowner"},
         {table: "materialgroup", field: "material"},
         {table: "objectexit_common", field: "depositor"},
         {table: "objectnamegroup", field: "objectname"},
