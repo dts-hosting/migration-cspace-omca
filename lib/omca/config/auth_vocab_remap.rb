@@ -23,7 +23,8 @@ module Omca
         {table: "materialgroup", field: "material"},
         {table: "objectexit_common", field: "depositor"},
         {table: "objectnamegroup", field: "objectname"},
-        {table: "previousownersgroup", field: "previousowner"}
+        {table: "previousownersgroup", field: "previousowner"},
+        {table: "viewercontributiongroup", field: "viewername"}
       ]
 
     def remapped_diverted

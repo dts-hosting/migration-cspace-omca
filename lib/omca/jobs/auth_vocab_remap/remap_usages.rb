@@ -132,6 +132,14 @@ module Omca
                 row[:field] = "anthroowner"
                 row
               end
+            elsif table == "viewercontributiongroup" &&
+                field == "viewername"
+              transform do |row|
+                row[:tabletype] = "extension_field_group"
+                row[:table] = "partiesinvolvedgroup"
+                row[:field] = "involvedparty"
+                row
+              end
 
             end
           end
