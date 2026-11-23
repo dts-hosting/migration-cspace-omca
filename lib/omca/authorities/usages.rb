@@ -32,6 +32,8 @@ module Omca
 
       private
 
+      def tables = @tables ||= Omca::Mappings::Db.source_tables
+
       def ensure_sources
         sources.each do |src|
           unless File.exist?(src.path)
@@ -52,11 +54,15 @@ module Omca
       end
 
       def extract_from_file(dir, filename, csv)
+        table = File.basename(filename, ".csv")
+        return unless tables.include?(table)
+
         filepath = File.join(Omca.datadir, Omca.fixed_orig_phase, dir, filename)
         puts "Extracting from #{filepath}"
+
         base = {
           "tabletype" => dir,
-          "table" => File.basename(filename, ".csv")
+          "table" => table
         }
         CSV.foreach(filepath, headers: true) do |row|
           extract_from_row(base.dup, row, csv)
