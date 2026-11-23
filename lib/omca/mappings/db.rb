@@ -116,6 +116,13 @@ module Omca
             .map { |r| r["table_name"] }
       end
 
+      def source_tables
+        Omca::Mappings::Fields.migrating
+          .map { |row| row["source_db_table"] }
+          .uniq
+          .reject { |v| Omca::RegistryData.skip_tables.include?(v) }
+      end
+
       def target_tables(type)
         Omca::Mappings::Fields.migrating
           .select { |row| row["target_db_table_type"] == type }
