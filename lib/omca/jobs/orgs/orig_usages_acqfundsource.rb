@@ -44,9 +44,9 @@ module Omca
 
           data = CSV.parse(xan_result, headers: true)
             .map do |row|
-              row[:tabletype] = "repeatable_field_group"
-              row[:table] = "acquisitionfunding"
-              row[:field] = "acquisitionfundingsource"
+              row["tabletype"] = "repeatable_field_group"
+              row["table"] = "acquisitionfunding"
+              row["field"] = "acquisitionfundingsource"
               vocab_refname = row["acquisitionfundingsource"]
               row.delete("acquisitionfundingsource")
               normterm = norm.call(Omca::Refname.deurn(vocab_refname))
