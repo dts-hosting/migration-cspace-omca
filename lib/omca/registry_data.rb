@@ -1240,8 +1240,8 @@ module Omca
           end
 
           entry = {
-            path: File.join(Omca.datadir, "refnames_csids", "lookup",
-              "#{rectype}.csv"),
+            path: File.join(Omca.wrkdir,
+              "refnames_csids_lookup_#{rectype}.csv"),
             creator: {
               callee: Omca::Jobs::RefnamesCsidsLookup,
               args: args
