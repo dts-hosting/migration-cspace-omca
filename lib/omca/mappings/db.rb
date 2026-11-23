@@ -139,6 +139,20 @@ module Omca
           .reject { |v| v == "structured dates" }
           .map { |v| v.tr(" ", "_") }
       end
+
+      # @param [String] name of parent table into which row(s) should be
+      #   merged
+      # @return [Hash] where key is table name of child table and value is
+      #   the child table's tabletype
+      def build_children_config_for(table) = db_tables_sheet.select do |r|
+        r["parent_table"]&.match?(table)
+      end.to_h { |r| [r["table_name"], r["table_type"]] }
+
+      # @param [String] name of parent table into which row(s) should be
+      #   merged
+      # @return [Array<String>] of tables that rows from the given table merge
+      #   INTO
+      def build_children_for(table) = build_children_config_for(table).keys
     end
   end
 end
