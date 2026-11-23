@@ -3,13 +3,17 @@
 module Omca
   module Xforms
     class AuthorityMerge
-      def initialize(lookup:)
+      def initialize(lookup:, field:)
         @lookup = lookup
+        @field = field.to_sym
       end
 
       def process(row)
         merges = lookup[row[:id]]
-        return row unless merges
+        unless merges
+          row[field] = nil
+          return row
+        end
 
         merges.each do |mergedata|
           target = mergedata[:field].to_sym
@@ -22,7 +26,7 @@ module Omca
 
       private
 
-      attr_reader :lookup
+      attr_reader :field, :lookup
     end
   end
 end
