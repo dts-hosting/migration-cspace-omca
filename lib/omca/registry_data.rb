@@ -409,7 +409,7 @@ module Omca
                 callee: Omca::Jobs::RefnameLkupUniqUsagesSplit.method(:new),
                 args: {type: type, subtype: subtype}
               },
-              tags: [ns, type_subtype, type, subtype].map(&:to_sym),
+              tags: [ns, type_subtype, type, subtype].compact.map(&:to_sym),
               desc: Omca::Jobs::RefnameLkupUniqUsagesSplit.desc(type_subtype),
               lookup_on: :refname
             }
@@ -431,7 +431,7 @@ module Omca
                 callee: Omca::Jobs::SplitUsagesForRefnameLkup.method(:new),
                 args: {type: type, subtype: subtype}
               },
-              tags: [ns, type_subtype, type, subtype].map(&:to_sym),
+              tags: [ns, type_subtype, type, subtype].compact.map(&:to_sym),
               desc: Omca::Jobs::SplitUsagesForRefnameLkup.desc(type_subtype)
             }
           end
@@ -452,7 +452,7 @@ module Omca
                 callee: Omca::Jobs::RefnameUsageMerge.method(:new),
                 args: {type: type, subtype: subtype}
               },
-              tags: [ns, type_subtype, type, subtype].map(&:to_sym),
+              tags: [ns, type_subtype, type, subtype].compact.map(&:to_sym),
               desc: Omca::Jobs::RefnameUsageMerge.desc(type_subtype)
             }
           end
@@ -473,7 +473,7 @@ module Omca
                 callee: Omca::Jobs::NewRefnameUsagesSplit.method(:new),
                 args: {table: table, field: field}
               },
-              tags: [ns, table_field, table, field].map(&:to_sym),
+              tags: [ns, table_field, table, field].compact.map(&:to_sym),
               desc: Omca::Jobs::NewRefnameUsagesSplit.desc(table_field),
               lookup_on: :id
             }
