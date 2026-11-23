@@ -14,6 +14,7 @@ module Omca
         {table: "assocculturalcontextgroup", field: "assocculturalcontext"},
         {table: "assocplacegroup", field: "assocplace"},
         {table: "collectionobjects_common", field: "fieldcollectionplace"},
+        {table: "collectionobjects_common_contentplaces", field: "item"},
         {table: "collectionobjects_omca", field: "copyrightholder"},
         {table: "depositoromcagroup", field: "depositoromca"},
         {table: "determinationhistorygroup", field: "dhname"},
