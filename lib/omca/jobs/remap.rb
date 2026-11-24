@@ -161,6 +161,7 @@ module Omca
             accessrestrictiongroup
             acquisitioncontactgroup
             acquisitions_omca
+            addressgroupomca
             citations_omca
             collectionobjects_anthropology_nagpraapplicabilitylist
             collectionobjects_anthropology_nagpraculturaldeterminationlist
