@@ -1015,12 +1015,6 @@ module Omca
     end
     private_class_method :source_table_type_dirs
 
-    def target_table_type_dirs = proc { Omca::Mappings::Db.target_table_types }
-    private_class_method :target_table_type_dirs
-
-    def build_table_type_dirs = proc { [] }
-    private_class_method :build_table_type_dirs
-
     def source_table_type_files
       ->(dir) do
         orig_dir_path = File.join(Omca.datadir, "orig", dir)
@@ -1031,6 +1025,11 @@ module Omca
     end
     private_class_method :source_table_type_files
 
+    def target_table_type_dirs = proc do
+      Omca::Mappings::Db.target_table_types
+    end
+    private_class_method :target_table_type_dirs
+
     # @return [Array<String>]
     def target_table_type_files
       ->(dir) do
@@ -1040,9 +1039,16 @@ module Omca
     end
     private_class_method :target_table_type_files
 
+    def build_table_type_dirs = proc do
+      Omca::Mappings::Db.target_table_types - %w[
+        subgroup extension_subgroup
+      ]
+    end
+    private_class_method :build_table_type_dirs
+
     # @return [Array<String>]
     def build_table_type_files
-      ->(dir) { [] }
+      ->(dir) { target_table_type_files.call(dir) }
     end
     private_class_method :build_table_type_files
 
