@@ -244,7 +244,9 @@ module Omca
               from: :argusdescription,
               to: :materialtechniquedescription
           when "collectionobjects_common"
-            transform Delete::Fields, fields: :distinguishingfeatures
+            transform Delete::Fields,
+              fields: %i[collection computedcurrentlocation
+                distinguishingfeatures]
           when "collectionobjects_common_comments"
             transform Omca::Xforms::Remap::AddDistinguishingfeatureComments,
               lookup: collectionobjects
