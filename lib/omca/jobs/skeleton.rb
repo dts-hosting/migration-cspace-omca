@@ -81,8 +81,8 @@ module Omca
               source_phase, cfg[mod.lookup_table_field(rectype)]
             )
             transform Omca::Xforms::MergeRepeatableField,
-              config: cfg,
-              lookup: send(lkup_meth)
+              lookup: send(lkup_meth),
+              target: cfg["target_field"].to_sym
           end
 
           Omca::Mappings::Fields.skeleton_fields(

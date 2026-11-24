@@ -3,10 +3,9 @@
 module Omca
   module Xforms
     class MergeRepeatableField
-      def initialize(config:, lookup:)
-        @config = config
+      def initialize(lookup:, target:)
         @lookup = lookup
-        @target = config["target_field"].to_sym
+        @target = target
       end
 
       def process(row)
@@ -18,13 +17,14 @@ module Omca
 
         row[target] = to_merge.sort_by { |tm| tm[:pos].to_i }
           .map { |tm| tm[:item] }
+          .uniq
           .join(Omca.delim)
         row
       end
 
       private
 
-      attr_reader :config, :lookup, :target
+      attr_reader :lookup, :target
     end
   end
 end
