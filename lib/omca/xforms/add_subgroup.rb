@@ -6,12 +6,8 @@ module Omca
       SG_META_FIELDS = %i[recordcsid rectype groupid grouptable
         pos id]
 
-      def initialize(src:)
-        @src = src
-        @lookup = Kiba::Extend::Utils::Lookup.from_job(
-          jobkey: src,
-          lookup_on: :groupid
-        )
+      def initialize(lookup:)
+        @lookup = lookup
         @fields = lookup.first[1][0].keys - SG_META_FIELDS
       end
 
@@ -30,7 +26,7 @@ module Omca
 
       private
 
-      attr_reader :src, :lookup, :fields
+      attr_reader :lookup, :fields
 
       def merge_field(row, field, merges)
         vals = merges.map { |m| m[field].blank? ? "%NULLVALUE%" : m[field] }
