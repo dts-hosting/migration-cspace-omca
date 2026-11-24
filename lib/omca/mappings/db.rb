@@ -23,7 +23,7 @@ module Omca
       def table_type(table, mode = :info)
         type = val_from_table_row(table, "table_type")
         return unless type
-        return if mode == :info
+        return type if mode == :info
 
         type.tr(" ", "_")
       end
