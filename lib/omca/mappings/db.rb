@@ -144,9 +144,53 @@ module Omca
       #   merged
       # @return [Hash] where key is table name of child table and value is
       #   the child table's tabletype
-      def build_children_config_for(table) = db_tables_sheet.select do |r|
-        r["parent_table"]&.match?(table)
-      end.to_h { |r| [r["table_name"], r["table_type"]] }
+      def build_children_config_for(table)
+        if table_type(table).end_with?("_field_group")
+          build_children_config_for_group(table)
+        elsif table_type(table) == "main"
+          build_children_config_for_main(table)
+        elsif table_type(table) == "subrecord"
+          build_children_config_for_subrecord(table)
+        else
+          {}
+        end
+      end
+
+      def build_children_config_for_main(table)
+        children_config_rows_for_top_level(table).reject do |r|
+          r["target_db_table_type"] == "main"
+        end.to_h do |r|
+          [r["target_db_table"], r["target_db_table_type"]]
+        end.merge(
+          build_children_config_for_group(table)
+        )
+      end
+
+      def build_children_config_for_subrecord(table)
+        children_config_rows_for_top_level(table).reject do |r|
+          r["target_db_table_type"] == "subrecord"
+        end.to_h do |r|
+          [r["target_db_table"], r["target_db_table_type"]]
+        end
+      end
+
+      def children_config_rows_for_top_level(table)
+        rectype = rectype_for_table(table)
+        Omca::Mappings::Fields.for_rectype(rectype, side: :target)
+          .reject do |r|
+            ["subgroup", "extension_subgroup",
+              "structured dates"].include?(r["target_db_table_type"]) ||
+              (r["target_db_table"] ==
+               "collectionobjects_common_mediaprioritylist")
+          end
+      end
+
+      def build_children_config_for_group(table)
+        migrating_tables.select do |r|
+          r["parent_table"]&.match?(table)
+        end.reject { |r| r["table_type"] == "structured dates" }
+          .to_h { |r| [r["table_name"], r["table_type"]] }
+      end
 
       # @param [String] name of parent table into which row(s) should be
       #   merged
