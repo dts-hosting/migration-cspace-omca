@@ -62,9 +62,9 @@ module Omca
         @addtl_fields_tables ||=
           migrating_tables.select { |row| row["table_type"] == "addtl_fields" }
             .map do |r|
-            [r["table_name"],
-              main_tables_by_rectype[r["rectype"]]]
-          end
+              [r["table_name"],
+                main_tables_by_rectype[r["rectype"]]]
+            end
       end
 
       def extension_field_group_tables
