@@ -25,9 +25,10 @@ module Omca
       end
 
       # @param table [String]
-      # @return [Array<Hash>] of migrating rows where data comes from db table
-      def for_table(table)
-        fields_sheet.select { |row| row["source_db_table"] == rectype }
+      # @param side [:source, :target] of migration
+      # @return [Array<Hash>] of rows representing migrating fields
+      def for_table(table, side: :source)
+        migrating.select { |row| row["#{side}_db_table"] == table }
       end
 
       # @param rectype [String]
