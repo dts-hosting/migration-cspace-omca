@@ -398,6 +398,9 @@ module Omca
             transform FilterRows::FieldPopulated,
               action: :keep,
               field: :item
+          when "contacts_common"
+            transform Delete::FieldsExcept,
+              fields: %i[recordcsid termcsid id]
           when "depositorgroup"
             content_fields = %i[depositorsrequirementsomca depositoromca]
             transform FilterRows::AnyFieldsPopulated,
