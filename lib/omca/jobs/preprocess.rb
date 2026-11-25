@@ -71,6 +71,10 @@ module Omca
           transform FilterRows::AnyFieldsPopulated,
             action: :keep,
             fields: Omca::StructuredDate.data_fields
+          transform Clean::RegexpFindReplaceFieldVals,
+            fields: :datedisplaydate,
+            find: /^(\d{4}):(\d{2}):(\d{2}) /,
+            replace: '\1-\2-\3 '
         end
       end
 
