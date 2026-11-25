@@ -52,6 +52,7 @@ module Omca
       phase_config.each { |phase, callee| register_phase_jobs(phase, callee) }
 
       register_skeleton_jobs
+      register_ingest_jobs
       register_refname_csid_lookup_jobs
       register_unused_authority_reports
 
@@ -1198,6 +1199,84 @@ module Omca
               "#{type_subtype}.csv"),
             creator: {
               callee: Omca::Jobs::Skeleton,
+              args: args
+            },
+            tags: [ns.to_sym, subtype[:rectype].to_sym,
+              type_subtype.to_sym],
+            dest_special_opts: {
+              initial_headers: [:termdisplayname]
+            }
+          }
+
+          [type_subtype.to_sym, entry]
+        end
+
+      Omca.registry.namespace(ns) do
+        non_auth.each { |entry| register entry[0], entry[1] }
+        auth.each { |entry| register entry[0], entry[1] }
+      end
+    end
+    private_class_method :register_skeleton_jobs
+
+    def register_ingest_jobs
+      ns = "ingest"
+
+      non_auth = Omca::Mappings::Fields.ingest_rectypes
+        .reject { |rectype| Omca::Mappers.authority?(rectype) }
+        .map do |rectype|
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+          id_field = Omca::Mappers.id_field_for_table(table)
+
+          args = {
+            source: :"build_main__#{table}",
+            dest: :"#{ns}__#{rectype}",
+            rectype: rectype,
+            id_field: id_field
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "ingest", "#{rectype}.csv"),
+            creator: {
+              callee: Omca::Jobs::Ingest,
+              args: args
+            },
+            tags: [ns.to_sym, rectype.to_sym],
+            dest_special_opts: {
+              initial_headers: [id_field]
+            }
+          }
+          [rectype.to_sym, entry]
+        end
+
+      auth = Omca::Mappings::Fields.ingest_rectypes
+        .select { |rectype| Omca::Mappers.authority?(rectype) }
+        .map do |rectype|
+          table = Omca::Mappings::Db.main_tables_by_rectype[rectype]
+          base = {
+            rectype: rectype,
+            table: table
+          }
+          Omca::Mappers.mappers[rectype]
+            .dig(:config, :authority_subtypes)
+            .map { |subtype| subtype.merge(base) }
+        end.flatten
+        .map do |subtype|
+          type_subtype = "#{subtype[:rectype]}_"\
+            "#{subtype[:name].downcase}".tr(" ", "_")
+
+          args = {
+            source: :"build_main__#{subtype[:table]}",
+            dest: :"#{ns}__#{type_subtype}",
+            rectype: subtype[:rectype],
+            id_field: :termdisplayname,
+            auth_subtype: subtype[:subtype]
+          }
+
+          entry = {
+            path: File.join(Omca.datadir, "ingest",
+              "#{type_subtype}.csv"),
+            creator: {
+              callee: Omca::Jobs::Ingest,
               args: args
             },
             tags: [ns.to_sym, subtype[:rectype].to_sym,
