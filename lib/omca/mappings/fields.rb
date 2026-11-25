@@ -57,6 +57,14 @@ module Omca
           .sort
       end
 
+      # @return [Array<String>]
+      def ingest_rectypes
+        migrating.map { |row| row["target_record_type"] }
+          .reject { |v| v == "contact" || v == "work" }
+          .uniq
+          .sort
+      end
+
       def uncontrol_rectypes
         migrating.select do |row|
           row["authority_treatment"]&.include?("uncontrol")

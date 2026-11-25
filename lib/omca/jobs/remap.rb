@@ -115,6 +115,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :loanoutfeesgroup
           }
+        when "measuredpartgroup"
+          base << {
+            jobkey: :"#{prev}_extension_subgroup__dimensionsubgroup",
+            lookup_on: :groupid,
+            name: :dimensionsubgroup
+          }
         when "media_common"
           base << {
             jobkey: :"#{prev}_addtl_fields__media_omca",
@@ -410,6 +416,9 @@ module Omca
               depositorsrequirementsomca: :depositorsrequirements,
               depositoromca: :depositor
             }
+          when "dimensionsubgroup"
+            transform Delete::Fields,
+              fields: :dimensionnote
           when "exits_common"
             transform Rename::Fields, fieldmap: {
               exitnote: :note,
@@ -466,6 +475,9 @@ module Omca
               material: :materialcontrolled,
               materialcomponent: :materialcomponentnote
             }
+          when "measuredpartgroup"
+            transform Omca::Xforms::Remap::AddDimensionnote,
+              lookup: dimensionsubgroup
           when "media_common"
             transform Merge::MultiRowLookup,
               lookup: media_omca,
@@ -476,6 +488,8 @@ module Omca
               target: :title,
               delete_sources: true,
               delim: " - "
+            transform Delete::Fields,
+              fields: %i[blobcsid sourceurl uri]
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
@@ -537,6 +551,8 @@ module Omca
               target: :title,
               delete_sources: true,
               delim: " - "
+            transform Delete::Fields,
+              fields: %i[blobcsid sourceurl uri]
           when "restrictedmedia_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
@@ -564,6 +580,19 @@ module Omca
                 pos: "0",
                 grouptable: "rightsgroup"
               }
+          when "taxontermgroup"
+            transform do |row|
+              name = row[:termname]
+              next row if name.blank?
+
+              formatted = row[:termformatteddisplayname]
+              next row unless formatted.blank?
+
+              row[:termformatteddisplayname] = name
+              row.delete(:termname)
+
+              row
+            end
           when "taxonomicidentgroup"
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           when "textualinscriptiongroup"

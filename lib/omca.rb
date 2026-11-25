@@ -64,6 +64,7 @@ module Omca
   setting :delim, default: Kiba::Extend.delim, reader: true
   setting :sgdelim, default: Kiba::Extend.sgdelim, reader: true
   setting :notedelim, default: "\n\n", reader: true
+  setting :nullvalue, default: Kiba::Extend.nullvalue, reader: true
 
   setting :mappings_path,
     reader: true,
