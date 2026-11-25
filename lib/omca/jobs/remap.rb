@@ -564,6 +564,19 @@ module Omca
                 pos: "0",
                 grouptable: "rightsgroup"
               }
+          when "taxontermgroup"
+            transform do |row|
+              name = row[:termname]
+              next row if name.blank?
+
+              formatted = row[:termformatteddisplayname]
+              next row unless formatted.blank?
+
+              row[:termformatteddisplayname] = name
+              row.delete(:termname)
+
+              row
+            end
           when "taxonomicidentgroup"
             transform Omca::Xforms::Remap::BuildTaxonomicidentgroup
           when "textualinscriptiongroup"
