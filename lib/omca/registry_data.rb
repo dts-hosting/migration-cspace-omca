@@ -982,6 +982,14 @@ module Omca
           tags: [ns.to_sym],
           desc: Omca::Jobs::StructuredDates::Exitdate.desc
         }
+
+        register :uniq_displaydates, {
+          path: File.join(Omca.wrkdir,
+            "structured_dates_uniq_displaydates.csv"),
+          creator: Omca::Jobs::StructuredDates::UniqDisplaydates.method(:new),
+          tags: [ns.to_sym],
+          desc: Omca::Jobs::StructuredDates::UniqDisplaydates.desc
+        }
       end
 
       Omca.registry.register :omca_source_db, {
