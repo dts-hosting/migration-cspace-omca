@@ -3,7 +3,8 @@
 module Omca
   module Xforms
     class AddFieldGroup
-      META_FIELDS = %i[recordcsid rectype pos id]
+      META_FIELDS = %i[recordcsid rectype pos id authority
+        shortidentifier] + [Omca::Authorities.used_tag_field]
 
       def initialize(lookup:)
         @lookup = lookup
