@@ -115,6 +115,12 @@ module Omca
             lookup_on: :recordcsid,
             name: :loanoutfeesgroup
           }
+        when "measuredpartgroup"
+          base << {
+            jobkey: :"#{prev}_extension_subgroup__dimensionsubgroup",
+            lookup_on: :groupid,
+            name: :dimensionsubgroup
+          }
         when "media_common"
           base << {
             jobkey: :"#{prev}_addtl_fields__media_omca",
@@ -410,6 +416,9 @@ module Omca
               depositorsrequirementsomca: :depositorsrequirements,
               depositoromca: :depositor
             }
+          when "dimensionsubgroup"
+            transform Delete::Fields,
+              fields: :dimensionnote
           when "exits_common"
             transform Rename::Fields, fieldmap: {
               exitnote: :note,
@@ -466,6 +475,9 @@ module Omca
               material: :materialcontrolled,
               materialcomponent: :materialcomponentnote
             }
+          when "measuredpartgroup"
+            transform Omca::Xforms::Remap::AddDimensionnote,
+              lookup: dimensionsubgroup
           when "media_common"
             transform Merge::MultiRowLookup,
               lookup: media_omca,
