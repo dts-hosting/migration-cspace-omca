@@ -488,6 +488,8 @@ module Omca
               target: :title,
               delete_sources: true,
               delim: " - "
+            transform Delete::Fields,
+              fields: %i[blobcsid sourceurl uri]
           when "media_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
@@ -549,6 +551,8 @@ module Omca
               target: :title,
               delete_sources: true,
               delim: " - "
+            transform Delete::Fields,
+              fields: %i[blobcsid sourceurl uri]
           when "restrictedmedia_common_publishtolist"
             transform Omca::Xforms::Remap::SvFieldToRepeatableFieldTable,
               fieldmap: {approveforpublic: :item}
